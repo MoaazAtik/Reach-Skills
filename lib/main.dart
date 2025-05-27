@@ -1,5 +1,8 @@
+import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:skill_swap/features/auth/controller/auth_gate.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -7,7 +10,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -36,7 +43,14 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      localizationsDelegates: [
+        FirebaseUILocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('tr', 'TR'),
+      ],
+      home: const AuthGate(),
     );
   }
 }
