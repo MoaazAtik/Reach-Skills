@@ -5,6 +5,7 @@ class AppUser {
   final String email;
   final String bio;
   final List<String> skills;
+  final int lastEditedTime;
 
   AppUser({
     required this.uid,
@@ -12,6 +13,7 @@ class AppUser {
     required this.email,
     required this.bio,
     required this.skills,
+    required this.lastEditedTime,
   });
 
   factory AppUser.fromMap(Map<String, dynamic> map) {
@@ -21,6 +23,7 @@ class AppUser {
       email: map['email'] ?? '',
       bio: map['bio'] ?? '',
       skills: List<String>.from(map['skills'] ?? []),
+      lastEditedTime: map['lastEditedTime'].toInt() ?? 0,
     );
   }
 
@@ -31,6 +34,7 @@ class AppUser {
       'email': email,
       'bio': bio,
       'skills': skills,
+      'lastEditedTime': lastEditedTime,
     };
   }
 
