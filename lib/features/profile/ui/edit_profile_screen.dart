@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../profile/controller/profile_providers.dart';
+import 'profile_providers.dart';
 import '../../profile/domain/models/app_user.dart';
 
 
