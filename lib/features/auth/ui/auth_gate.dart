@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/ui/home_screen.dart';
-import '../ui/auth_screen.dart';
+import 'auth_screen.dart';
 
 
 final authStateProvider = StreamProvider<User?>((ref) {
