@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../domain/models/app_user.dart';
+import '../domain/profile_repository.dart';
 
-class ProfileRepository {
+class ProfileRepositoryImpl extends ProfileRepository {
 
   final _firestore = FirebaseFirestore.instance;
 
+  @override
   Future<void> saveUserProfile(AppUser user) async {
     await _firestore
         .collection('users')
@@ -13,6 +15,7 @@ class ProfileRepository {
         .set(user.toMap());
   }
 
+  @override
   Future<AppUser?> getUserProfile(String uid) async {
     final doc = await _firestore
         .collection('users')
