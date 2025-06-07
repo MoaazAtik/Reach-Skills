@@ -38,19 +38,14 @@ class AuthViewModel extends ChangeNotifier {
         errorAuthMessage = object.toString();
         print('Error: $object');
         print('Stack trace: $stackTrace');
-        // _loggedIn = false;
-        // notifyListeners();
+        notifyListeners();
       },
       onDone: () {
         print('Auth state subscription done');
-        // notifyListeners();
+        notifyListeners();
       },
     );
   }
-
-  // Future<void> signOut() async {
-  //   await _authRepository.signOut();
-  // }
 
   @override
   void dispose() {

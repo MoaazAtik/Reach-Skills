@@ -1,25 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 
-import 'edit_profile_viewmodel.dart';
-import 'profile_providers.dart';
 import '../../profile/domain/models/app_user.dart';
+import 'edit_profile_viewmodel.dart';
 
-
-// class EditProfileScreen extends ConsumerStatefulWidget {
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
   @override
-  // State<ConsumerStatefulWidget> createState() =>
   State<StatefulWidget> createState() =>
       _EditProfileScreenState();
 }
 
 
-// class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 class _EditProfileScreenState extends State<EditProfileScreen> {
 
   final _formKey = GlobalKey<FormState>();
@@ -49,9 +43,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final uid = FirebaseAuth.instance.currentUser?.uid;
 
     if (uid != null) {
-      // final repository = ref.read(profileRepositoryProvider);
-      // final profile = await repository.getUserProfile(uid);
-      // final repository = context.read<EditProfileViewModel>()._profileRepository;
       final profile = await context.read<EditProfileViewModel>().getProfile(uid);
 
       if (profile != null) {
@@ -79,8 +70,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null || _user == null) return;
-
-    // final repository = ref.read(profileRepositoryProvider);
 
     final user = AppUser(
       uid: uid,
@@ -129,7 +118,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return;
     }
 
-    // await repository.saveUserProfile(user);
     await context.read<EditProfileViewModel>().saveProfile(user);
 
     if (mounted) {
