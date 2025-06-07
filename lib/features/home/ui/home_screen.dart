@@ -1,6 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:skill_swap/features/profile/ui/edit_profile_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../../profile/ui/edit_profile_screen.dart';
+import 'home_viewmodel.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -8,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final user = FirebaseAuth.instance.currentUser;
+    final user = context.select((HomeViewModel vm) => vm.currentUser);
 
     return Scaffold(
 
@@ -17,9 +19,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-            },
+            onPressed: context.read<HomeViewModel>().signOut,
           )
         ],
       ),
@@ -44,9 +44,7 @@ class HomeScreen extends StatelessWidget {
                 child: const Text('Edit Profile'),
             ),
             ElevatedButton(
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-              },
+              onPressed: context.read<HomeViewModel>().signOut,
               child: const Text('Sign Out'),
             )
           ],
