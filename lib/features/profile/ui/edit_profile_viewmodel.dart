@@ -1,5 +1,5 @@
-import '../data/profile_repository.dart';
 import '../domain/models/app_user.dart';
+import '../domain/profile_repository.dart';
 
 class EditProfileViewModel {
   EditProfileViewModel({required ProfileRepository profileRepository})

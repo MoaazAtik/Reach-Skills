@@ -7,7 +7,7 @@ import 'features/auth/data/auth_repository_impl.dart';
 import 'features/auth/ui/auth_viewmodel.dart';
 import 'features/home/data/home_repository_impl.dart';
 import 'features/home/ui/home_viewmodel.dart';
-import 'features/profile/data/profile_repository.dart';
+import 'features/profile/data/profile_repository_impl.dart';
 import 'features/profile/ui/edit_profile_viewmodel.dart';
 import 'firebase_options.dart';
 
@@ -30,7 +30,7 @@ void main() async {
         Provider(
           create:
               (context) =>
-                  EditProfileViewModel(profileRepository: ProfileRepository()),
+                  EditProfileViewModel(profileRepository: ProfileRepositoryImpl()),
         ),
       ],
       child: SkillSwapApp(),
