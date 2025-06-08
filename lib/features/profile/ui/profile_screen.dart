@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../auth/ui/auth_viewmodel.dart';
 import '../domain/profile_model.dart';
 import 'profile_viewmodel.dart';
 
@@ -22,117 +22,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController _bioController;
   late TextEditingController _skillsController;
 
-  bool _loading = true;
+  String? _uid;
   ProfileModel? _profile;
-  bool edited = false;
-
 
   @override
   void initState() {
     super.initState();
-
-    _nameController = TextEditingController();
-    _bioController = TextEditingController();
-    _skillsController = TextEditingController();
-
-    _loadProfile();
+    _uid = context.read<AuthViewModel>().currentUser?.uid;
+    context.read<ProfileViewModel>().loadProfile(_uid);
   }
-
-
-  Future<void> _loadProfile() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-
-    if (uid != null) {
-      final profile = await context.read<ProfileViewModel>().getProfile(uid);
-
-      if (profile != null) {
-        setState(() {
-          _profile = profile;
-          _nameController.text = profile.name;
-          _bioController.text = profile.bio;
-          _skillsController.text = profile.skills.join(', ');
-
-          _loading = false;
-        });
-      }
-      else {
-        // No profile yet
-        setState(() => _loading = false);
-      }
-    }
-
-  }
-
-
-  Future<void> _saveProfile() async {
-
-    if (!_formKey.currentState!.validate()) return;
-
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null || _profile == null) return;
-
-    final profile = ProfileModel(
-      uid: uid,
-      name: _nameController.text.trim(),
-      email: FirebaseAuth.instance.currentUser!.email ?? '',
-      bio: _bioController.text.trim(),
-      skills: _skillsController.text
-          .trim()
-          .split(',')
-          .map((s) => s.trim())
-          .toList(),
-      lastEditedTime: DateTime.now().millisecondsSinceEpoch,
-    );
-
-    for (final entry in profile.toMap().entries) {
-      // skip uid, email, lastEditedTime
-      if (entry.key == 'uid' ||
-          entry.key == 'email' ||
-          entry.key == 'lastEditedTime') {
-        continue;
-      }
-
-      // check skills
-      if (entry.key == 'skills') {
-        if (entry.value.toString() != _profile!.toMap()[entry.key].toString()) {
-          edited = true;
-          break;
-        }
-        continue;
-      }
-
-      // check name, bio
-      if (entry.value != _profile!.toMap()[entry.key]) {
-        edited = true;
-        break;
-      }
-    }
-
-    if (!edited) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No changes to save')),
-        );
-      }
-
-      return;
-    }
-
-    await context.read<ProfileViewModel>().saveProfile(profile);
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile Saved')),
-      );
-    }
-
-  }
-
 
   @override
   Widget build(BuildContext context) {
 
-    if (_loading) {
+    _profile = context.watch<ProfileViewModel>().profile;
+    bool loading  = context.watch<ProfileViewModel>().loading;
+
+    _nameController = TextEditingController(text: _profile?.name);
+    _bioController = TextEditingController(text: _profile?.bio);
+    _skillsController = TextEditingController(text: _profile?.skills.join(', '));
+
+    if (loading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -179,6 +89,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+
+  Future<void> _saveProfile() async {
+    String updatingResult;
+
+    if (!_formKey.currentState!.validate()) {
+      updatingResult = 'Please fill in all required fields.';
+    } else if (_uid == null || _profile == null) {
+      updatingResult = 'Unknown Error. Try signing out and signing in again.';
+    } else {
+      final newProfile = ProfileModel(
+        uid: _uid!,
+        name: _nameController.text.trim(),
+        email: _profile!.email,
+        bio: _bioController.text.trim(),
+        skills: _skillsController.text
+            .trim()
+            .split(',')
+            .map((s) => s.trim())
+            .toList(),
+        lastEditedTime: DateTime
+            .now()
+            .millisecondsSinceEpoch,
+      );
+
+      updatingResult =
+      await context.read<ProfileViewModel>().updateProfile(newProfile);
+    }
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(updatingResult)),
+      );
+    }
+  }
 
   @override
   void dispose() {

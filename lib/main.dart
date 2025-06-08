@@ -21,7 +21,7 @@ void main() async {
           create:
               (context) => AuthViewModel(authRepository: AuthRepositoryImpl()),
         ),
-        Provider(
+        ChangeNotifierProvider(
           create:
               (context) =>
                   ProfileViewModel(profileRepository: ProfileRepositoryImpl()),
