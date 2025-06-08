@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../domain/models/app_user.dart';
+import '../domain/app_user.dart';
 import '../domain/profile_repository.dart';
 
 class ProfileRepositoryImpl extends ProfileRepository {

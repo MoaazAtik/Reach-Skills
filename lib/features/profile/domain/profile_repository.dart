@@ -1,4 +1,4 @@
-import 'models/app_user.dart';
+import 'app_user.dart';
 
 abstract class ProfileRepository {
   Future<void> saveUserProfile(AppUser user);
