@@ -2,10 +2,10 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../home/ui/home_screen.dart';
+import '../../common/ui/home_screen.dart';
 import 'auth_viewmodel.dart';
 
-class AuthScreen extends StatelessWidget { // todo rename AuthScreen to SignInScreen
+class AuthScreen extends StatelessWidget {
 
   const AuthScreen({super.key});
 

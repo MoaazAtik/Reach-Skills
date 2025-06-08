@@ -1,7 +1,7 @@
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 
-import 'features/home/ui/home_screen.dart';
+import 'features/common/ui/home_screen.dart';
 
 class SkillSwapApp extends StatelessWidget {
   const SkillSwapApp({super.key});
