@@ -1,4 +1,4 @@
-import '../domain/app_user.dart';
+import '../domain/profile_model.dart';
 import '../domain/profile_repository.dart';
 
 class ProfileViewModel {
@@ -7,11 +7,11 @@ class ProfileViewModel {
 
   final ProfileRepository _profileRepository;
 
-  Future<void> saveProfile(AppUser user) async {
-    await _profileRepository.saveUserProfile(user);
+  Future<void> saveProfile(ProfileModel profile) async {
+    await _profileRepository.saveUserProfile(profile);
   }
 
-  Future<AppUser?> getProfile(String uid) async {
+  Future<ProfileModel?> getProfile(String uid) async {
     return await _profileRepository.getUserProfile(uid);
   }
 }

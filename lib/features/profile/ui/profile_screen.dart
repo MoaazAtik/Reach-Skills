@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../domain/app_user.dart';
+import '../domain/profile_model.dart';
 import 'profile_viewmodel.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -23,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController _skillsController;
 
   bool _loading = true;
-  AppUser? _user;
+  ProfileModel? _profile;
   bool edited = false;
 
 
@@ -47,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       if (profile != null) {
         setState(() {
-          _user = profile;
+          _profile = profile;
           _nameController.text = profile.name;
           _bioController.text = profile.bio;
           _skillsController.text = profile.skills.join(', ');
@@ -69,9 +69,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null || _user == null) return;
+    if (uid == null || _profile == null) return;
 
-    final user = AppUser(
+    final profile = ProfileModel(
       uid: uid,
       name: _nameController.text.trim(),
       email: FirebaseAuth.instance.currentUser!.email ?? '',
@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       lastEditedTime: DateTime.now().millisecondsSinceEpoch,
     );
 
-    for (final entry in user.toMap().entries) {
+    for (final entry in profile.toMap().entries) {
       // skip uid, email, lastEditedTime
       if (entry.key == 'uid' ||
           entry.key == 'email' ||
@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       // check skills
       if (entry.key == 'skills') {
-        if (entry.value.toString() != _user!.toMap()[entry.key].toString()) {
+        if (entry.value.toString() != _profile!.toMap()[entry.key].toString()) {
           edited = true;
           break;
         }
@@ -102,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
 
       // check name, bio
-      if (entry.value != _user!.toMap()[entry.key]) {
+      if (entry.value != _profile!.toMap()[entry.key]) {
         edited = true;
         break;
       }
@@ -118,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return;
     }
 
-    await context.read<ProfileViewModel>().saveProfile(user);
+    await context.read<ProfileViewModel>().saveProfile(profile);
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -170,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: const Text('Save Profile'),
               ),
               const SizedBox(height: 24),
-              Text('Last edited: ${DateTime.fromMillisecondsSinceEpoch(_user!.lastEditedTime).toString()}')
+              Text('Last edited: ${DateTime.fromMillisecondsSinceEpoch(_profile!.lastEditedTime).toString()}')
             ],
           ),
         ),
