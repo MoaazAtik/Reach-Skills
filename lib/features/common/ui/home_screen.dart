@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../auth/ui/auth_screen.dart';
 import '../../auth/ui/auth_viewmodel.dart';
-import '../../profile/ui/edit_profile_screen.dart';
+import '../../profile/ui/profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -65,7 +65,7 @@ class HomeScreen extends StatelessWidget {
             TextButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+                    MaterialPageRoute(builder: (_) => const ProfileScreen()),
                   );
                 },
                 child: const Text('Edit Profile'),

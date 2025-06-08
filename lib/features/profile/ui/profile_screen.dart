@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../profile/domain/models/app_user.dart';
-import 'edit_profile_viewmodel.dart';
+import 'profile_viewmodel.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
   State<StatefulWidget> createState() =>
-      _EditProfileScreenState();
+      _ProfileScreenState();
 }
 
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
@@ -43,7 +43,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final uid = FirebaseAuth.instance.currentUser?.uid;
 
     if (uid != null) {
-      final profile = await context.read<EditProfileViewModel>().getProfile(uid);
+      final profile = await context.read<ProfileViewModel>().getProfile(uid);
 
       if (profile != null) {
         setState(() {
@@ -118,7 +118,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return;
     }
 
-    await context.read<EditProfileViewModel>().saveProfile(user);
+    await context.read<ProfileViewModel>().saveProfile(user);
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

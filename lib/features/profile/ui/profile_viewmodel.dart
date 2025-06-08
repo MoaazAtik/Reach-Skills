@@ -1,8 +1,8 @@
 import '../domain/models/app_user.dart';
 import '../domain/profile_repository.dart';
 
-class EditProfileViewModel {
-  EditProfileViewModel({required ProfileRepository profileRepository})
+class ProfileViewModel {
+  ProfileViewModel({required ProfileRepository profileRepository})
     : _profileRepository = profileRepository;
 
   final ProfileRepository _profileRepository;
