@@ -7,4 +7,9 @@ class AuthRepositoryImpl extends AuthRepository {
   Stream<User?> getAuthStateChanges() {
     return FirebaseAuth.instance.authStateChanges();
   }
+
+  @override
+  Future<void> signOut() {
+    return FirebaseAuth.instance.signOut();
+  }
 }

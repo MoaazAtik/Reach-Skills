@@ -1,10 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../auth/ui/auth_screen.dart';
 import '../../auth/ui/auth_viewmodel.dart';
 import '../../profile/ui/edit_profile_screen.dart';
-import 'home_viewmodel.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,11 +12,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final user = context.select((HomeViewModel vm) => vm.currentUser);
-
     String? errorAuthMessage = context.watch<AuthViewModel>().errorAuthMessage;
     /* Perhaps (?) no need for 'watch' for 'loggedIn' because errorAuthMessage is already watching. So we can avoid unnecessary rebuild without two 'watch' calls. */
     bool loggedIn = context.read<AuthViewModel>().loggedIn;
+    User? user = context.read<AuthViewModel>().currentUser;
 
     return Scaffold(
 
@@ -36,7 +35,7 @@ class HomeScreen extends StatelessWidget {
           if (loggedIn)
             IconButton(
               icon: const Icon(Icons.logout),
-              onPressed: context.read<HomeViewModel>().signOut,
+              onPressed: context.read<AuthViewModel>().signOut,
             ),
 
           if (!loggedIn)
@@ -72,7 +71,7 @@ class HomeScreen extends StatelessWidget {
                 child: const Text('Edit Profile'),
             ),
             ElevatedButton(
-              onPressed: context.read<HomeViewModel>().signOut,
+              onPressed: context.read<AuthViewModel>().signOut,
               child: const Text('Sign Out'),
             )
           ],
