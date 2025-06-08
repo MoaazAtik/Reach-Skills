@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../auth/ui/auth_screen.dart';
+import '../../auth/ui/auth_viewmodel.dart';
 import '../../profile/ui/edit_profile_screen.dart';
 import 'home_viewmodel.dart';
 
@@ -12,15 +14,41 @@ class HomeScreen extends StatelessWidget {
 
     final user = context.select((HomeViewModel vm) => vm.currentUser);
 
+    String? errorAuthMessage = context.watch<AuthViewModel>().errorAuthMessage;
+    /* Perhaps (?) no need for 'watch' for 'loggedIn' because errorAuthMessage is already watching. So we can avoid unnecessary rebuild without two 'watch' calls. */
+    bool loggedIn = context.read<AuthViewModel>().loggedIn;
+
     return Scaffold(
 
       appBar: AppBar(
         title: const Text('SkillSwap - Home'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: context.read<HomeViewModel>().signOut,
-          )
+
+          if (errorAuthMessage != null)
+            Text('Error: $errorAuthMessage'),
+
+          if (loggedIn)
+            const Text('Logged in'),
+
+          if (!loggedIn)
+            const Text('Not logged in'),
+
+          if (loggedIn)
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: context.read<HomeViewModel>().signOut,
+            ),
+
+          if (!loggedIn)
+            IconButton(
+              icon: const Icon(Icons.login),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const AuthScreen()),
+                );
+              }
+            ),
+
         ],
       ),
 
