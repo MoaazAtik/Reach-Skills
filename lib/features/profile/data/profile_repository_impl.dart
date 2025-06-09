@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../common/data/interest_model.dart';
@@ -27,14 +29,19 @@ class ProfileRepositoryImpl extends ProfileRepository {
     return null;
   }
 
-  /// get the interests from all profiles
+  /// Get stream of the interests from all profiles
   @override
-  Future<List<InterestModel>> getInterests(
+  Stream<List<InterestModel>> getInterestsStream(
     List<InterestType> interestTypes,
-  ) async {
-    List<InterestModel> allInterests = [];
-    await _firestore.collection('profiles').get().then((querySnapshot) {
-      for (var doc in querySnapshot.docs) {
+  ) {
+    final controller = StreamController<List<InterestModel>>();
+
+    final subscription = _firestore.collection('profiles').snapshots().listen((
+      snapshot,
+    ) {
+      final List<InterestModel> allInterests = [];
+
+      for (var doc in snapshot.docs) {
         String uid = doc.data()['uid'];
 
         List<dynamic> profileSkillsList =
@@ -46,18 +53,22 @@ class ProfileRepositoryImpl extends ProfileRepository {
                 ? doc.data()['wishes']
                 : [];
         for (var skillInAProfile in profileSkillsList) {
-          allInterests.add(
-            SkillModel(uid: uid, title: skillInAProfile),
-          );
+          allInterests.add(SkillModel(uid: uid, title: skillInAProfile));
         }
         for (var wishInAProfile in profileWishesList) {
-          allInterests.add(
-            WishModel(uid: uid, title: wishInAProfile),
-          );
+          allInterests.add(WishModel(uid: uid, title: wishInAProfile));
         }
-
       }
+      controller.add(allInterests);
     });
-    return allInterests;
+
+    controller.onCancel = () {
+      subscription.cancel();
+    };
+    controller.onListen = () {
+      subscription.resume();
+    };
+
+    return controller.stream;
   }
 }

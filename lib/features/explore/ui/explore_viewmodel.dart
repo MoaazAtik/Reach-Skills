@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import '../../common/data/interest_model.dart';
@@ -10,19 +12,33 @@ class ExploreViewModel extends ChangeNotifier {
   }
 
   final ProfileRepository _profileRepository;
+  StreamSubscription<List<InterestModel>>? _interestsSubscription;
   List<InterestModel>? interests;
   List<InterestType> interestTypes = [InterestType.skill, InterestType.wish];
   bool loading = true;
 
   void init() {
-    getInterests(interestTypes);
+    startInterestsSubscription(interestTypes);
   }
 
-  Future<void> getInterests(List<InterestType> interestTypes) async {
-    loading = true;
+  void startInterestsSubscription(List<InterestType> interestTypes) {
+    // cancel previous subscription when interest types change
+    _interestsSubscription?.cancel();
+
     this.interestTypes = interestTypes;
-    interests = await _profileRepository.getInterests(interestTypes);
-    loading = false;
-    notifyListeners();
+    _interestsSubscription = _profileRepository
+        .getInterestsStream(interestTypes)
+        .listen((interests) {
+          loading = true;
+          this.interests = interests;
+          loading = false;
+          notifyListeners();
+        });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _interestsSubscription?.cancel();
   }
 }

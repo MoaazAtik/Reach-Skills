@@ -6,5 +6,7 @@ abstract class ProfileRepository {
 
   Future<ProfileModel?> getProfile(String uid);
 
-  Future<List<InterestModel>> getInterests(List<InterestType> interestTypes);
+  Stream<List<InterestModel>> getInterestsStream(
+    List<InterestType> interestTypes,
+  );
 }
