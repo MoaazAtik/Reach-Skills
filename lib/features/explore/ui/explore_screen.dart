@@ -25,10 +25,11 @@ class ExploreScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         for (final interest in interests)
-          InterestCart(
+          InterestCard(
             interestType: interest.interestType,
             title: interest.title,
             userName: interest.userName,
+            onReach: () => print('Reach ${interest.userName}'),
           ),
       ],
     );

@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../../common/data/interest_model.dart';
 
-class InterestCart extends StatelessWidget {
-  const InterestCart({
+class InterestCard extends StatelessWidget {
+  const InterestCard({
     super.key,
     required this.interestType,
     required this.title,
     required this.userName,
+    required this.onReach
   });
 
   final InterestType interestType;
   final String title;
   final String userName;
+  final Function onReach;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class InterestCart extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                // todo
+                onReach();
               },
             ),
           ],
