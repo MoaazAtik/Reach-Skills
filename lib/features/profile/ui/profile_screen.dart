@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../auth/ui/auth_screen.dart';
 import '../../auth/ui/auth_viewmodel.dart';
 import '../domain/profile_model.dart';
 import 'profile_viewmodel.dart';
@@ -41,6 +42,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _nameController = TextEditingController(text: _profile?.name);
     _bioController = TextEditingController(text: _profile?.bio);
     _skillsController = TextEditingController(text: _profile?.skills.join(', '));
+
+    if (_uid == null || _profile == null) {
+      return Column(
+        children: [
+          const SizedBox(height: 40),
+          Text('No user info available.'),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const AuthScreen()),
+              );
+            },
+            child: const Text('Sign in'),
+          ),
+        ],
+      );
+    }
 
     if (loading) {
       return const Scaffold(

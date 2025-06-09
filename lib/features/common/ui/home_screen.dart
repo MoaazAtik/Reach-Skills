@@ -22,7 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
     String? errorAuthMessage = context.watch<AuthViewModel>().errorAuthMessage;
     /* Perhaps (?) no need for 'watch' for 'loggedIn' because errorAuthMessage is already watching. So we can avoid unnecessary rebuild without two 'watch' calls. */
     bool loggedIn = context.read<AuthViewModel>().loggedIn;
-    User? user = context.read<AuthViewModel>().currentUser;
 
     return Scaffold(
 
@@ -59,35 +58,17 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       body: Center(
-        child: user == null
-            ? Text('No user info available.')
-            : Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Logged in as:'),
-            const SizedBox(height: 8),
-            Text(user.displayName ?? 'No display name'),
-            Text(user.email ?? 'No email'),
-            const SizedBox(height: 16),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const ProfileScreen()),
-                  );
-                },
-                child: const Text('Edit Profile'),
-            ),
-            ElevatedButton(
-              onPressed: context.read<AuthViewModel>().signOut,
-              child: const Text('Sign Out'),
-            )
-          ],
-        ),
+        child:
+          switch (_selectedIndex) {
+            0 => const Text('Explore Screen'),
+            1 => const ProfileScreen(),
+            _ => const Text('Unknown Screen'),
+          },
       ),
 
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,
