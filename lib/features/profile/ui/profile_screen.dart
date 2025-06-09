@@ -22,6 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController _nameController;
   late TextEditingController _bioController;
   late TextEditingController _skillsController;
+  late TextEditingController _wishesController;
 
   String? _uid;
   ProfileModel? _profile;
@@ -42,6 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _nameController = TextEditingController(text: _profile?.name);
     _bioController = TextEditingController(text: _profile?.bio);
     _skillsController = TextEditingController(text: _profile?.skills.join(', '));
+    _wishesController = TextEditingController(text: _profile?.wishes.join(', '));
 
     if (_uid == null || _profile == null) {
       return Column(
@@ -93,6 +95,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: const InputDecoration(
                     labelText: 'Skills (comma-separated)'),
               ),
+              TextFormField(
+                controller: _wishesController,
+                decoration: const InputDecoration(
+                    labelText: 'Wishes (comma-separated)'),
+              ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _saveProfile,
@@ -123,6 +130,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         email: _profile!.email,
         bio: _bioController.text.trim(),
         skills: _skillsController.text
+            .trim()
+            .split(',')
+            .map((s) => s.trim())
+            .toList(),
+        wishes: _wishesController.text
             .trim()
             .split(',')
             .map((s) => s.trim())

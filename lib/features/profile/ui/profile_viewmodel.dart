@@ -44,6 +44,15 @@ class ProfileViewModel extends ChangeNotifier {
         continue;
       }
 
+      // check wishes
+      if (entry.key == 'wishes') {
+        if (entry.value.toString() != profile!.toMap()[entry.key].toString()) {
+          edited = true;
+          break;
+        }
+        continue;
+      }
+
       // check name, bio
       if (entry.value != profile!.toMap()[entry.key]) {
         edited = true;

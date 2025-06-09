@@ -5,6 +5,7 @@ class ProfileModel {
   final String email;
   final String bio;
   final List<String> skills;
+  final List<String> wishes;
   final int lastEditedTime;
 
   ProfileModel({
@@ -13,6 +14,7 @@ class ProfileModel {
     required this.email,
     required this.bio,
     required this.skills,
+    required this.wishes,
     required this.lastEditedTime,
   });
 
@@ -23,6 +25,7 @@ class ProfileModel {
       email: map['email'] ?? '',
       bio: map['bio'] ?? '',
       skills: List<String>.from(map['skills'] ?? []),
+      wishes: List<String>.from(map['wishes'] ?? []),
       lastEditedTime: map['lastEditedTime'].toInt() ?? 0,
     );
   }
@@ -34,6 +37,7 @@ class ProfileModel {
       'email': email,
       'bio': bio,
       'skills': skills,
+      'wishes': wishes,
       'lastEditedTime': lastEditedTime,
     };
   }
