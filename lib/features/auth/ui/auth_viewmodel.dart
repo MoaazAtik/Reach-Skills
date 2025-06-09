@@ -19,6 +19,9 @@ class AuthViewModel extends ChangeNotifier {
   bool get loggedIn => _loggedIn;
   String? errorAuthMessage;
 
+  User? _currentUser;
+  User? get currentUser => _currentUser;
+
   void init() {
     startAuthStateSubscription();
   }
@@ -28,8 +31,10 @@ class AuthViewModel extends ChangeNotifier {
       (user) {
         if (user != null) {
           _loggedIn = true;
+          _currentUser = user;
         } else {
           _loggedIn = false;
+          _currentUser = null;
         }
         errorAuthMessage = null;
         notifyListeners();
@@ -45,6 +50,10 @@ class AuthViewModel extends ChangeNotifier {
         notifyListeners();
       },
     );
+  }
+
+  Future<void> signOut() async {
+    await _authRepository.signOut();
   }
 
   @override

@@ -1,7 +1,7 @@
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 
-import 'features/auth/ui/auth_gate.dart';
+import 'features/common/ui/home_screen.dart';
 
 class SkillSwapApp extends StatelessWidget {
   const SkillSwapApp({super.key});
@@ -14,6 +14,7 @@ class SkillSwapApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
+      debugShowCheckedModeBanner: false,
 
       localizationsDelegates: [
         FirebaseUILocalizations.delegate,
@@ -23,7 +24,7 @@ class SkillSwapApp extends StatelessWidget {
         Locale('tr', 'TR'),
       ],
 
-      home: const AuthGate(),
+      home: const HomeScreen(),
     );
   }
 }

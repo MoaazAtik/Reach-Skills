@@ -1,4 +1,4 @@
-class AppUser {
+class ProfileModel {
 
   final String uid;
   final String name;
@@ -7,7 +7,7 @@ class AppUser {
   final List<String> skills;
   final int lastEditedTime;
 
-  AppUser({
+  ProfileModel({
     required this.uid,
     required this.name,
     required this.email,
@@ -16,8 +16,8 @@ class AppUser {
     required this.lastEditedTime,
   });
 
-  factory AppUser.fromMap(Map<String, dynamic> map) {
-    return AppUser(
+  factory ProfileModel.fromMap(Map<String, dynamic> map) {
+    return ProfileModel(
       uid: map['uid'] ?? '',
       name: map['name'] ?? '',
       email: map['email'] ?? '',
