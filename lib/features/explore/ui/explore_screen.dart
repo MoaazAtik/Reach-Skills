@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'explore_viewmodel.dart';
+import 'interest_cart.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
@@ -21,11 +22,13 @@ class ExploreScreen extends StatelessWidget {
     }
 
     return ListView(
+      padding: const EdgeInsets.all(16),
       children: [
         for (final interest in interests)
-          ListTile(
-            title: Text(interest.title),
-            subtitle: Text('by ${interest.userName}'),
+          InterestCart(
+            interestType: interest.interestType,
+            title: interest.title,
+            userName: interest.userName,
           ),
       ],
     );
