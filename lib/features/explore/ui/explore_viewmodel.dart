@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../common/data/interest_model.dart';
 import '../../profile/domain/profile_repository.dart';
 
 class ExploreViewModel extends ChangeNotifier {
@@ -9,15 +10,18 @@ class ExploreViewModel extends ChangeNotifier {
   }
 
   final ProfileRepository _profileRepository;
-  Set<String>? skills;
+  List<InterestModel>? interests;
+  List<InterestType> interestTypes = [InterestType.skill, InterestType.wish];
   bool loading = true;
 
   void init() {
-    getSkills();
+    getInterests(interestTypes);
   }
 
-  Future<void> getSkills() async {
-    skills = await _profileRepository.getSkills();
+  Future<void> getInterests(List<InterestType> interestTypes) async {
+    loading = true;
+    this.interestTypes = interestTypes;
+    interests = await _profileRepository.getInterests(interestTypes);
     loading = false;
     notifyListeners();
   }

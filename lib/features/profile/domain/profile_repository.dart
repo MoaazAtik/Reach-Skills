@@ -1,3 +1,4 @@
+import '../../common/data/interest_model.dart';
 import 'profile_model.dart';
 
 abstract class ProfileRepository {
@@ -5,5 +6,5 @@ abstract class ProfileRepository {
 
   Future<ProfileModel?> getProfile(String uid);
 
-  Future<Set<String>> getSkills();
+  Future<List<InterestModel>> getInterests(List<InterestType> interestTypes);
 }

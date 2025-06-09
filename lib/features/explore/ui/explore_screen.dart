@@ -9,17 +9,19 @@ class ExploreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exploreViewModel = context.watch<ExploreViewModel>();
-    final skills = exploreViewModel.skills;
+    final interests = exploreViewModel.interests;
     final loading = exploreViewModel.loading;
 
     if (loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    if (skills == null || skills.isEmpty) {
+    if (interests == null || interests.isEmpty) {
       return const Text('No skills found');
     }
 
-    return ListView(children: [for (final skill in skills) Text(skill)]);
+    return ListView(
+      children: [for (final interest in interests) Text(interest.title)],
+    );
   }
 }
