@@ -43,6 +43,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
 
       for (var doc in snapshot.docs) {
         String uid = doc.data()['uid'];
+        String userName = doc.data()['name'];
 
         List<dynamic> profileSkillsList =
             interestTypes.contains(InterestType.skill)
@@ -53,10 +54,14 @@ class ProfileRepositoryImpl extends ProfileRepository {
                 ? doc.data()['wishes']
                 : [];
         for (var skillInAProfile in profileSkillsList) {
-          allInterests.add(SkillModel(uid: uid, title: skillInAProfile));
+          allInterests.add(
+            SkillModel(title: skillInAProfile, uid: uid, userName: userName),
+          );
         }
         for (var wishInAProfile in profileWishesList) {
-          allInterests.add(WishModel(uid: uid, title: wishInAProfile));
+          allInterests.add(
+            WishModel(title: wishInAProfile, uid: uid, userName: userName),
+          );
         }
       }
       controller.add(allInterests);
@@ -70,5 +75,29 @@ class ProfileRepositoryImpl extends ProfileRepository {
     };
 
     return controller.stream;
+  }
+
+  @override
+  Future<String> getUserName(String uid) async {
+    final doc = await _firestore.collection('profiles').doc(uid).get();
+    if (doc.exists) {
+      return doc.data()!['name'];
+    } else {
+      return 'Unknown User';
+    }
+  }
+
+  Future<List<String>> getUserNames(List<String> userIds) async {
+    List<String> names = [];
+
+    for (var userId in userIds) {
+      final doc = await _firestore.collection('profiles').doc(userId).get();
+      if (doc.exists) {
+        names.add(doc.data()!['name']);
+      } else {
+        names.add('Unknown User');
+      }
+    }
+    return names;
   }
 }

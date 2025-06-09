@@ -9,4 +9,7 @@ abstract class ProfileRepository {
   Stream<List<InterestModel>> getInterestsStream(
     List<InterestType> interestTypes,
   );
+
+  /// Get list of user names matching the provided user id
+  Future<String> getUserName(String uid);
 }

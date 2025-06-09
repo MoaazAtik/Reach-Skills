@@ -21,7 +21,13 @@ class ExploreScreen extends StatelessWidget {
     }
 
     return ListView(
-      children: [for (final interest in interests) Text(interest.title)],
+      children: [
+        for (final interest in interests)
+          ListTile(
+            title: Text(interest.title),
+            subtitle: Text('by ${interest.userName}'),
+          ),
+      ],
     );
   }
 }
