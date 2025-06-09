@@ -8,7 +8,7 @@ class InterestCard extends StatelessWidget {
     required this.interestType,
     required this.title,
     required this.userName,
-    required this.onReach
+    required this.onReach,
   });
 
   final InterestType interestType;
@@ -20,8 +20,8 @@ class InterestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cardColor =
         interestType == InterestType.skill
-            ? Colors.green.withValues(alpha: 0.7)
-            : Colors.blue.withValues(alpha: 0.7);
+            ? Color(0x96AAFFD0)
+            : Color(0xD58DBAF6);
 
     // final buttonTextColor = Colors.red;
 
@@ -31,24 +31,24 @@ class InterestCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: Container(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(8),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   title,
-                  style: TextStyle(fontSize: 24, color: Colors.grey[900]),
+                  style: TextStyle(fontSize: 20, color: Colors.grey[900]),
                 ),
                 Container(height: 10),
                 Text(
                   userName,
-                  style: TextStyle(fontSize: 15, color: Colors.grey[900]),
+                  style: TextStyle(fontSize: 13, color: Colors.grey[900]),
                 ),
               ],
             ),
-            const Spacer(),
             TextButton(
               style: TextButton.styleFrom(foregroundColor: Colors.transparent),
               child: const Text(

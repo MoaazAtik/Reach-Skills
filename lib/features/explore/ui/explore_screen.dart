@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'explore_viewmodel.dart';
-import 'interest_cart.dart';
+import 'interest_card.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
@@ -21,16 +21,33 @@ class ExploreScreen extends StatelessWidget {
       return const Text('No skills found');
     }
 
-    return ListView(
-      padding: const EdgeInsets.all(16),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final interest in interests)
-          InterestCard(
-            interestType: interest.interestType,
-            title: interest.title,
-            userName: interest.userName,
-            onReach: () => print('Reach ${interest.userName}'),
+        Padding(
+          padding: const EdgeInsets.all(30),
+          child: Text(
+            'Explore '
+            '${interests.length} interests:',
           ),
+        ),
+        Expanded(
+          child: GridView(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 400,
+              childAspectRatio: 3 / 1,
+            ),
+            children: [
+              for (final interest in interests)
+                InterestCard(
+                  interestType: interest.interestType,
+                  title: interest.title,
+                  userName: interest.userName,
+                  onReach: () => print('Reach ${interest.userName}'),
+                ),
+            ],
+          ),
+        ),
       ],
     );
   }
