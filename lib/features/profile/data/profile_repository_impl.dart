@@ -8,17 +8,17 @@ class ProfileRepositoryImpl extends ProfileRepository {
   final _firestore = FirebaseFirestore.instance;
 
   @override
-  Future<void> saveUserProfile(ProfileModel profile) async {
+  Future<void> saveProfile(ProfileModel profile) async {
     await _firestore
-        .collection('users')
+        .collection('profiles')
         .doc(profile.uid)
         .set(profile.toMap());
   }
 
   @override
-  Future<ProfileModel?> getUserProfile(String uid) async {
+  Future<ProfileModel?> getProfile(String uid) async {
     final doc = await _firestore
-        .collection('users')
+        .collection('profiles')
         .doc(uid)
         .get();
 

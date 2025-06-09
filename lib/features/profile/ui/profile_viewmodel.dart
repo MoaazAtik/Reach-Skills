@@ -20,7 +20,7 @@ class ProfileViewModel extends ChangeNotifier {
    because profile is already loaded.*/
   Future<void> loadProfile(String? uid) async {
     if (uid != null) {
-      profile = await _profileRepository.getUserProfile(uid);
+      profile = await _profileRepository.getProfile(uid);
       loading = false;
       notifyListeners();
     }
@@ -62,7 +62,7 @@ class ProfileViewModel extends ChangeNotifier {
 
     if (!edited) return 'No changes to save';
 
-    await _profileRepository.saveUserProfile(newProfile);
+    await _profileRepository.saveProfile(newProfile);
     loadProfile(profile!.uid);
     edited = false; // reset edited flag
 
