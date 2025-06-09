@@ -4,4 +4,8 @@ abstract class AuthRepository {
   Stream<User?> getAuthStateChanges();
 
   Future<void> signOut();
+
+  String? getUserId();
+
+  String? getUserEmail();
 }

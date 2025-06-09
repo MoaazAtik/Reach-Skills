@@ -18,6 +18,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        Provider(create: (context) => AuthRepositoryImpl()),
         Provider(create: (context) => ProfileRepositoryImpl()),
         ChangeNotifierProvider(
           create:
@@ -27,11 +28,14 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create:
-              (context) => AuthViewModel(authRepository: AuthRepositoryImpl()),
+              (context) => AuthViewModel(
+                authRepository: context.read<AuthRepositoryImpl>(),
+              ),
         ),
         ChangeNotifierProvider(
           create:
               (context) => ProfileViewModel(
+                authRepository: context.read<AuthRepositoryImpl>(),
                 profileRepository: context.read<ProfileRepositoryImpl>(),
               ),
         ),
