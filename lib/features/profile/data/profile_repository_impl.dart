@@ -76,28 +76,4 @@ class ProfileRepositoryImpl extends ProfileRepository {
 
     return controller.stream;
   }
-
-  @override
-  Future<String> getUserName(String uid) async {
-    final doc = await _firestore.collection('profiles').doc(uid).get();
-    if (doc.exists) {
-      return doc.data()!['name'];
-    } else {
-      return 'Unknown User';
-    }
-  }
-
-  Future<List<String>> getUserNames(List<String> userIds) async {
-    List<String> names = [];
-
-    for (var userId in userIds) {
-      final doc = await _firestore.collection('profiles').doc(userId).get();
-      if (doc.exists) {
-        names.add(doc.data()!['name']);
-      } else {
-        names.add('Unknown User');
-      }
-    }
-    return names;
-  }
 }
