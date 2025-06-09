@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'app.dart';
 import 'features/auth/data/auth_repository_impl.dart';
 import 'features/auth/ui/auth_viewmodel.dart';
+import 'features/explore/ui/explore_viewmodel.dart';
 import 'features/profile/data/profile_repository_impl.dart';
 import 'features/profile/ui/profile_viewmodel.dart';
 import 'firebase_options.dart';
@@ -17,6 +18,12 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create:
+              (context) => ExploreViewModel(
+                profileRepository: ProfileRepositoryImpl(),
+              ),
+        ),
         ChangeNotifierProvider(
           create:
               (context) => AuthViewModel(authRepository: AuthRepositoryImpl()),

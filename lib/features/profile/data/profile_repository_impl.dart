@@ -28,4 +28,19 @@ class ProfileRepositoryImpl extends ProfileRepository {
     return null;
   }
 
+  /// get the skills from all profiles
+  @override
+  Future<Set<String>> getSkills() async {
+    Set<String> allSkills = {};
+
+    await _firestore.collection('profiles').get().then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        List<dynamic> profileSkillsList = doc.data()['skills'];
+        for (var skillInAProfile in profileSkillsList) {
+          allSkills.add(skillInAProfile);
+        }
+      }
+    });
+    return allSkills;
+  }
 }

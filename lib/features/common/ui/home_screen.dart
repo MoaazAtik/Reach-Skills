@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../auth/ui/auth_screen.dart';
 import '../../auth/ui/auth_viewmodel.dart';
+import '../../explore/ui/explore_screen.dart';
 import '../../profile/ui/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -59,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child:
           switch (_selectedIndex) {
-            0 => const Text('Explore Screen'),
+            0 => const ExploreScreen(),
             1 => const ProfileScreen(),
             _ => const Text('Unknown Screen'),
           },
