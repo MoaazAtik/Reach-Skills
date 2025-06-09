@@ -18,10 +18,11 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        Provider(create: (context) => ProfileRepositoryImpl()),
         ChangeNotifierProvider(
           create:
               (context) => ExploreViewModel(
-                profileRepository: ProfileRepositoryImpl(),
+                profileRepository: context.read<ProfileRepositoryImpl>(),
               ),
         ),
         ChangeNotifierProvider(
@@ -30,8 +31,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create:
-              (context) =>
-                  ProfileViewModel(profileRepository: ProfileRepositoryImpl()),
+              (context) => ProfileViewModel(
+                profileRepository: context.read<ProfileRepositoryImpl>(),
+              ),
         ),
       ],
       child: SkillSwapApp(),
