@@ -12,4 +12,14 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<void> signOut() {
     return FirebaseAuth.instance.signOut();
   }
+
+  @override
+  String? getUserId() {
+    return FirebaseAuth.instance.currentUser?.uid;
+  }
+
+  @override
+  String? getUserEmail() {
+    return FirebaseAuth.instance.currentUser?.email;
+  }
 }

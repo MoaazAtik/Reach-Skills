@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../auth/ui/auth_screen.dart';
-import '../../auth/ui/auth_viewmodel.dart';
 import '../domain/profile_model.dart';
 import 'profile_viewmodel.dart';
 
@@ -25,18 +24,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController _wishesController;
 
   String? _uid;
+  String? _email;
   ProfileModel? _profile;
 
   @override
   void initState() {
     super.initState();
-    _uid = context.read<AuthViewModel>().currentUser?.uid;
-    context.read<ProfileViewModel>().loadProfile(_uid);
+    context.read<ProfileViewModel>().loadProfile();
   }
 
   @override
   Widget build(BuildContext context) {
 
+    _uid = context.watch<ProfileViewModel>().uid;
+    _email = context.watch<ProfileViewModel>().email;
     _profile = context.watch<ProfileViewModel>().profile;
     bool loading  = context.watch<ProfileViewModel>().loading;
 
@@ -45,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _skillsController = TextEditingController(text: _profile?.skills.join(', '));
     _wishesController = TextEditingController(text: _profile?.wishes.join(', '));
 
-    if (_uid == null || _profile == null) {
+    if (_uid == null) {
       return Column(
         children: [
           const SizedBox(height: 40),
@@ -106,7 +107,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: const Text('Save Profile'),
               ),
               const SizedBox(height: 24),
-              Text('Last edited: ${DateTime.fromMillisecondsSinceEpoch(_profile!.lastEditedTime).toString()}')
+              Text('Email: $_email'),
+              const SizedBox(height: 24),
+              if (_profile != null)
+                Text('Last edited: ${DateTime.fromMillisecondsSinceEpoch(_profile!.lastEditedTime).toString()}')
             ],
           ),
         ),
@@ -121,13 +125,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (!_formKey.currentState!.validate()) {
       updatingResult = 'Please fill in all required fields.';
-    } else if (_uid == null || _profile == null) {
+    } else if (_uid == null) {
       updatingResult = 'Unknown Error. Try signing out and signing in again.';
     } else {
       final newProfile = ProfileModel(
         uid: _uid!,
         name: _nameController.text.trim(),
-        email: _profile!.email,
+        email: _email!,
         bio: _bioController.text.trim(),
         skills: _skillsController.text
             .trim()
