@@ -34,29 +34,9 @@ class ChatViewModel extends ChangeNotifier {
   void init() {
     startAuthStateSubscription();
     startAllChatsSubscription();
-
-    // temporary for testing purposes
-    // startMessagesSubscription('6hpVaSPv2EW0tPht8l8K');
-    // _chatRepository.sendMessage(
-    //   senderId: 'uYGz8nhkXnUDqwtK0ewpvQTKqyl2',
-    //   senderName: 'Albert',
-    //   receiverId: 'ytrbrAbAQJapK1QpEJ8t2i0IMaM2',
-    //   receiverName: 'NewUs',
-    //   content: 'test message',
-    // );
-
-    // print(allChats);
-    // print(messages);
   }
 
   void sendMessage(String chatId, String content) {
-    // final message = MessageModel(
-    //   id: DateTime.now().millisecondsSinceEpoch.toString(),
-    //   chatId: chatId,
-    //   createdAt: DateTime.now().millisecondsSinceEpoch,
-    //   updatedAt: DateTime.now().millisecondsSinceEpoch,
-    //   content: content,
-    // );
     _chatRepository.sendMessageWithChatId(chatId: chatId, content: content);
   }
 
@@ -97,7 +77,6 @@ class ChatViewModel extends ChangeNotifier {
       loading = false;
       notifyListeners();
     });
-    print('messages $messages');
   }
 
   @override

@@ -13,9 +13,9 @@ class MessageModel {
     required this.content,
   });
 
-  factory MessageModel.fromMap(Map<String, dynamic> map) {
+  factory MessageModel.fromMapAndId(String id, Map<String, dynamic> map) {
     return MessageModel(
-      id: map['id'] ?? '',
+      id: id,
       chatId: map['chatId'] ?? '',
       createdAt: map['createdAt'].toInt() ?? 0,
       updatedAt: map['updatedAt'].toInt() ?? 0,

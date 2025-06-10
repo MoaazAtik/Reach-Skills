@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../domain/chat_entity.dart';
 import '../domain/chat_repository.dart';
 import 'chat_model.dart';
 import 'message_model.dart';
@@ -122,9 +121,7 @@ class ChatRepositoryImpl extends ChatRepository {
         .listen((snapshot) {
           final List<ChatModel> allChats = [];
           for (var doc in snapshot.docs) {
-            allChats.add(
-              ChatModel.withEntity(ChatEntity.fromMap(doc.data()), []),
-            );
+            allChats.add(ChatModel.fromMapAndId(doc.id, doc.data()));
           }
           controller.add(allChats);
         });
@@ -147,9 +144,8 @@ class ChatRepositoryImpl extends ChatRepository {
         .listen((snapshot) {
           final List<MessageModel> messages = [];
           for (var doc in snapshot.docs) {
-            messages.add(MessageModel.fromMap(doc.data()));
+            messages.add(MessageModel.fromMapAndId(doc.id, doc.data()));
           }
-          print('messages in repo $messages');
           controller.add(messages);
         });
     controller.onCancel = () {
