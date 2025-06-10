@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../auth/ui/auth_screen.dart';
 import '../../auth/ui/auth_viewmodel.dart';
+import '../../chat/ui/chat_screen.dart';
 import '../../explore/ui/explore_screen.dart';
 import '../../profile/ui/profile_screen.dart';
 
@@ -62,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
           switch (_selectedIndex) {
             0 => const ExploreScreen(),
             1 => const ProfileScreen(),
+            2 => const ChatScreen(),
             _ => const Text('Unknown Screen'),
           },
       ),
@@ -70,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(ChatScreen.icon), label: ChatScreen.title),
         ],
         currentIndex: _selectedIndex,
         onTap: (index) {
