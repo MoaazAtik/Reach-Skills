@@ -1,9 +1,23 @@
 import '../data/chat_model.dart';
+import '../data/message_model.dart';
 
 abstract class ChatRepository {
-  Future<void> saveChat(ChatModel chat);
+  // from explore screen
+  void sendMessage({
+    required String senderId,
+    required String senderName,
+    required String receiverId,
+    required String receiverName,
+    required String content,
+  });
 
-  Future<ChatModel?> getChat(String id);
+  // from messages screen
+  Future<void> sendMessageWithChatId({
+    required String chatId,
+    required String content,
+  });
 
   Stream<List<ChatModel>> getAllChatsStream();
+
+  Stream<List<MessageModel>> getMessagesStream(String chatId);
 }

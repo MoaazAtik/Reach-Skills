@@ -18,6 +18,9 @@ class ChatScreen extends StatelessWidget {
     final loading = chatViewModel.loading;
     final allChats = chatViewModel.allChats;
 
+    // temporary for testing purposes
+    final messages = chatViewModel.messages;
+
     if (!loggedIn) {
       return Column(
         children: [
@@ -49,9 +52,9 @@ class ChatScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         final chat = allChats[index];
         return ListTile(
-          title: Text(chat.message.content),
-          subtitle: Text(chat.message.senderName),
-          trailing: Text(chat.lastUpdated.toString()),
+          title: Text('sender: ${chat.senderName}'),
+          subtitle: Text('receiver: ${chat.receiverName}'),
+          trailing: Text('${chat.messages.length} messages'),
         );
       },
     );

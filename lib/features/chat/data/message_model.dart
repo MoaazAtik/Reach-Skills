@@ -1,43 +1,35 @@
 class MessageModel {
   final String id;
-  final String senderId;
-  final String receiverId;
-  final String senderName;
-  final String receiverName;
+  final String chatId;
+  final int createdAt;
+  final int updatedAt;
   final String content;
-  final int timestamp;
 
   MessageModel({
     required this.id,
-    required this.senderId,
-    required this.receiverId,
-    required this.senderName,
-    required this.receiverName,
+    required this.chatId,
+    required this.createdAt,
+    required this.updatedAt,
     required this.content,
-    required this.timestamp,
   });
 
   factory MessageModel.fromMap(Map<String, dynamic> map) {
     return MessageModel(
       id: map['id'] ?? '',
-      senderId: map['senderId'] ?? '',
-      receiverId: map['receiverId'] ?? '',
-      senderName: map['senderName'] ?? '',
-      receiverName: map['receiverName'] ?? '',
+      chatId: map['chatId'] ?? '',
+      createdAt: map['createdAt'].toInt() ?? 0,
+      updatedAt: map['updatedAt'].toInt() ?? 0,
       content: map['content'] ?? '',
-      timestamp: map['timestamp'].toInt() ?? 0,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'sender': senderId,
-      'receiver': receiverId,
-      'senderName': senderName,
-      'receiverName': receiverName,
+      'chatId': chatId,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
       'content': content,
-      'timestamp': timestamp,
     };
   }
 }
