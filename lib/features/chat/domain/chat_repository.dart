@@ -3,7 +3,7 @@ import '../data/message_model.dart';
 
 abstract class ChatRepository {
   // from explore screen
-  void sendMessage({
+  Future<void> reachAndSendMessage({
     required String senderId,
     required String senderName,
     required String receiverId,
@@ -12,9 +12,8 @@ abstract class ChatRepository {
   });
 
   // from messages screen
-  Future<void> sendMessageWithChatId({
-    required String chatId,
-    required String content,
+  Future<void> sendMessageViaMessageModel({
+    required MessageModel messageModel,
   });
 
   Stream<List<ChatModel>> getAllChatsStream();

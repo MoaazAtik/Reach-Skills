@@ -37,7 +37,11 @@ class ChatViewModel extends ChangeNotifier {
   }
 
   void sendMessage(String chatId, String content) {
-    _chatRepository.sendMessageWithChatId(chatId: chatId, content: content);
+    MessageModel messageModel = MessageModel.fromChatIdAndContent(
+      chatId: chatId,
+      content: content,
+    );
+    _chatRepository.sendMessageViaMessageModel(messageModel: messageModel);
   }
 
   void startAuthStateSubscription() {

@@ -74,7 +74,7 @@ class ChatRepositoryImpl extends ChatRepository {
   }
 
   @override
-  Future<void> sendMessage({
+  Future<void> reachAndSendMessage({
     required String senderId,
     required String senderName,
     required String receiverId,
@@ -90,23 +90,25 @@ class ChatRepositoryImpl extends ChatRepository {
     });
 
     if (chatId != null) {
-      sendMessageWithChatId(chatId: chatId!, content: content);
+      sendMessageViaMessageModel(
+        messageModel: MessageModel.fromChatIdAndContent(
+          chatId: chatId!,
+          content: content,
+        ),
+      );
     } else {
       throw Exception('Chat not found');
     }
   }
 
   @override
-  Future<void> sendMessageWithChatId({
-    required String chatId,
-    required String content,
+  Future<void> sendMessageViaMessageModel({
+    required MessageModel messageModel,
   }) async {
-    await _firestore.collection('messages').add({
-      'chatId': chatId,
-      'createdAt': DateTime.now().millisecondsSinceEpoch,
-      'updatedAt': DateTime.now().millisecondsSinceEpoch,
-      'content': content,
-    });
+    final messageModelMap = messageModel.toMap();
+    final newDocRef = _firestore.collection('chats').doc();
+    messageModelMap['id'] = newDocRef.id;
+    await newDocRef.set(messageModelMap);
   }
 
   @override

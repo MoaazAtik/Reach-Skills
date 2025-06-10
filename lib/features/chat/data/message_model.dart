@@ -23,6 +23,19 @@ class MessageModel {
     );
   }
 
+  factory MessageModel.fromChatIdAndContent({
+    required String chatId,
+    required String content,
+  }) {
+    return MessageModel(
+      id: '',
+      chatId: chatId,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      updatedAt: DateTime.now().millisecondsSinceEpoch,
+      content: content,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
