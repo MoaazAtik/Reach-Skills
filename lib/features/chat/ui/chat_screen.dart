@@ -47,10 +47,10 @@ class ChatScreen extends StatelessWidget {
     return ListView.builder(
       itemCount: allChats.length,
       itemBuilder: (context, index) {
-        final chat = allChats[index];
+        // final chat = allChats[index];
         return ListTile(
-          title: Text('sender: ${chat.senderName}'),
-          subtitle: Text('receiver: ${chat.receiverName}'),
+          // title: Text('sender: ${chat.senderName}'),
+          // subtitle: Text('receiver: ${chat.receiverName}'),
         );
       },
     );

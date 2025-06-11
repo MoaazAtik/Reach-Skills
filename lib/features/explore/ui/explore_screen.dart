@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../chat/ui/messages_screen.dart';
 import 'explore_viewmodel.dart';
 import 'interest_card.dart';
 
@@ -43,7 +44,34 @@ class ExploreScreen extends StatelessWidget {
                   interestType: interest.interestType,
                   title: interest.title,
                   userName: interest.userName,
-                  onReach: () => print('Reach ${interest.userName}'),
+                  onReach: () async {
+
+                    String? errorMessage;
+                    errorMessage = await exploreViewModel.updateFields(
+                        currentReceiverId: interest.uid,
+                        currentReceiverName: interest.userName
+                    );
+
+                    if (errorMessage != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(errorMessage)),
+                      );
+                      return;
+                    }
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:
+                            (_) => MessagesScreen.fromExplore(
+                              currentSenderId: exploreViewModel.currentSenderId,
+                              currentSenderName: exploreViewModel.currentSenderName,
+                              currentReceiverId: exploreViewModel.currentReceiverId,
+                              currentReceiverName: exploreViewModel.currentReceiverName,
+                            ),
+                      ),
+                    );
+                  },
+
                 ),
             ],
           ),

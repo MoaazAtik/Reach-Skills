@@ -3,20 +3,16 @@ import '../data/message_model.dart';
 
 abstract class ChatRepository {
   // from explore screen
-  Future<void> reachAndSendMessage({
-    required String senderId,
-    required String senderName,
-    required String receiverId,
-    required String receiverName,
-    required String content,
+  Future<String?> getChatIdOrCreateChat({
+    required String personAId,
+    required String personAName, // to create a chat
+    required String personBId,
+    required String personBName, // to create a chat
   });
-
-  // from messages screen
-  Future<void> sendMessageViaMessageModel({
-    required MessageModel messageModel,
-  });
-
-  Stream<List<ChatModel>> getAllChatsStream();
 
   Stream<List<MessageModel>> getMessagesStream(String chatId);
+
+  Future<void> sendMessage(MessageModel messageModel);
+
+  Stream<List<ChatModel>> getAllChatsStream();
 }

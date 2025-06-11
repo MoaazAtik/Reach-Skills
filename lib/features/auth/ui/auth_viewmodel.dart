@@ -41,12 +41,9 @@ class AuthViewModel extends ChangeNotifier {
       },
       onError: (object, stackTrace) {
         errorAuthMessage = object.toString();
-        print('Error: $object');
-        print('Stack trace: $stackTrace');
         notifyListeners();
       },
       onDone: () {
-        print('Auth state subscription done');
         notifyListeners();
       },
     );

@@ -7,6 +7,7 @@ import 'features/auth/data/auth_repository_impl.dart';
 import 'features/auth/ui/auth_viewmodel.dart';
 import 'features/chat/data/chat_repository_impl.dart';
 import 'features/chat/ui/chat_viewmodel.dart';
+import 'features/chat/ui/messages_viewmodel.dart';
 import 'features/explore/ui/explore_viewmodel.dart';
 import 'features/profile/data/profile_repository_impl.dart';
 import 'features/profile/ui/profile_viewmodel.dart';
@@ -26,6 +27,7 @@ void main() async {
         ChangeNotifierProvider(
           create:
               (context) => ExploreViewModel(
+                authRepository: context.read<AuthRepositoryImpl>(),
                 profileRepository: context.read<ProfileRepositoryImpl>(),
               ),
         ),
@@ -45,6 +47,13 @@ void main() async {
         ChangeNotifierProvider(
           create:
               (context) => ChatViewModel(
+                authRepository: context.read<AuthRepositoryImpl>(),
+                chatRepository: context.read<ChatRepositoryImpl>(),
+              ),
+        ),
+        ChangeNotifierProvider(
+          create:
+              (context) => MessagesViewModel(
                 authRepository: context.read<AuthRepositoryImpl>(),
                 chatRepository: context.read<ChatRepositoryImpl>(),
               ),
