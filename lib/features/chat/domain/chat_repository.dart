@@ -2,6 +2,8 @@ import '../data/chat_model.dart';
 import '../data/message_model.dart';
 
 abstract class ChatRepository {
+  Stream<List<MessageModel>>? get messagesStream;
+
   // from explore screen
   Future<String?> getChatIdOrCreateChat({
     required String personAId,
@@ -9,8 +11,6 @@ abstract class ChatRepository {
     required String personBId,
     required String personBName, // to create a chat
   });
-
-  Stream<List<MessageModel>>? get messagesStream;
 
   void subscribeToMessagesStream(String chatId);
 

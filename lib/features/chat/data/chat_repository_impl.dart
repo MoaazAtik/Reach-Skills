@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 import '../domain/chat_repository.dart';
 import 'chat_model.dart';
@@ -9,6 +8,18 @@ import 'message_model.dart';
 
 class ChatRepositoryImpl extends ChatRepository {
   final _firestore = FirebaseFirestore.instance;
+
+  final StreamController<List<MessageModel>> _messagesController =
+      StreamController<List<MessageModel>>.broadcast();
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>?
+  _messagesSubscription;
+  int _messagesSubscriptionCount = 0;
+  Stream<List<MessageModel>>? _messagesStream;
+
+  @override
+  Stream<List<MessageModel>>? get messagesStream {
+    return _messagesStream;
+  }
 
   // from explore screen
   @override
@@ -96,20 +107,6 @@ class ChatRepositoryImpl extends ChatRepository {
     await newDocRef.set(messageModelMap);
   }
 
-
-
-  Stream<List<MessageModel>>? _messagesStream;
-  @override
-  Stream<List<MessageModel>>? get messagesStream {
-    return _messagesStream;
-  }
-  // Stream<List<MessageModel>> messagesStream = Stream.value([]);
-  //   (Stream.value([]).asBroadcastStream() as Stream<List<MessageModel>>);
-
-  final StreamController<List<MessageModel>> _messagesController = StreamController<List<MessageModel>>.broadcast();
-  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _messagesSubscription;
-  int _messagesSubscriptionCount = 0;
-
   @override
   void subscribeToMessagesStream(String chatId) {
     _messagesSubscriptionCount++;
@@ -123,21 +120,24 @@ class ChatRepositoryImpl extends ChatRepository {
           .orderBy(MessageModel.FIELD_UPDATED_AT, descending: true)
           .limit(50)
           .snapshots()
-          .listen((snapshot) {
-        final List<MessageModel> tempMessagesList = [];
-        for (var doc in snapshot.docs) {
-          tempMessagesList.add(MessageModel.fromMapAndId(doc.id, doc.data()));
-        }
+          .listen(
+            (snapshot) {
+              final List<MessageModel> tempMessagesList = [];
+              for (var doc in snapshot.docs) {
+                tempMessagesList.add(
+                  MessageModel.fromMapAndId(doc.id, doc.data()),
+                );
+              }
 
-        _messagesController.sink.add(tempMessagesList);
-          },
-          onError: ((error, stackTrace) {
-            _messagesController.addError(error);
-          })
-      );
+              _messagesController.sink.add(tempMessagesList);
+            },
+            onError: ((error, stackTrace) {
+              _messagesController.addError(error);
+            }),
+          );
     }
 
-    _messagesController.onCancel =(() {
+    _messagesController.onCancel = (() {
       _messagesSubscription?.cancel();
     });
   }
@@ -150,7 +150,6 @@ class ChatRepositoryImpl extends ChatRepository {
       _messagesSubscription?.cancel();
     }
   }
-
 
   @override
   Stream<List<ChatModel>> getAllChatsStream() {

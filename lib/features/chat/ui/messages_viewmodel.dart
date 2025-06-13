@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../auth/domain/auth_repository.dart';
-import '../data/chat_repository_impl.dart';
 import '../data/message_model.dart';
 import '../domain/chat_repository.dart';
 
@@ -25,7 +24,10 @@ class MessagesViewModel extends ChangeNotifier {
   String? currentSenderName;
   String? currentReceiverId;
   String? currentReceiverName;
+
   bool loading = true;
+  List<MessageModel>? messages;
+  dynamic messagesError;
   bool _loggedIn = false;
 
   bool get loggedIn => _loggedIn;
@@ -70,12 +72,7 @@ class MessagesViewModel extends ChangeNotifier {
   void setChatId(String chatId) {
     this.chatId = chatId;
     startMessagesSubscription(chatId);
-    // notifyListeners();
   }
-
-
-  List<MessageModel>? messages;
-  dynamic messagesError;
 
   void startMessagesSubscription(String chatId) {
     _chatRepository.subscribeToMessagesStream(chatId);
@@ -83,19 +80,20 @@ class MessagesViewModel extends ChangeNotifier {
     if (_chatRepository.messagesStream == null) {
       loading = true;
     } else {
-      _chatRepository.messagesStream!.listen((data) {
-        messages = data;
-        messagesError = null;
-        loading = false;
-        notifyListeners();
-      },
-      onError: (errorObject, stackTrace) {
-        messagesError = errorObject;
-        notifyListeners();
-      });
+      _chatRepository.messagesStream!.listen(
+        (data) {
+          messages = data;
+          messagesError = null;
+          loading = false;
+          notifyListeners();
+        },
+        onError: (errorObject, stackTrace) {
+          messagesError = errorObject;
+          notifyListeners();
+        },
+      );
     }
   }
-
 
   Future<void> sendMessage(String content) async {
     MessageModel messageModel = MessageModel.toBeStored(
