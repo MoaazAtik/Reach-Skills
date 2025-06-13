@@ -11,6 +11,17 @@ import '../domain/profile_repository.dart';
 class ProfileRepositoryImpl extends ProfileRepository {
   final _firestore = FirebaseFirestore.instance;
 
+  int _interestsSubscriptionCount = 0;
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>?
+  _interestsSubscription;
+  final StreamController<List<InterestModel>> _interestsController =
+      StreamController<List<InterestModel>>.broadcast();
+  Stream<List<InterestModel>>? _interestsStream;
+
+  /// Get stream of the interests from all profiles
+  @override
+  Stream<List<InterestModel>>? get interestsStream => _interestsStream;
+
   @override
   Future<void> saveProfile(ProfileModel profile) async {
     await _firestore
@@ -29,51 +40,72 @@ class ProfileRepositoryImpl extends ProfileRepository {
     return null;
   }
 
-  /// Get stream of the interests from all profiles
   @override
-  Stream<List<InterestModel>> getInterestsStream(
-    List<InterestType> interestTypes,
-  ) {
-    final controller = StreamController<List<InterestModel>>();
+  void subscribeToInterestsStream({
+    List<InterestType> interestTypes = InterestType.values,
+  }) {
+    _interestsSubscriptionCount++;
 
-    final subscription = _firestore.collection('profiles').snapshots().listen((
-      snapshot,
-    ) {
-      final List<InterestModel> allInterests = [];
+    if (_interestsSubscriptionCount <= 1) {
+      _interestsStream = _interestsController.stream;
 
-      for (var doc in snapshot.docs) {
-        String uid = doc.data()['uid'];
-        String userName = doc.data()['name'];
+      _interestsSubscription = _firestore
+          .collection('profiles')
+          .snapshots()
+          .listen(
+            (snapshot) {
+              final List<InterestModel> tempInterests = [];
 
-        List<dynamic> profileSkillsList =
-            interestTypes.contains(InterestType.skill)
-                ? doc.data()['skills']
-                : [];
-        List<dynamic> profileWishesList =
-            interestTypes.contains(InterestType.wish)
-                ? doc.data()['wishes']
-                : [];
-        for (var skillInAProfile in profileSkillsList) {
-          allInterests.add(
-            SkillModel(title: skillInAProfile, uid: uid, userName: userName),
+              for (var doc in snapshot.docs) {
+                String uid = doc.data()['uid'];
+                String userName = doc.data()['name'];
+
+                List<dynamic> profileSkillsList =
+                    interestTypes.contains(InterestType.skill)
+                        ? doc.data()['skills']
+                        : [];
+                List<dynamic> profileWishesList =
+                    interestTypes.contains(InterestType.wish)
+                        ? doc.data()['wishes']
+                        : [];
+                for (var skillInAProfile in profileSkillsList) {
+                  tempInterests.add(
+                    SkillModel(
+                      title: skillInAProfile,
+                      uid: uid,
+                      userName: userName,
+                    ),
+                  );
+                }
+                for (var wishInAProfile in profileWishesList) {
+                  tempInterests.add(
+                    WishModel(
+                      title: wishInAProfile,
+                      uid: uid,
+                      userName: userName,
+                    ),
+                  );
+                }
+              }
+              _interestsController.sink.add(tempInterests);
+            },
+            onError: (errorObject, stackTrace) {
+              _interestsController.addError(errorObject);
+            },
           );
-        }
-        for (var wishInAProfile in profileWishesList) {
-          allInterests.add(
-            WishModel(title: wishInAProfile, uid: uid, userName: userName),
-          );
-        }
-      }
-      controller.add(allInterests);
+    }
+
+    _interestsController.onCancel = (() {
+      _interestsSubscription?.cancel();
     });
+  }
 
-    controller.onCancel = () {
-      subscription.cancel();
-    };
-    controller.onListen = () {
-      subscription.resume();
-    };
-
-    return controller.stream;
+  @override
+  void unsubscribeFromInterestsStream() {
+    _interestsSubscriptionCount--;
+    if (_interestsSubscriptionCount < 1) {
+      _interestsController.close();
+      _interestsSubscription?.cancel();
+    }
   }
 }

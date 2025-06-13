@@ -11,11 +11,17 @@ class ExploreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exploreViewModel = context.watch<ExploreViewModel>();
-    final interests = exploreViewModel.interests;
     final loading = exploreViewModel.loading;
+
+    final interests = exploreViewModel.interests;
+    final interestsStreamError = exploreViewModel.interestsStreamError;
 
     if (loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (interestsStreamError != null) {
+      return Center(child: Text(interestsStreamError.toString()));
     }
 
     if (interests == null || interests.isEmpty) {

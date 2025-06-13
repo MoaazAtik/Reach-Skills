@@ -21,7 +21,8 @@ class ExploreViewModel extends ChangeNotifier {
 
   StreamSubscription<List<InterestModel>>? _interestsSubscription;
   List<InterestModel>? interests;
-  List<InterestType> interestTypes = [InterestType.skill, InterestType.wish];
+  List<InterestType> interestTypes = InterestType.values;
+  dynamic interestsStreamError;
   bool loading = true;
 
   String? currentSenderId;
@@ -63,22 +64,32 @@ class ExploreViewModel extends ChangeNotifier {
 
   void startInterestsSubscription(List<InterestType> interestTypes) {
     // cancel previous subscription when interest types change
-    _interestsSubscription?.cancel();
-
     this.interestTypes = interestTypes;
-    _interestsSubscription = _profileRepository
-        .getInterestsStream(interestTypes)
-        .listen((interests) {
-          loading = true;
+    _interestsSubscription?.cancel();
+    _profileRepository.subscribeToInterestsStream(interestTypes: interestTypes);
+
+    if (_profileRepository.interestsStream == null) {
+      loading = true;
+    } else {
+      _interestsSubscription = _profileRepository.interestsStream!.listen(
+        (interests) {
           this.interests = interests;
+          interestsStreamError = null;
           loading = false;
           notifyListeners();
-        });
+        },
+        onError: (errorObject, stackTrace) {
+          interestsStreamError = errorObject;
+          notifyListeners();
+        },
+      );
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
+    _profileRepository.unsubscribeFromInterestsStream();
     _interestsSubscription?.cancel();
   }
 }
