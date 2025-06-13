@@ -80,7 +80,7 @@ class MessagesViewModel extends ChangeNotifier {
     if (_chatRepository.messagesStream == null) {
       loading = true;
     } else {
-      _chatRepository.messagesStream!.listen(
+      _messagesSubscription = _chatRepository.messagesStream!.listen(
         (data) {
           messages = data;
           messagesError = null;
@@ -127,6 +127,7 @@ class MessagesViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _authStateSubscription?.cancel();
+    _chatRepository.unsubscribeFromMessagesStream();
     _messagesSubscription?.cancel();
     super.dispose();
   }
