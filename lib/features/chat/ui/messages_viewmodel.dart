@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../auth/domain/auth_repository.dart';
+import '../data/chat_repository_impl.dart';
 import '../data/message_model.dart';
 import '../domain/chat_repository.dart';
 
@@ -36,7 +37,7 @@ class MessagesViewModel extends ChangeNotifier {
   void init() {
     startAuthStateSubscription();
     if (chatId != null) {
-      startMessagesSubscription(chatId!);
+      // startMessagesSubscription(chatId!);
     }
   }
 
@@ -71,7 +72,78 @@ class MessagesViewModel extends ChangeNotifier {
     this.chatId = chatId;
     startMessagesSubscription(chatId);
     notifyListeners();
+
+    // OR
+    getMessagesFromStream(chatId);
+    // OR
+    getMessagesFromValueNotifier(chatId);
+
+    // OR
+    getMessagesFromStream2(chatId);
+    // OR
+    getMessagesFromValueNotifier2(chatId);
   }
+
+
+  // Stream:
+  List<MessageModel>? messagesFromStream;
+
+  void getMessagesFromStream(String chatId) {
+    _chatRepository.subscribeToMessagesAsStream(chatId);
+
+    // 'messagesStream' is declared in the ChatRepository
+    // _chatRepository.messagesStream?.listen((data) {
+
+    // 'messagesStream' is declared in the ChatRepositoryImpl only. not in ChatRepository
+    (_chatRepository as ChatRepositoryImpl).messagesStream.listen((data) {
+      loading = true;
+      this.messagesFromStream = data;
+      loading = false;
+      notifyListeners();
+    });
+  }
+
+
+  // ValueNotifier:
+  List<MessageModel>? messagesFromValueNotifier;
+
+  void getMessagesFromValueNotifier(String chatId) {
+    _chatRepository.subscribeToMessagesAsStream(chatId);
+
+    (_chatRepository as ChatRepositoryImpl).messagesNotifier.addListener(() {
+      loading = true;
+      // this.messagesFromValueNotifier = (_chatRepository as ChatRepositoryImpl).messagesNotifier.value;
+      // OR without cast because it was casted to lines above (before loading = true;)
+      this.messagesFromValueNotifier = (_chatRepository).messagesNotifier.value;
+      loading = false;
+      notifyListeners();
+    });
+  }
+
+
+  // Stream (ui listens via StreamBuilder widget):
+  Stream<List<MessageModel>>? messagesStream;
+
+  void getMessagesFromStream2(String chatId) {
+    _chatRepository.subscribeToMessagesAsStream(chatId);
+
+    this.messagesStream = (_chatRepository as ChatRepositoryImpl).messagesStream;
+
+    loading = false;
+  }
+
+
+  // ValueNotifier (ui listens via ValueListenableBuilder widget):
+  ValueNotifier<List<MessageModel>> messagesNotifier = ValueNotifier<List<MessageModel>>([]);
+
+  void getMessagesFromValueNotifier2(String chatId) {
+    _chatRepository.subscribeToMessagesAsStream(chatId);
+
+    this.messagesNotifier = (_chatRepository as ChatRepositoryImpl).messagesNotifier;
+
+    loading = false;
+  }
+
 
   void startMessagesSubscription(String chatId) {
     _messagesSubscription = _chatRepository.getMessagesStream(chatId).listen((

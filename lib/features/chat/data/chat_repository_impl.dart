@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import '../domain/chat_repository.dart';
 import 'chat_model.dart';
@@ -94,6 +95,107 @@ class ChatRepositoryImpl extends ChatRepository {
     messageModelMap[MessageModel.FIELD_ID] = newDocRef.id;
     await newDocRef.set(messageModelMap);
   }
+
+  ValueNotifier<bool> loading = ValueNotifier<bool>(true);
+
+
+  /*
+  How to pass data from Repository through ViewModel to UI:
+  using Stream and ValueNotifier.
+
+  Options:
+
+       Repository      ->       ViewModel                    -> UI
+
+    - Stream           ->  Stream to Explicit type           -> Explicit type
+    - ValueNotifier    ->  ValueNotifier to Explicit type    -> Explicit type
+
+    - Stream           ->  Stream                            -> StreamBuilder widget (takes Stream)
+    - ValueNotifier    ->  ValueNotifier                     -> ValueListenableBuilder widget (takes ValueNotifier)
+
+   */
+  /*
+  Stream by default allows only 1 listener.
+  Broadcast stream allows multiple listeners.
+
+  ValueNotifier by default allows multiple listeners.
+   */
+
+  // Stream:
+  // allowed listeners count is based on the controller
+  Stream<List<MessageModel>> messagesStream = Stream<List<MessageModel>>.value([]);
+  // OR
+  // Stream<List<MessageModel>> messagesStream = StreamController<List<MessageModel>>().stream;
+  // OR
+  // Stream<List<MessageModel>> messagesStream = StreamController<List<MessageModel>>().stream.asBroadcastStream();
+  // OR
+  // Stream<List<MessageModel>> messagesStream = StreamController<List<MessageModel>>.broadcast().stream;
+
+  // OR (allows only 1 listener)
+  // final StreamController<List<MessageModel>> messagesStreamController = StreamController<List<MessageModel>>();
+  // OR (allows multiple listeners)    '.broadcast()' to allow multiple listeners of the stream
+  // final StreamController<List<MessageModel>> messagesStreamController = StreamController<List<MessageModel>>.broadcast();
+
+  @override
+  void subscribeToMessagesAsStream(String chatId) {
+  // OR (for better Future handling)
+  // Future<void> startSub(String chatId) async {
+
+    final controller = StreamController<List<MessageModel>>();
+    // OR
+    // final controller = StreamController<List<MessageModel>>.broadcast();
+
+    messagesStream = controller.stream;
+    // OR
+    // messagesStream = controller.stream.asBroadcastStream();
+    // OR
+    // messagesStream = messagesStreamController.stream;
+    // OR
+    // messagesStream = messagesStreamController.stream.asBroadcastStream();
+
+    _firestore
+      .collection(MessageModel.COLLECTION_NAME)
+      .where(MessageModel.FIELD_CHAT_ID, isEqualTo: chatId)
+      .orderBy(MessageModel.FIELD_UPDATED_AT, descending: true)
+      .limit(50)
+      .snapshots()
+      .listen((snapshot) {
+        final List<MessageModel> m = [];
+        for (var doc in snapshot.docs) {
+          m.add(MessageModel.fromMapAndId(doc.id, doc.data()));
+        }
+
+        controller.sink.add(m);
+        // OR
+        // messagesStreamController.sink.add(m);
+      });
+  }
+
+
+  // ValueNotifier:
+  // (allows multiple listeners)
+  ValueNotifier<List<MessageModel>> messagesNotifier = ValueNotifier<List<MessageModel>>([]);
+
+  @override
+  void subscribeToMessagesAsValueNotifier(String chatId) {
+  // OR (for better Future handling)
+  // Future<void> subscribeToMessagesAsValueProvider(String chatId) async {
+    _firestore
+        .collection(MessageModel.COLLECTION_NAME)
+        .where(MessageModel.FIELD_CHAT_ID, isEqualTo: chatId)
+        .orderBy(MessageModel.FIELD_UPDATED_AT, descending: true)
+        .limit(50)
+        .snapshots()
+        .listen((snapshot) {
+      final List<MessageModel> m = [];
+      for (var doc in snapshot.docs) {
+        m.add(MessageModel.fromMapAndId(doc.id, doc.data()));
+      }
+
+      messagesNotifier.value = m;
+    });
+  }
+
 
   @override
   Stream<List<MessageModel>> getMessagesStream(String chatId) {
