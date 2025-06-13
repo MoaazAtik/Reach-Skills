@@ -96,128 +96,61 @@ class ChatRepositoryImpl extends ChatRepository {
     await newDocRef.set(messageModelMap);
   }
 
-  ValueNotifier<bool> loading = ValueNotifier<bool>(true);
 
 
-  /*
-  How to pass data from Repository through ViewModel to UI:
-  using Stream and ValueNotifier.
+  Stream<List<MessageModel>>? _messagesStream;
+  @override
+  Stream<List<MessageModel>>? get messagesStream {
+    return _messagesStream;
+  }
+  // Stream<List<MessageModel>> messagesStream = Stream.value([]);
+  //   (Stream.value([]).asBroadcastStream() as Stream<List<MessageModel>>);
 
-  Options:
-
-       Repository      ->       ViewModel                    -> UI
-
-    - Stream           ->  Stream to Explicit type           -> Explicit type
-    - ValueNotifier    ->  ValueNotifier to Explicit type    -> Explicit type
-
-    - Stream           ->  Stream                            -> StreamBuilder widget (takes Stream)
-    - ValueNotifier    ->  ValueNotifier                     -> ValueListenableBuilder widget (takes ValueNotifier)
-
-   */
-  /*
-  Stream by default allows only 1 listener.
-  Broadcast stream allows multiple listeners.
-
-  ValueNotifier by default allows multiple listeners.
-   */
-
-  // Stream:
-  // allowed listeners count is based on the controller
-  Stream<List<MessageModel>> messagesStream = Stream<List<MessageModel>>.value([]);
-  // OR
-  // Stream<List<MessageModel>> messagesStream = StreamController<List<MessageModel>>().stream;
-  // OR
-  // Stream<List<MessageModel>> messagesStream = StreamController<List<MessageModel>>().stream.asBroadcastStream();
-  // OR
-  // Stream<List<MessageModel>> messagesStream = StreamController<List<MessageModel>>.broadcast().stream;
-
-  // OR (allows only 1 listener)
-  // final StreamController<List<MessageModel>> messagesStreamController = StreamController<List<MessageModel>>();
-  // OR (allows multiple listeners)    '.broadcast()' to allow multiple listeners of the stream
-  // final StreamController<List<MessageModel>> messagesStreamController = StreamController<List<MessageModel>>.broadcast();
+  final StreamController<List<MessageModel>> _messagesController = StreamController<List<MessageModel>>.broadcast();
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _messagesSubscription;
+  int _messagesSubscriptionCount = 0;
 
   @override
-  void subscribeToMessagesAsStream(String chatId) {
-  // OR (for better Future handling)
-  // Future<void> startSub(String chatId) async {
+  void subscribeToMessagesStream(String chatId) {
+    _messagesSubscriptionCount++;
 
-    final controller = StreamController<List<MessageModel>>();
-    // OR
-    // final controller = StreamController<List<MessageModel>>.broadcast();
+    if (_messagesSubscriptionCount <= 1) {
+      _messagesStream = _messagesController.stream;
 
-    messagesStream = controller.stream;
-    // OR
-    // messagesStream = controller.stream.asBroadcastStream();
-    // OR
-    // messagesStream = messagesStreamController.stream;
-    // OR
-    // messagesStream = messagesStreamController.stream.asBroadcastStream();
-
-    _firestore
-      .collection(MessageModel.COLLECTION_NAME)
-      .where(MessageModel.FIELD_CHAT_ID, isEqualTo: chatId)
-      .orderBy(MessageModel.FIELD_UPDATED_AT, descending: true)
-      .limit(50)
-      .snapshots()
-      .listen((snapshot) {
-        final List<MessageModel> m = [];
+      _messagesSubscription = _firestore
+          .collection(MessageModel.COLLECTION_NAME)
+          .where(MessageModel.FIELD_CHAT_ID, isEqualTo: chatId)
+          .orderBy(MessageModel.FIELD_UPDATED_AT, descending: true)
+          .limit(50)
+          .snapshots()
+          .listen((snapshot) {
+        final List<MessageModel> tempMessagesList = [];
         for (var doc in snapshot.docs) {
-          m.add(MessageModel.fromMapAndId(doc.id, doc.data()));
+          tempMessagesList.add(MessageModel.fromMapAndId(doc.id, doc.data()));
         }
 
-        controller.sink.add(m);
-        // OR
-        // messagesStreamController.sink.add(m);
-      });
-  }
+        _messagesController.sink.add(tempMessagesList);
+          },
+          onError: ((error, stackTrace) {
+            _messagesController.addError(error);
+          })
+      );
+    }
 
-
-  // ValueNotifier:
-  // (allows multiple listeners)
-  ValueNotifier<List<MessageModel>> messagesNotifier = ValueNotifier<List<MessageModel>>([]);
-
-  @override
-  void subscribeToMessagesAsValueNotifier(String chatId) {
-  // OR (for better Future handling)
-  // Future<void> subscribeToMessagesAsValueProvider(String chatId) async {
-    _firestore
-        .collection(MessageModel.COLLECTION_NAME)
-        .where(MessageModel.FIELD_CHAT_ID, isEqualTo: chatId)
-        .orderBy(MessageModel.FIELD_UPDATED_AT, descending: true)
-        .limit(50)
-        .snapshots()
-        .listen((snapshot) {
-      final List<MessageModel> m = [];
-      for (var doc in snapshot.docs) {
-        m.add(MessageModel.fromMapAndId(doc.id, doc.data()));
-      }
-
-      messagesNotifier.value = m;
+    _messagesController.onCancel =(() {
+      _messagesSubscription?.cancel();
     });
   }
 
-
   @override
-  Stream<List<MessageModel>> getMessagesStream(String chatId) {
-    final controller = StreamController<List<MessageModel>>();
-    final subscription = _firestore
-        .collection(MessageModel.COLLECTION_NAME)
-        .where(MessageModel.FIELD_CHAT_ID, isEqualTo: chatId)
-        .orderBy(MessageModel.FIELD_UPDATED_AT, descending: true)
-        .limit(50)
-        .snapshots()
-        .listen((snapshot) {
-          final List<MessageModel> messages = [];
-          for (var doc in snapshot.docs) {
-            messages.add(MessageModel.fromMapAndId(doc.id, doc.data()));
-          }
-          controller.add(messages);
-        });
-    controller.onCancel = () {
-      subscription.cancel();
-    };
-    return controller.stream;
+  void unsubscribeFromMessagesStream() {
+    _messagesSubscriptionCount--;
+    if (_messagesSubscriptionCount < 1) {
+      _messagesController.close();
+      _messagesSubscription?.cancel();
+    }
   }
+
 
   @override
   Stream<List<ChatModel>> getAllChatsStream() {

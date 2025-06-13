@@ -50,31 +50,8 @@ class _MessagesScreenState extends State<MessagesScreen> {
     final loggedIn = messagesViewModel.loggedIn;
     final loading = messagesViewModel.loading;
 
-
-    final messages = messagesViewModel.messagesFromStream;
-
-
-    final messagesViewModel2 = context.read<MessagesViewModel>(); // or .watch
-    final messagesStream = messagesViewModel2.messagesStream;
-    StreamBuilder(
-      stream: messagesStream,
-      builder: (context, snapshot) {
-        // only this will rebuild when the listOfMessages changes instead of the whole widget MessagesScreen widget
-        return Text(snapshot.data?[0].toString() ?? '');
-      }
-    );
-
-
-    final messagesViewModel3 = context.read<MessagesViewModel>(); // or .watch
-    final messagesNotifier = messagesViewModel3.messagesNotifier;
-    ValueListenableBuilder(
-      valueListenable: messagesNotifier,
-      builder: (context, listOfMessages /*default name is 'data'*/, child) {
-        // only this will rebuild when the listOfMessages changes instead of the whole widget MessagesScreen widget
-        return Text(listOfMessages[0].toString());
-      }
-    );
-
+    final messages = messagesViewModel.messages;
+    final messagesError = messagesViewModel.messagesError;
 
     if (!loggedIn) {
       return Column(
@@ -96,6 +73,10 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
     if (loading) {
       return const Center(child: CircularProgressIndicator());
+    }
+
+    if (messagesError != null) {
+      return Center(child: Text(messagesError.toString()));
     }
 
     return Column(
