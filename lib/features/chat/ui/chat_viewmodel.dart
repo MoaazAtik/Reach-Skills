@@ -24,7 +24,6 @@ class ChatViewModel extends ChangeNotifier {
 
   bool get isLoggedIn => _isLoggedIn;
 
-  StreamSubscription<bool>? _isLoggedInSubscription;
   StreamSubscription<List<ChatModel>>? _allChatsSubscription;
 
   void init() {
@@ -35,8 +34,11 @@ class ChatViewModel extends ChangeNotifier {
   void startAuthStateSubscription() {
     _authRepository.subscribeToAuthStateChanges();
 
-    _isLoggedInSubscription = _authRepository.isLoggedIn.listen((isLoggedIn) {
-      _isLoggedIn = isLoggedIn;
+    _isLoggedIn = _authRepository.isLoggedIn.value;
+    notifyListeners();
+
+    _authRepository.isLoggedIn.addListener(() {
+      _isLoggedIn = _authRepository.isLoggedIn.value;
       notifyListeners();
     });
   }
@@ -56,7 +58,6 @@ class ChatViewModel extends ChangeNotifier {
   void dispose() {
     super.dispose();
     _authRepository.unsubscribeFromAuthStateChanges();
-    _isLoggedInSubscription?.cancel();
     _allChatsSubscription?.cancel();
   }
 }

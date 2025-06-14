@@ -109,15 +109,17 @@ class MessagesViewModel extends ChangeNotifier {
   void startAuthStateSubscription() {
     _authRepository.subscribeToAuthStateChanges();
 
-    _isLoggedInSubscription = _authRepository.isLoggedIn.listen((isLoggedIn) {
-      this._isLoggedIn = isLoggedIn;
+    _isLoggedIn = _authRepository.isLoggedIn.value;
+    notifyListeners();
+
+    _authRepository.isLoggedIn.addListener(() {
+      _isLoggedIn = _authRepository.isLoggedIn.value;
       notifyListeners();
     });
   }
 
   void stopSubscriptions() {
     _authRepository.unsubscribeFromAuthStateChanges();
-    _isLoggedInSubscription?.cancel();
     _chatRepository.unsubscribeFromMessagesStream();
     _messagesSubscription?.cancel();
   }

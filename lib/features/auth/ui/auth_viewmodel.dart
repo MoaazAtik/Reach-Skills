@@ -23,8 +23,6 @@ class AuthViewModel extends ChangeNotifier {
   String? authError;
   StreamSubscription<User?>? _currentUserSubscription;
 
-  StreamSubscription<bool>? _isLoggedInSubscription;
-
   void init() {
     startAuthStateSubscription();
   }
@@ -50,8 +48,11 @@ class AuthViewModel extends ChangeNotifier {
     }
     */
 
-    _isLoggedInSubscription = _authRepository.isLoggedIn.listen((isLoggedIn) {
-      _isLoggedIn = isLoggedIn;
+    _isLoggedIn = _authRepository.isLoggedIn.value;
+    notifyListeners();
+
+    _authRepository.isLoggedIn.addListener(() {
+      _isLoggedIn = _authRepository.isLoggedIn.value;
       notifyListeners();
     });
   }
@@ -60,7 +61,6 @@ class AuthViewModel extends ChangeNotifier {
     _authRepository.unsubscribeFromAuthStateChanges();
     // Example: Listen to current user stream.
     _currentUserSubscription?.cancel();
-    _isLoggedInSubscription?.cancel();
   }
 
   Future<void> signOut() async {
