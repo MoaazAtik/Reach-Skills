@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class AuthRepository {
-  Stream<User?>? get currentUserStream;
+  ValueNotifier<User?> get currentUserNotifier;
 
   ValueNotifier<bool> get isLoggedIn;
 

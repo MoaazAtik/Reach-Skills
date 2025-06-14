@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
+import '../data/auth_repository_impl.dart';
 import '../domain/auth_repository.dart';
 
 class AuthViewModel extends ChangeNotifier {
@@ -20,7 +21,8 @@ class AuthViewModel extends ChangeNotifier {
   // Example: Listen to current user stream.
   User? _currentUser;
   User? get currentUser => _currentUser;
-  String? authError;
+  String? _authError;
+  String? get authError => _authError;
   StreamSubscription<User?>? _currentUserSubscription;
 
   void init() {
@@ -30,26 +32,27 @@ class AuthViewModel extends ChangeNotifier {
   void startAuthStateSubscription() {
     _authRepository.subscribeToAuthStateChanges();
 
+    // Initialize fields
     /*
-    // Example: Listen to current user stream.
-
-    if (_authRepository.currentUserStream != null) { // ie, stream initialized
-      _currentUserSubscription = _authRepository.currentUserStream!.listen(
-        (user) {
-          _currentUser = user;
-          authError = null;
-          notifyListeners();
-        },
-        onError: (object, stackTrace) {
-          authError = object.toString();
-          notifyListeners();
-        },
-      );
-    }
+     Needed because these local fields might not be initialized when they
+     start listening to the repo after the repo updates its fields.
     */
-
     _isLoggedIn = _authRepository.isLoggedIn.value;
+    _currentUser = _authRepository.currentUserNotifier.value;
+    _authError = (_authRepository as AuthRepositoryImpl).authError.value;
     notifyListeners();
+
+    // Listen to changes
+    _authRepository.currentUserNotifier.addListener(() {
+      _currentUser = _authRepository.currentUserNotifier.value;
+      _authError = null;
+      notifyListeners();
+    });
+
+    _authRepository.authError.addListener(() {
+      _authError = _authRepository.authError.value;
+      notifyListeners();
+    });
 
     _authRepository.isLoggedIn.addListener(() {
       _isLoggedIn = _authRepository.isLoggedIn.value;

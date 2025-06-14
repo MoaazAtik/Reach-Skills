@@ -10,53 +10,35 @@ class AuthRepositoryImpl extends AuthRepository {
 
   int _authStateSubscriptionCount = 0;
   StreamSubscription<User?>? _authStateSubscription;
-  final StreamController<User?> _currentUserController =
-      StreamController<User?>.broadcast();
-  Stream<User?>? _currentUserStream;
+  final ValueNotifier<User?> _currentUserNotifier = ValueNotifier(null);
 
   @override
-  Stream<User?>? get currentUserStream => _currentUserStream;
+  ValueNotifier<User?> get currentUserNotifier => _currentUserNotifier;
 
   final ValueNotifier<bool> _isLoggedIn = ValueNotifier(false);
 
   @override
   ValueNotifier<bool> get isLoggedIn => _isLoggedIn;
 
-  // {
-  //   // if (_authUserState != null) {
-  //   //   return _authUserState?.map((user) => user != null);
-  //   // } else {
-  //   //   return Stream.value(false);
-  //   // }
-  //
-  //   // if (_auth.currentUser != null) {
-  //   //   return Stream.value(true);
-  //   // } else {
-  //   //   return Stream.value(false);
-  //   // }
-  // }
+  final ValueNotifier<String?> _authError = ValueNotifier(null);
+
+  ValueNotifier<String?> get authError => _authError;
 
   @override
   void subscribeToAuthStateChanges() {
     _authStateSubscriptionCount++;
 
     if (_authStateSubscriptionCount <= 1) {
-      _currentUserStream = _currentUserController.stream;
-      // _isLoggedIn = _isLoggedInController.stream;
-
       _authStateSubscription = _auth.authStateChanges().listen(
         (user) {
-          _currentUserController.sink.add(user);
+          _currentUserNotifier.value = user;
           _isLoggedIn.value = user != null;
+          _authError.value = null;
         },
         onError: ((error, stackTrace) {
-          _currentUserController.addError(error);
+          _authError.value = error.toString();
         }),
       );
-
-      _currentUserController.onCancel = () {
-        _authStateSubscription?.cancel();
-      };
     }
   }
 
@@ -64,9 +46,9 @@ class AuthRepositoryImpl extends AuthRepository {
   void unsubscribeFromAuthStateChanges() {
     _authStateSubscriptionCount--;
     if (_authStateSubscriptionCount < 1) {
-      _currentUserController.close();
-
+      _currentUserNotifier.dispose();
       _isLoggedIn.dispose();
+      _authError.dispose();
       _authStateSubscription?.cancel();
     }
   }
