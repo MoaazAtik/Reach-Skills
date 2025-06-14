@@ -13,40 +13,54 @@ class AuthViewModel extends ChangeNotifier {
 
   final AuthRepository _authRepository;
 
-  StreamSubscription<User?>? _authStateSubscription;
-  bool _loggedIn = false;
+  bool _isLoggedIn = false;
 
-  bool get loggedIn => _loggedIn;
-  String? errorAuthMessage;
+  bool get isLoggedIn => _isLoggedIn;
 
+  // Example: Listen to current user stream.
   User? _currentUser;
   User? get currentUser => _currentUser;
+  String? authError;
+  StreamSubscription<User?>? _currentUserSubscription;
+
+  StreamSubscription<bool>? _isLoggedInSubscription;
 
   void init() {
     startAuthStateSubscription();
   }
 
   void startAuthStateSubscription() {
-    _authStateSubscription = _authRepository.getAuthStateChanges().listen(
-      (user) {
-        if (user != null) {
-          _loggedIn = true;
+    _authRepository.subscribeToAuthStateChanges();
+
+    /*
+    // Example: Listen to current user stream.
+
+    if (_authRepository.currentUserStream != null) { // ie, stream initialized
+      _currentUserSubscription = _authRepository.currentUserStream!.listen(
+        (user) {
           _currentUser = user;
-        } else {
-          _loggedIn = false;
-          _currentUser = null;
-        }
-        errorAuthMessage = null;
-        notifyListeners();
-      },
-      onError: (object, stackTrace) {
-        errorAuthMessage = object.toString();
-        notifyListeners();
-      },
-      onDone: () {
-        notifyListeners();
-      },
-    );
+          authError = null;
+          notifyListeners();
+        },
+        onError: (object, stackTrace) {
+          authError = object.toString();
+          notifyListeners();
+        },
+      );
+    }
+    */
+
+    _isLoggedInSubscription = _authRepository.isLoggedIn.listen((isLoggedIn) {
+      _isLoggedIn = isLoggedIn;
+      notifyListeners();
+    });
+  }
+
+  void stopAuthStateSubscription() {
+    _authRepository.unsubscribeFromAuthStateChanges();
+    // Example: Listen to current user stream.
+    _currentUserSubscription?.cancel();
+    _isLoggedInSubscription?.cancel();
   }
 
   Future<void> signOut() async {
@@ -55,7 +69,7 @@ class AuthViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    _authStateSubscription?.cancel();
+    stopAuthStateSubscription();
     super.dispose();
   }
 }

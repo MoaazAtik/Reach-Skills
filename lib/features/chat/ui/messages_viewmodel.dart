@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../auth/domain/auth_repository.dart';
@@ -28,11 +27,11 @@ class MessagesViewModel extends ChangeNotifier {
   bool loading = true;
   List<MessageModel>? messages;
   dynamic messagesError;
-  bool _loggedIn = false;
+  bool _isLoggedIn = false;
 
-  bool get loggedIn => _loggedIn;
+  bool get isLoggedIn => _isLoggedIn;
 
-  StreamSubscription<User?>? _authStateSubscription;
+  StreamSubscription<bool>? _isLoggedInSubscription;
   StreamSubscription<List<MessageModel>>? _messagesSubscription;
 
   void init() {
@@ -108,27 +107,24 @@ class MessagesViewModel extends ChangeNotifier {
   }
 
   void startAuthStateSubscription() {
-    _authStateSubscription = _authRepository.getAuthStateChanges().listen(
-      (user) {
-        if (user != null) {
-          _loggedIn = true;
-        } else {
-          _loggedIn = false;
-        }
-        notifyListeners();
-      },
-      onError: (object, stackTrace) {
-        _loggedIn = false;
-        notifyListeners();
-      },
-    );
+    _authRepository.subscribeToAuthStateChanges();
+
+    _isLoggedInSubscription = _authRepository.isLoggedIn.listen((isLoggedIn) {
+      this._isLoggedIn = isLoggedIn;
+      notifyListeners();
+    });
+  }
+
+  void stopSubscriptions() {
+    _authRepository.unsubscribeFromAuthStateChanges();
+    _isLoggedInSubscription?.cancel();
+    _chatRepository.unsubscribeFromMessagesStream();
+    _messagesSubscription?.cancel();
   }
 
   @override
   void dispose() {
-    _authStateSubscription?.cancel();
-    _chatRepository.unsubscribeFromMessagesStream();
-    _messagesSubscription?.cancel();
+    stopSubscriptions();
     super.dispose();
   }
 }

@@ -14,11 +14,11 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final chatViewModel = context.watch<ChatViewModel>();
-    final loggedIn = chatViewModel.loggedIn;
+    final isLoggedIn = chatViewModel.isLoggedIn;
     final loading = chatViewModel.loading;
     final allChats = chatViewModel.allChats;
 
-    if (!loggedIn) {
+    if (!isLoggedIn) {
       return Column(
         children: [
           const SizedBox(height: 40),

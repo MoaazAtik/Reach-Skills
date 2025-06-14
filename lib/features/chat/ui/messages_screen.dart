@@ -47,13 +47,13 @@ class _MessagesScreenState extends State<MessagesScreen> {
   @override
   Widget build(BuildContext context) {
     final messagesViewModel = context.watch<MessagesViewModel>();
-    final loggedIn = messagesViewModel.loggedIn;
+    final isLoggedIn = messagesViewModel.isLoggedIn;
     final loading = messagesViewModel.loading;
 
     final messages = messagesViewModel.messages;
     final messagesError = messagesViewModel.messagesError;
 
-    if (!loggedIn) {
+    if (!isLoggedIn) {
       return Column(
         children: [
           const SizedBox(height: 40),
