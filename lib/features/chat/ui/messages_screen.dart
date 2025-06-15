@@ -5,25 +5,29 @@ import '../../auth/ui/auth_screen.dart';
 import 'messages_viewmodel.dart';
 
 class MessagesScreen extends StatefulWidget {
-  MessagesScreen({super.key, required this.chatId});
+  const MessagesScreen({super.key, required this.chatId})
+    : currentSenderId = null,
+      currentSenderName = null,
+      currentReceiverId = null,
+      currentReceiverName = null;
 
-  MessagesScreen.fromExplore({
+  const MessagesScreen.fromExplore({
     super.key,
     required this.currentSenderId,
     required this.currentSenderName,
     required this.currentReceiverId,
     required this.currentReceiverName,
-  });
+  }) : chatId = null;
 
   static const String routeName = '/messages';
   static const String title = 'Messages';
   static const IconData icon = Icons.message;
 
-  String? chatId;
-  String? currentSenderId;
-  String? currentSenderName;
-  String? currentReceiverId;
-  String? currentReceiverName;
+  final String? chatId;
+  final String? currentSenderId;
+  final String? currentSenderName;
+  final String? currentReceiverId;
+  final String? currentReceiverName;
 
   @override
   State<MessagesScreen> createState() => _MessagesScreenState();
