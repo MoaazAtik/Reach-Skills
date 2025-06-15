@@ -9,13 +9,10 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() =>
-      _ProfileScreenState();
+  State<StatefulWidget> createState() => _ProfileScreenState();
 }
 
-
 class _ProfileScreenState extends State<ProfileScreen> {
-
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nameController;
@@ -35,16 +32,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    _uid = context.watch<ProfileViewModel>().uid;
-    _email = context.watch<ProfileViewModel>().email;
-    _profile = context.watch<ProfileViewModel>().profile;
-    bool loading  = context.watch<ProfileViewModel>().loading;
+    final profileViewModel = context.watch<ProfileViewModel>();
+    _uid = profileViewModel.uid;
+    _email = profileViewModel.email;
+    _profile = profileViewModel.profile;
+    final bool loading = profileViewModel.loading;
+    final Future<String> Function(ProfileModel newProfile) updateProfile =
+        profileViewModel.updateProfile;
 
     _nameController = TextEditingController(text: _profile?.name);
     _bioController = TextEditingController(text: _profile?.bio);
-    _skillsController = TextEditingController(text: _profile?.skills.join(', '));
-    _wishesController = TextEditingController(text: _profile?.wishes.join(', '));
+    _skillsController = TextEditingController(
+      text: _profile?.skills.join(', '),
+    );
+    _wishesController = TextEditingController(
+      text: _profile?.wishes.join(', '),
+    );
 
     if (_uid == null) {
       return Column(
@@ -54,9 +57,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const AuthScreen()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const AuthScreen()));
             },
             child: const Text('Sign in'),
           ),
@@ -65,9 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     if (loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
@@ -82,10 +83,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: 'Name'),
-                validator: (value) =>
-                value == null || value.isEmpty
-                    ? 'Required'
-                    : null,
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty ? 'Required' : null,
               ),
               TextFormField(
                 controller: _bioController,
@@ -94,33 +94,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
               TextFormField(
                 controller: _skillsController,
                 decoration: const InputDecoration(
-                    labelText: 'Skills (comma-separated)'),
+                  labelText: 'Skills (comma-separated)',
+                ),
               ),
               TextFormField(
                 controller: _wishesController,
                 decoration: const InputDecoration(
-                    labelText: 'Wishes (comma-separated)'),
+                  labelText: 'Wishes (comma-separated)',
+                ),
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: _saveProfile,
+                onPressed: () => _saveProfile(updateProfile),
                 child: const Text('Save Profile'),
               ),
               const SizedBox(height: 24),
               Text('Email: $_email'),
               const SizedBox(height: 24),
               if (_profile != null)
-                Text('Last edited: ${DateTime.fromMillisecondsSinceEpoch(_profile!.lastEditedTime).toString()}')
+                Text(
+                  'Last edited: ${DateTime.fromMillisecondsSinceEpoch(_profile!.lastEditedTime).toString()}',
+                ),
             ],
           ),
         ),
       ),
-
     );
   }
 
-
-  Future<void> _saveProfile() async {
+  Future<void> _saveProfile(
+    Future<String> Function(ProfileModel newProfile) updateProfile,
+  ) async {
     String updatingResult;
 
     if (!_formKey.currentState!.validate()) {
@@ -133,29 +137,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
         name: _nameController.text.trim(),
         email: _email!,
         bio: _bioController.text.trim(),
-        skills: _skillsController.text
-            .trim()
-            .split(',')
-            .map((s) => s.trim())
-            .toList(),
-        wishes: _wishesController.text
-            .trim()
-            .split(',')
-            .map((s) => s.trim())
-            .toList(),
-        lastEditedTime: DateTime
-            .now()
-            .millisecondsSinceEpoch,
+        skills:
+            _skillsController.text
+                .trim()
+                .split(',')
+                .map((s) => s.trim())
+                .toList(),
+        wishes:
+            _wishesController.text
+                .trim()
+                .split(',')
+                .map((s) => s.trim())
+                .toList(),
+        lastEditedTime: DateTime.now().millisecondsSinceEpoch,
       );
 
-      updatingResult =
-      await context.read<ProfileViewModel>().updateProfile(newProfile);
+      updatingResult = await updateProfile(newProfile);
     }
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(updatingResult)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(updatingResult)));
     }
   }
 
@@ -167,5 +170,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     super.dispose();
   }
-
 }
