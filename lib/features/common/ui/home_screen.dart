@@ -20,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final authViewModel = context.watch<AuthViewModel>();
-    // final authViewModel = context.watch<AuthRepositoryImpl>(); // todo
     final isLoggedIn = authViewModel.isLoggedIn;
     final authError = authViewModel.authError;
 

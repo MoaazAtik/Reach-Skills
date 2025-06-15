@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../auth/ui/auth_screen.dart';
 import 'chat_viewmodel.dart';
+import 'messages_screen.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -17,6 +18,7 @@ class ChatScreen extends StatelessWidget {
     final isLoggedIn = chatViewModel.isLoggedIn;
     final loading = chatViewModel.loading;
     final allChats = chatViewModel.allChats;
+    final chatsError = chatViewModel.chatsError;
 
     if (!isLoggedIn) {
       return Column(
@@ -40,6 +42,10 @@ class ChatScreen extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
+    if (chatsError != null) {
+      return Center(child: Text(chatsError.toString()));
+    }
+
     if (allChats == null || allChats.isEmpty) {
       return const Center(child: Text('No chats available.'));
     }
@@ -47,10 +53,21 @@ class ChatScreen extends StatelessWidget {
     return ListView.builder(
       itemCount: allChats.length,
       itemBuilder: (context, index) {
-        // final chat = allChats[index];
-        return ListTile(
-          // title: Text('sender: ${chat.senderName}'),
-          // subtitle: Text('receiver: ${chat.receiverName}'),
+        final chat = allChats[index];
+        return Card(
+          child: ListTile(
+            title: Text('Created by: ${chat.person1Name}'),
+            subtitle: Text('To: ${chat.person2Name}'),
+            trailing: Text(
+              'Updated at: ${DateTime.fromMillisecondsSinceEpoch(chat.updatedAt).toString()}',
+            ),
+            onTap:
+                () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => MessagesScreen(chatId: chat.id),
+                  ),
+                ),
+          ),
         );
       },
     );

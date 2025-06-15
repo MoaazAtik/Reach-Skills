@@ -86,10 +86,14 @@ class ExploreViewModel extends ChangeNotifier {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  void stopSubscriptions() {
     _profileRepository.unsubscribeFromInterestsStream();
     _interestsSubscription?.cancel();
+  }
+
+  @override
+  void dispose() {
+    stopSubscriptions();
+    super.dispose();
   }
 }

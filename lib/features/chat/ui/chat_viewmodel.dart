@@ -19,11 +19,16 @@ class ChatViewModel extends ChangeNotifier {
   final ChatRepository _chatRepository;
 
   bool loading = true;
-  List<ChatModel>? allChats;
   bool _isLoggedIn = false;
 
   bool get isLoggedIn => _isLoggedIn;
 
+  List<ChatModel>? _allChats;
+
+  List<ChatModel>? get allChats => _allChats;
+  dynamic _chatsError;
+
+  dynamic get chatsError => _chatsError;
   StreamSubscription<List<ChatModel>>? _allChatsSubscription;
 
   void init() {
@@ -44,20 +49,34 @@ class ChatViewModel extends ChangeNotifier {
   }
 
   void startAllChatsSubscription() {
-    _allChatsSubscription = _chatRepository.getAllChatsStream().listen((
-      allChats,
-    ) {
-      loading = true;
-      this.allChats = allChats;
-      loading = false;
-      notifyListeners();
-    });
+    _chatRepository.subscribeToChatsStream();
+
+    if (_chatRepository.chatsStream != null) {
+      _allChatsSubscription = _chatRepository.chatsStream!.listen(
+        (allChats) {
+          _allChats = allChats;
+          _chatsError = null;
+          loading = false;
+          notifyListeners();
+        },
+        onError: (errorObject, stackTrace) {
+          _chatsError = errorObject;
+          notifyListeners();
+        },
+      );
+    }
+  }
+
+  void stopSubscriptions() {
+    _authRepository.unsubscribeFromAuthStateChanges();
+
+    _chatRepository.unsubscribeFromChatsStream();
+    _allChatsSubscription?.cancel();
   }
 
   @override
   void dispose() {
+    stopSubscriptions();
     super.dispose();
-    _authRepository.unsubscribeFromAuthStateChanges();
-    _allChatsSubscription?.cancel();
   }
 }

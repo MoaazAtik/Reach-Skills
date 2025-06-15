@@ -9,6 +9,15 @@ import 'message_model.dart';
 class ChatRepositoryImpl extends ChatRepository {
   final _firestore = FirebaseFirestore.instance;
 
+  int _chatsSubscriptionCount = 0;
+  final StreamController<List<ChatModel>> _chatsController =
+      StreamController<List<ChatModel>>.broadcast();
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _chatsSubscription;
+  Stream<List<ChatModel>>? _chatsStream;
+
+  @override
+  Stream<List<ChatModel>>? get chatsStream => _chatsStream;
+
   final StreamController<List<MessageModel>> _messagesController =
       StreamController<List<MessageModel>>.broadcast();
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>?
@@ -19,6 +28,47 @@ class ChatRepositoryImpl extends ChatRepository {
   @override
   Stream<List<MessageModel>>? get messagesStream {
     return _messagesStream;
+  }
+
+  @override
+  void subscribeToChatsStream() {
+    _chatsSubscriptionCount++;
+
+    if (_chatsSubscriptionCount <= 1) {
+      _chatsStream = _chatsController.stream;
+
+      _chatsSubscription = _firestore
+          .collection(ChatModel.COLLECTION_NAME)
+          .orderBy(ChatModel.FIELD_UPDATED_AT, descending: true)
+          .limit(50)
+          .snapshots()
+          .listen(
+            (snapshot) {
+              final List<ChatModel> allChats = [];
+              for (var doc in snapshot.docs) {
+                allChats.add(ChatModel.fromMapAndId(doc.id, doc.data()));
+              }
+
+              _chatsController.sink.add(allChats);
+            },
+            onError: ((error, stackTrace) {
+              _chatsController.addError(error);
+            }),
+          );
+    }
+
+    _chatsController.onCancel = (() {
+      _chatsSubscription?.cancel();
+    });
+  }
+
+  @override
+  void unsubscribeFromChatsStream() {
+    _chatsSubscriptionCount--;
+    if (_chatsSubscriptionCount < 1) {
+      _chatsController.close();
+      _chatsSubscription?.cancel();
+    }
   }
 
   // from explore screen
@@ -149,28 +199,5 @@ class ChatRepositoryImpl extends ChatRepository {
       _messagesController.close();
       _messagesSubscription?.cancel();
     }
-  }
-
-  @override
-  Stream<List<ChatModel>> getAllChatsStream() {
-    final controller = StreamController<List<ChatModel>>();
-
-    final subscription = _firestore
-        .collection('chats') // todo replace with constants
-        .orderBy('updatedAt', descending: true)
-        .limit(50)
-        .snapshots()
-        .listen((snapshot) {
-          final List<ChatModel> allChats = [];
-          for (var doc in snapshot.docs) {
-            allChats.add(ChatModel.fromMapAndId(doc.id, doc.data()));
-          }
-          controller.add(allChats);
-        });
-
-    controller.onCancel = () {
-      subscription.cancel();
-    };
-    return controller.stream;
   }
 }

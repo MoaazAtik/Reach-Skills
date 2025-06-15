@@ -20,10 +20,11 @@ class AuthViewModel extends ChangeNotifier {
 
   // Example: Listen to current user stream.
   User? _currentUser;
+
   User? get currentUser => _currentUser;
   String? _authError;
+
   String? get authError => _authError;
-  StreamSubscription<User?>? _currentUserSubscription;
 
   void init() {
     startAuthStateSubscription();
@@ -62,8 +63,6 @@ class AuthViewModel extends ChangeNotifier {
 
   void stopAuthStateSubscription() {
     _authRepository.unsubscribeFromAuthStateChanges();
-    // Example: Listen to current user stream.
-    _currentUserSubscription?.cancel();
   }
 
   Future<void> signOut() async {

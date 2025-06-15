@@ -31,13 +31,12 @@ class MessagesViewModel extends ChangeNotifier {
 
   bool get isLoggedIn => _isLoggedIn;
 
-  StreamSubscription<bool>? _isLoggedInSubscription;
   StreamSubscription<List<MessageModel>>? _messagesSubscription;
 
   void init() {
     startAuthStateSubscription();
     if (chatId != null) {
-      // startMessagesSubscription(chatId!);
+      startMessagesSubscription(chatId!);
     }
   }
 
