@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
+import '../data/auth_repository_impl.dart';
 import '../domain/auth_repository.dart';
 
 class AuthViewModel extends ChangeNotifier {
@@ -13,43 +14,55 @@ class AuthViewModel extends ChangeNotifier {
 
   final AuthRepository _authRepository;
 
-  StreamSubscription<User?>? _authStateSubscription;
-  bool _loggedIn = false;
+  bool _isLoggedIn = false;
 
-  bool get loggedIn => _loggedIn;
-  String? errorAuthMessage;
+  bool get isLoggedIn => _isLoggedIn;
 
+  // Example: Listen to current user stream.
   User? _currentUser;
+
   User? get currentUser => _currentUser;
+  String? _authError;
+
+  String? get authError => _authError;
 
   void init() {
     startAuthStateSubscription();
   }
 
   void startAuthStateSubscription() {
-    _authStateSubscription = _authRepository.getAuthStateChanges().listen(
-      (user) {
-        if (user != null) {
-          _loggedIn = true;
-          _currentUser = user;
-        } else {
-          _loggedIn = false;
-          _currentUser = null;
-        }
-        errorAuthMessage = null;
-        notifyListeners();
-      },
-      onError: (object, stackTrace) {
-        errorAuthMessage = object.toString();
-        print('Error: $object');
-        print('Stack trace: $stackTrace');
-        notifyListeners();
-      },
-      onDone: () {
-        print('Auth state subscription done');
-        notifyListeners();
-      },
-    );
+    _authRepository.subscribeToAuthStateChanges();
+
+    // Initialize fields
+    /*
+     Needed because these local fields might not be initialized when they
+     start listening to the repo after the repo updates its fields.
+    */
+    _isLoggedIn = _authRepository.isLoggedIn.value;
+    _currentUser = _authRepository.currentUserNotifier.value;
+    _authError = (_authRepository as AuthRepositoryImpl).authError.value;
+    notifyListeners();
+
+    // Listen to changes
+    _authRepository.currentUserNotifier.addListener(() {
+      _currentUser = _authRepository.currentUserNotifier.value;
+      _authError = null;
+      notifyListeners();
+    });
+
+    _authRepository.authError.addListener(() {
+      _authError = _authRepository.authError.value;
+      notifyListeners();
+    });
+
+    _authRepository.isLoggedIn.addListener(() {
+      _isLoggedIn = _authRepository.isLoggedIn.value;
+      notifyListeners();
+    });
+  }
+
+  void stopAuthStateSubscription() {
+    _authRepository.unsubscribeFromAuthStateChanges();
   }
 
   Future<void> signOut() async {
@@ -58,7 +71,7 @@ class AuthViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    _authStateSubscription?.cancel();
+    stopAuthStateSubscription();
     super.dispose();
   }
 }

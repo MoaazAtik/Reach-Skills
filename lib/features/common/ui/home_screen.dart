@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../auth/ui/auth_screen.dart';
 import '../../auth/ui/auth_viewmodel.dart';
+import '../../chat/ui/chat_screen.dart';
 import '../../explore/ui/explore_screen.dart';
 import '../../profile/ui/profile_screen.dart';
 
@@ -18,10 +19,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    String? errorAuthMessage = context.watch<AuthViewModel>().errorAuthMessage;
-    /* Perhaps (?) no need for 'watch' for 'loggedIn' because errorAuthMessage is already watching. So we can avoid unnecessary rebuild without two 'watch' calls. */
-    bool loggedIn = context.read<AuthViewModel>().loggedIn;
+    final authViewModel = context.watch<AuthViewModel>();
+    final isLoggedIn = authViewModel.isLoggedIn;
+    final authError = authViewModel.authError;
 
     return Scaffold(
 
@@ -29,22 +29,22 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('SkillSwap - Home'),
         actions: [
 
-          if (errorAuthMessage != null)
-            Text('Error: $errorAuthMessage'),
+          if (authError != null)
+            Text('Error: $authError'),
 
-          if (loggedIn)
+          if (isLoggedIn)
             const Text('Logged in'),
 
-          if (!loggedIn)
+          if (!isLoggedIn)
             const Text('Not logged in'),
 
-          if (loggedIn)
+          if (isLoggedIn)
             IconButton(
               icon: const Icon(Icons.logout),
-              onPressed: context.read<AuthViewModel>().signOut,
+              onPressed: authViewModel.signOut,
             ),
 
-          if (!loggedIn)
+          if (!isLoggedIn)
             IconButton(
               icon: const Icon(Icons.login),
               onPressed: () {
@@ -62,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
           switch (_selectedIndex) {
             0 => const ExploreScreen(),
             1 => const ProfileScreen(),
+            2 => const ChatScreen(),
             _ => const Text('Unknown Screen'),
           },
       ),
@@ -70,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(ChatScreen.icon), label: ChatScreen.title),
         ],
         currentIndex: _selectedIndex,
         onTap: (index) {

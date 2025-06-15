@@ -6,24 +6,22 @@ import '../../common/ui/home_screen.dart';
 import 'auth_viewmodel.dart';
 
 class AuthScreen extends StatelessWidget {
-
   const AuthScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = context.watch<AuthViewModel>();
+    final isLoggedIn = authViewModel.isLoggedIn;
 
-    String? errorAuthMessage = context.watch<AuthViewModel>().errorAuthMessage;
-    /* Perhaps (?) no need for 'watch' for 'loggedIn' because errorAuthMessage is already watching. So we can avoid unnecessary rebuild without two 'watch' calls. */
-    bool loggedIn = context.read<AuthViewModel>().loggedIn;
+    final authError = authViewModel.authError;
 
-    if (errorAuthMessage != null) {
-      return Center(child: Text('Error: $errorAuthMessage'));
+    if (authError != null) {
+      return Center(child: Text('Error: $authError'));
     }
 
-    if (loggedIn) {
+    if (isLoggedIn) {
       return HomeScreen();
     } else {
-      // return AuthScreen();
       return SignInScreen(
         providers: [
           EmailAuthProvider(),
@@ -31,5 +29,4 @@ class AuthScreen extends StatelessWidget {
       );
     }
   }
-
 }
