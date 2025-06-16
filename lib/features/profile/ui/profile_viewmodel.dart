@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../auth/domain/auth_repository.dart';
 import '../domain/profile_model.dart';
 import '../domain/profile_repository.dart';
@@ -43,12 +44,12 @@ class ProfileViewModel extends ChangeNotifier {
       edited = validateProfileUpdates(newProfile);
     }
 
-    if (!edited) return 'No changes to save';
+    if (!edited) return Str.noChanges;
 
     await _profileRepository.saveProfile(newProfile);
     loadProfile();
 
-    return 'Profile Saved';
+    return Str.profileSaved;
   }
 
   bool validateProfileUpdates(ProfileModel newProfile) {

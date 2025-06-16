@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../auth/domain/auth_repository.dart';
 import '../../common/data/interest_model.dart';
 import '../../profile/domain/profile_model.dart';
@@ -40,13 +41,13 @@ class ExploreViewModel extends ChangeNotifier {
   }) async {
     currentSenderId = _authRepository.getUserId();
 
-    if (currentSenderId == null) return 'Please sign in.'; // aka, not logged in
+    if (currentSenderId == null) return Str.pleaseSignIn; // aka, not logged in
 
     /* to avoid sending message to yourself.
     otherwise, it conflicts with fetching chatId logic
     in the chat repo.*/
     if (currentReceiverId == currentSenderId) {
-      return 'Trying to reach yourself?';
+      return Str.cannotReachYourself;
     }
 
     ProfileModel? senderProfile;
@@ -79,8 +80,7 @@ class ExploreViewModel extends ChangeNotifier {
           notifyListeners();
         },
         onError: (errorObject, stackTrace) {
-          interestsStreamError =
-              'Server error.\nPlease contact our support team or try again later.';
+          interestsStreamError = Str.serverErrorMessage;
           loading = false;
           notifyListeners();
         },

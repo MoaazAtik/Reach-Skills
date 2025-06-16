@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../chat/ui/messages_screen.dart';
 import 'explore_viewmodel.dart';
 import 'interest_card.dart';
@@ -25,7 +26,7 @@ class ExploreScreen extends StatelessWidget {
     }
 
     if (interests == null || interests.isEmpty) {
-      return const Text('No skills found');
+      return const Text(Str.noSkillsFound);
     }
 
     return Column(
@@ -34,8 +35,8 @@ class ExploreScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(30),
           child: Text(
-            'Explore '
-            '${interests.length} interests:',
+            '${Str.explore} '
+            '${interests.length} ${Str.interests}:',
           ),
         ),
         Expanded(
@@ -51,17 +52,16 @@ class ExploreScreen extends StatelessWidget {
                   title: interest.title,
                   userName: interest.userName,
                   onReach: () async {
-
                     String? errorMessage;
                     errorMessage = await exploreViewModel.updateFields(
-                        currentReceiverId: interest.uid,
-                        currentReceiverName: interest.userName
+                      currentReceiverId: interest.uid,
+                      currentReceiverName: interest.userName,
                     );
 
                     if (errorMessage != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(errorMessage)),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(errorMessage)));
                       return;
                     }
 
@@ -70,14 +70,16 @@ class ExploreScreen extends StatelessWidget {
                         builder:
                             (_) => MessagesScreen.fromExplore(
                               currentSenderId: exploreViewModel.currentSenderId,
-                              currentSenderName: exploreViewModel.currentSenderName,
-                              currentReceiverId: exploreViewModel.currentReceiverId,
-                              currentReceiverName: exploreViewModel.currentReceiverName,
+                              currentSenderName:
+                                  exploreViewModel.currentSenderName,
+                              currentReceiverId:
+                                  exploreViewModel.currentReceiverId,
+                              currentReceiverName:
+                                  exploreViewModel.currentReceiverName,
                             ),
                       ),
                     );
                   },
-
                 ),
             ],
           ),

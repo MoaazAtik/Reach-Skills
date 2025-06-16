@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../auth/domain/auth_repository.dart';
 import '../data/chat_model.dart';
 import '../domain/chat_repository.dart';
@@ -60,8 +61,7 @@ class ChatViewModel extends ChangeNotifier {
           notifyListeners();
         },
         onError: (errorObject, stackTrace) {
-          _chatsError =
-              'Server error.\nPlease contact our support team or try again later.';
+          _chatsError = Str.serverErrorMessage;
           loading = false;
           notifyListeners();
         },

@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../auth/ui/auth_screen.dart';
 import 'chat_viewmodel.dart';
 import 'messages_screen.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
-
-  static const routeName = '/chat';
-  static const title = 'Chat';
-  static const icon = Icons.chat;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +21,7 @@ class ChatScreen extends StatelessWidget {
       return Column(
         children: [
           const SizedBox(height: 40),
-          Text('No user info available.'),
+          Text(Str.noUserInfoMessage),
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
@@ -32,7 +29,7 @@ class ChatScreen extends StatelessWidget {
                 context,
               ).push(MaterialPageRoute(builder: (_) => const AuthScreen()));
             },
-            child: const Text('Sign in'),
+            child: const Text(Str.signIn),
           ),
         ],
       );
@@ -47,7 +44,7 @@ class ChatScreen extends StatelessWidget {
     }
 
     if (allChats == null || allChats.isEmpty) {
-      return const Center(child: Text('No chats available.'));
+      return const Center(child: Text(Str.noChatsMessage));
     }
 
     return ListView.builder(
@@ -56,10 +53,10 @@ class ChatScreen extends StatelessWidget {
         final chat = allChats[index];
         return Card(
           child: ListTile(
-            title: Text('Created by: ${chat.person1Name}'),
-            subtitle: Text('To: ${chat.person2Name}'),
+            title: Text('${Str.createdBy}: ${chat.person1Name}'),
+            subtitle: Text('${Str.to}: ${chat.person2Name}'),
             trailing: Text(
-              'Updated at: ${DateTime.fromMillisecondsSinceEpoch(chat.updatedAt).toString()}',
+              '${Str.updatedAt}: ${DateTime.fromMillisecondsSinceEpoch(chat.updatedAt).toString()}',
             ),
             onTap:
                 () => Navigator.of(context).push(
