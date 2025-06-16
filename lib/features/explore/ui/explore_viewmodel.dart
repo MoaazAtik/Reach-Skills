@@ -22,7 +22,7 @@ class ExploreViewModel extends ChangeNotifier {
   StreamSubscription<List<InterestModel>>? _interestsSubscription;
   List<InterestModel>? interests;
   List<InterestType> interestTypes = InterestType.values;
-  dynamic interestsStreamError;
+  String? interestsStreamError;
   bool loading = true;
 
   String? currentSenderId;
@@ -79,7 +79,9 @@ class ExploreViewModel extends ChangeNotifier {
           notifyListeners();
         },
         onError: (errorObject, stackTrace) {
-          interestsStreamError = errorObject;
+          interestsStreamError =
+              'Server error.\nPlease contact our support team or try again later.';
+          loading = false;
           notifyListeners();
         },
       );

@@ -21,7 +21,7 @@ class ExploreScreen extends StatelessWidget {
     }
 
     if (interestsStreamError != null) {
-      return Center(child: Text(interestsStreamError.toString()));
+      return Center(child: Text(interestsStreamError));
     }
 
     if (interests == null || interests.isEmpty) {

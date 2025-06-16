@@ -53,7 +53,11 @@ class ChatRepositoryImpl extends ChatRepository {
               _chatsController.sink.add(allChats);
             },
             onError: ((error, stackTrace) {
-              _chatsController.addError(error);
+              _chatsController.sink.addError(error);
+              if (kDebugMode) {
+                print('Messages Subscription Error. FirebaseException $error');
+                print('stackTrace: $stackTrace');
+              }
             }),
           );
     }
@@ -182,7 +186,8 @@ class ChatRepositoryImpl extends ChatRepository {
 
               _messagesController.sink.add(tempMessagesList);
             },
-            onError: ((error, stackTrace) { /* error.runtimeType FirebaseException */
+            onError: ((error, stackTrace) {
+              /* error.runtimeType FirebaseException */
               _messagesController.sink.addError(error);
               if (kDebugMode) {
                 print('Messages Subscription Error. FirebaseException $error');

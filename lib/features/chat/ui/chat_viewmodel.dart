@@ -26,9 +26,9 @@ class ChatViewModel extends ChangeNotifier {
   List<ChatModel>? _allChats;
 
   List<ChatModel>? get allChats => _allChats;
-  dynamic _chatsError;
+  String? _chatsError;
 
-  dynamic get chatsError => _chatsError;
+  String? get chatsError => _chatsError;
   StreamSubscription<List<ChatModel>>? _allChatsSubscription;
 
   void init() {
@@ -60,7 +60,9 @@ class ChatViewModel extends ChangeNotifier {
           notifyListeners();
         },
         onError: (errorObject, stackTrace) {
-          _chatsError = errorObject;
+          _chatsError =
+              'Server error.\nPlease contact our support team or try again later.';
+          loading = false;
           notifyListeners();
         },
       );

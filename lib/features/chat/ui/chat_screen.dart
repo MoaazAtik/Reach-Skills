@@ -43,7 +43,7 @@ class ChatScreen extends StatelessWidget {
     }
 
     if (chatsError != null) {
-      return Center(child: Text(chatsError.toString()));
+      return Center(child: Text(chatsError));
     }
 
     if (allChats == null || allChats.isEmpty) {
