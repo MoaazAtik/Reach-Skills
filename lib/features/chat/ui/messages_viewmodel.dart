@@ -26,7 +26,7 @@ class MessagesViewModel extends ChangeNotifier {
 
   bool loading = true;
   List<MessageModel>? messages;
-  dynamic messagesError;
+  String? messagesError;
   bool _isLoggedIn = false;
 
   bool get isLoggedIn => _isLoggedIn;
@@ -86,7 +86,9 @@ class MessagesViewModel extends ChangeNotifier {
           notifyListeners();
         },
         onError: (errorObject, stackTrace) {
-          messagesError = errorObject;
+          messagesError =
+              'Server error.\nPlease contact our support team or try again later.';
+          loading = false;
           notifyListeners();
         },
       );

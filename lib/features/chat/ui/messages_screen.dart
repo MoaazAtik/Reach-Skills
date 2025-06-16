@@ -84,7 +84,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
     }
 
     if (messagesError != null) {
-      return Center(child: Text(messagesError.toString()));
+      return Center(child: Text(messagesError));
     }
 
     return Column(

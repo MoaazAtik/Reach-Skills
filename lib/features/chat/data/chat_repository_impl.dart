@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import '../domain/chat_repository.dart';
 import 'chat_model.dart';
@@ -181,8 +182,12 @@ class ChatRepositoryImpl extends ChatRepository {
 
               _messagesController.sink.add(tempMessagesList);
             },
-            onError: ((error, stackTrace) {
-              _messagesController.addError(error);
+            onError: ((error, stackTrace) { /* error.runtimeType FirebaseException */
+              _messagesController.sink.addError(error);
+              if (kDebugMode) {
+                print('Messages Subscription Error. FirebaseException $error');
+                print('stackTrace: $stackTrace');
+              }
             }),
           );
     }
