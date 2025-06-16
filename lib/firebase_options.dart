@@ -47,28 +47,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDiPTRVsmlIB3A80quZVkkPlf1coYm1QCg',
-    appId: '1:1050098823596:web:a3c98260e04739d6d28a09',
-    messagingSenderId: '1050098823596',
-    projectId: 'skill-swap-cf272',
-    authDomain: 'skill-swap-cf272.firebaseapp.com',
-    storageBucket: 'skill-swap-cf272.firebasestorage.app',
+    apiKey: 'AIzaSyCs2JfFtPMz-WwDxCHsnOq4MVUj79lihvM',
+    appId: '1:945935664981:web:cdd5e99fd6412b7c84d1dc',
+    messagingSenderId: '945935664981',
+    projectId: 'reach-skills',
+    authDomain: 'reach-skills.firebaseapp.com',
+    storageBucket: 'reach-skills.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDLQ4qn-RpgR2TNdUMCgGy8DpSmzMV8WPY',
-    appId: '1:1050098823596:android:2d7fba5ce5e84bb1d28a09',
-    messagingSenderId: '1050098823596',
-    projectId: 'skill-swap-cf272',
-    storageBucket: 'skill-swap-cf272.firebasestorage.app',
+    apiKey: 'AIzaSyCXB-s5HP8qlPi3C5SAmCQaC3sZ5PkZ3Lw',
+    appId: '1:945935664981:android:8b6c09ae22a23d7984d1dc',
+    messagingSenderId: '945935664981',
+    projectId: 'reach-skills',
+    storageBucket: 'reach-skills.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA7VDJVuSodfqTCllq-H4HKva6eUVVxZlM',
-    appId: '1:1050098823596:ios:12e3b25b7f6b40a7d28a09',
-    messagingSenderId: '1050098823596',
-    projectId: 'skill-swap-cf272',
-    storageBucket: 'skill-swap-cf272.firebasestorage.app',
+    apiKey: 'AIzaSyA7ZJprAzRDECNUBWPp__uujTl8I9lWQD4',
+    appId: '1:945935664981:ios:d1e65afb1f3361bd84d1dc',
+    messagingSenderId: '945935664981',
+    projectId: 'reach-skills',
+    storageBucket: 'reach-skills.firebasestorage.app',
     iosBundleId: 'com.whitewings.skillSwap',
   );
+
 }
