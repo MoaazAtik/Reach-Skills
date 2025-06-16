@@ -32,7 +32,11 @@ class ProfileRepositoryImpl extends ProfileRepository {
 
   @override
   Future<ProfileModel?> getProfile(String uid) async {
-    final doc = await _firestore.collection('profiles').doc(uid).get();
+    final doc =
+        await _firestore
+            .collection(ProfileModel.COLLECTION_NAME)
+            .doc(uid)
+            .get();
 
     if (doc.exists) {
       return ProfileModel.fromMap(doc.data()!);
@@ -50,23 +54,23 @@ class ProfileRepositoryImpl extends ProfileRepository {
       _interestsStream = _interestsController.stream;
 
       _interestsSubscription = _firestore
-          .collection('profiles')
+          .collection(ProfileModel.COLLECTION_NAME)
           .snapshots()
           .listen(
             (snapshot) {
               final List<InterestModel> tempInterests = [];
 
               for (var doc in snapshot.docs) {
-                String uid = doc.data()['uid'];
-                String userName = doc.data()['name'];
+                String uid = doc.data()[ProfileModel.FIELD_UID];
+                String userName = doc.data()[ProfileModel.FIELD_NAME];
 
                 List<dynamic> profileSkillsList =
                     interestTypes.contains(InterestType.skill)
-                        ? doc.data()['skills']
+                        ? doc.data()[ProfileModel.FIELD_SKILLS]
                         : [];
                 List<dynamic> profileWishesList =
                     interestTypes.contains(InterestType.wish)
-                        ? doc.data()['wishes']
+                        ? doc.data()[ProfileModel.FIELD_WISHES]
                         : [];
                 for (var skillInAProfile in profileSkillsList) {
                   tempInterests.add(
