@@ -57,7 +57,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCXB-s5HP8qlPi3C5SAmCQaC3sZ5PkZ3Lw',
-    appId: '1:945935664981:android:8b6c09ae22a23d7984d1dc',
+    appId: '1:945935664981:android:59c0f6d1a15018e784d1dc',
     messagingSenderId: '945935664981',
     projectId: 'reach-skills',
     storageBucket: 'reach-skills.firebasestorage.app',
@@ -65,11 +65,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyA7ZJprAzRDECNUBWPp__uujTl8I9lWQD4',
-    appId: '1:945935664981:ios:d1e65afb1f3361bd84d1dc',
+    appId: '1:945935664981:ios:41d68a59efc7ff0184d1dc',
     messagingSenderId: '945935664981',
     projectId: 'reach-skills',
     storageBucket: 'reach-skills.firebasestorage.app',
-    iosBundleId: 'com.whitewings.skillSwap',
+    iosBundleId: 'com.whitewings.reachSkills',
   );
 
 }

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'core/constants/strings.dart';
 import 'features/common/ui/home_screen.dart';
 
-class SkillSwapApp extends StatelessWidget {
-  const SkillSwapApp({super.key});
+class ReachSkillsApp extends StatelessWidget {
+  const ReachSkillsApp({super.key});
 
   @override
   Widget build(BuildContext context) {

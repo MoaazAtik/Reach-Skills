@@ -1,6 +1,6 @@
 class Str {
-  static const appTitle = 'Skill Swap';
-  static const homeScreenTitle = 'SkillSwap - Home';
+  static const appTitle = 'Reach Skills';
+  static const homeScreenTitle = 'ReachSkills - Home';
   static const profileScreenTitle = 'Profile';
   static const exploreScreenTitle = 'Explore';
   static const chatScreenTitle = 'Chat';

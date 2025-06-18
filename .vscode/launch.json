@@ -24,18 +24,18 @@
         // },
 
         {
-            "name": "skill_swap",
+            "name": "reach_skills",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "skill_swap (profile mode)",
+            "name": "reach_skills (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "skill_swap (release mode)",
+            "name": "reach_skills (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

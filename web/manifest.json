@@ -1,6 +1,6 @@
 {
-    "name": "skill_swap",
-    "short_name": "skill_swap",
+    "name": "reach_skills",
+    "short_name": "reach_skills",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -59,7 +59,7 @@ void main() async {
               ),
         ),
       ],
-      child: SkillSwapApp(),
+      child: ReachSkillsApp(),
     ),
   );
 }
