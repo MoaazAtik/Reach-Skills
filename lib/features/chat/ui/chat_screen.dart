@@ -16,6 +16,7 @@ class ChatScreen extends StatelessWidget {
     final loading = chatViewModel.loading;
     final allChats = chatViewModel.allChats;
     final chatsError = chatViewModel.chatsError;
+    final authError = chatViewModel.authError;
 
     if (!isLoggedIn) {
       return Column(
@@ -43,6 +44,10 @@ class ChatScreen extends StatelessWidget {
       return Center(child: Text(chatsError));
     }
 
+    if (authError != null) {
+      return Center(child: Text(authError));
+    }
+
     if (allChats == null || allChats.isEmpty) {
       return const Center(child: Text(Str.noChatsMessage));
     }
@@ -58,12 +63,21 @@ class ChatScreen extends StatelessWidget {
             trailing: Text(
               '${Str.updatedAt}: ${DateTime.fromMillisecondsSinceEpoch(chat.updatedAt).toString()}',
             ),
-            onTap:
-                () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => MessagesScreen(chatId: chat.id),
-                  ),
+            onTap: () {
+              chatViewModel.updateSelectedChatFields(chat);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder:
+                      (_) => MessagesScreen(
+                        chatId: chat.id,
+                        currentSenderId: chatViewModel.currentSenderId,
+                        currentSenderName: chatViewModel.currentSenderName,
+                        currentReceiverId: chatViewModel.currentReceiverId,
+                        currentReceiverName: chatViewModel.currentReceiverName,
+                      ),
                 ),
+              );
+            },
           ),
         );
       },

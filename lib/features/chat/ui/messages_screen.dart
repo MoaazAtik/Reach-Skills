@@ -6,19 +6,18 @@ import '../../auth/ui/auth_screen.dart';
 import 'messages_viewmodel.dart';
 
 class MessagesScreen extends StatefulWidget {
-  const MessagesScreen({super.key, required this.chatId})
-    : currentSenderId = null,
-      currentSenderName = null,
-      currentReceiverId = null,
-      currentReceiverName = null;
-
-  const MessagesScreen.fromExplore({
+  /*
+  When navigating from ChatScreen pass all the fields,
+  when navigating from MessagesScreen don't pass chatId.
+  */
+  const MessagesScreen({
     super.key,
+    this.chatId,
     required this.currentSenderId,
     required this.currentSenderName,
     required this.currentReceiverId,
     required this.currentReceiverName,
-  }) : chatId = null;
+  });
 
   static const String routeName = Str.messagesScreenRouteName;
   static const String title = Str.messagesScreenTitle;
@@ -40,16 +39,14 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   @override
   void initState() {
-    if (widget.chatId != null) {
-      context.read<MessagesViewModel>().setChatId(widget.chatId!);
-    } else {
-      context.read<MessagesViewModel>().updateFields(
-        currentSenderId: widget.currentSenderId,
-        currentSenderName: widget.currentSenderName,
-        currentReceiverId: widget.currentReceiverId,
-        currentReceiverName: widget.currentReceiverName,
-      );
-    }
+    context.read<MessagesViewModel>().updateFields(
+      chatId: widget.chatId,
+      currentSenderId: widget.currentSenderId,
+      currentSenderName: widget.currentSenderName,
+      currentReceiverId: widget.currentReceiverId,
+      currentReceiverName: widget.currentReceiverName,
+    );
+
     super.initState();
   }
 

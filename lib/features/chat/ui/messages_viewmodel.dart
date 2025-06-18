@@ -42,6 +42,7 @@ class MessagesViewModel extends ChangeNotifier {
   }
 
   void updateFields({
+    String? chatId,
     String? currentSenderId,
     String? currentSenderName,
     String? currentReceiverId,
@@ -52,9 +53,9 @@ class MessagesViewModel extends ChangeNotifier {
     this.currentReceiverId = currentReceiverId;
     this.currentReceiverName = currentReceiverName;
 
-    // notifyListeners is called by setChatId
+    /* notifyListeners is called via setChatId by startMessagesSubscription */
 
-    getChatId();
+    chatId != null ? setChatId(chatId) : getChatId();
   }
 
   Future<void> getChatId() async {

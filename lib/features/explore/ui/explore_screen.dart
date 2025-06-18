@@ -68,7 +68,7 @@ class ExploreScreen extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder:
-                            (_) => MessagesScreen.fromExplore(
+                            (_) => MessagesScreen(
                               currentSenderId: exploreViewModel.currentSenderId,
                               currentSenderName:
                                   exploreViewModel.currentSenderName,
