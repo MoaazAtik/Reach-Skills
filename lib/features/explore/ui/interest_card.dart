@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../common/data/interest_model.dart';
 
 class InterestCard extends StatelessWidget {
@@ -52,7 +53,7 @@ class InterestCard extends StatelessWidget {
             TextButton(
               style: TextButton.styleFrom(foregroundColor: Colors.transparent),
               child: const Text(
-                "REACH...",
+                "${Str.reach}...",
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,

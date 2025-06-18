@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../auth/ui/auth_screen.dart';
 import 'messages_viewmodel.dart';
 
 class MessagesScreen extends StatefulWidget {
-  const MessagesScreen({super.key, required this.chatId})
-    : currentSenderId = null,
-      currentSenderName = null,
-      currentReceiverId = null,
-      currentReceiverName = null;
-
-  const MessagesScreen.fromExplore({
+  /*
+  When navigating from ChatScreen pass all the fields,
+  when navigating from MessagesScreen don't pass chatId.
+  */
+  const MessagesScreen({
     super.key,
+    this.chatId,
     required this.currentSenderId,
     required this.currentSenderName,
     required this.currentReceiverId,
     required this.currentReceiverName,
-  }) : chatId = null;
+  });
 
-  static const String routeName = '/messages';
-  static const String title = 'Messages';
+  static const String routeName = Str.messagesScreenRouteName;
+  static const String title = Str.messagesScreenTitle;
   static const IconData icon = Icons.message;
 
   final String? chatId;
@@ -39,16 +39,14 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   @override
   void initState() {
-    if (widget.chatId != null) {
-      context.read<MessagesViewModel>().setChatId(widget.chatId!);
-    } else {
-      context.read<MessagesViewModel>().updateFields(
-        currentSenderId: widget.currentSenderId,
-        currentSenderName: widget.currentSenderName,
-        currentReceiverId: widget.currentReceiverId,
-        currentReceiverName: widget.currentReceiverName,
-      );
-    }
+    context.read<MessagesViewModel>().updateFields(
+      chatId: widget.chatId,
+      currentSenderId: widget.currentSenderId,
+      currentSenderName: widget.currentSenderName,
+      currentReceiverId: widget.currentReceiverId,
+      currentReceiverName: widget.currentReceiverName,
+    );
+
     super.initState();
   }
 
@@ -65,7 +63,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
       return Column(
         children: [
           const SizedBox(height: 40),
-          Text('No user info available.'),
+          Text(Str.noUserInfoMessage),
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
@@ -73,7 +71,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 context,
               ).push(MaterialPageRoute(builder: (_) => const AuthScreen()));
             },
-            child: const Text('Sign in'),
+            child: const Text(Str.signIn),
           ),
         ],
       );
@@ -90,7 +88,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
     return Column(
       children: [
         if (messages == null || messages.isEmpty)
-          const Center(child: Text('No messages available.'))
+          const Center(child: Text(Str.noMessagesMessage))
         else
           Expanded(
             child: ListView.builder(
@@ -104,7 +102,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                       'Sender: ${message.senderName}\nReceiver: ${message.receiverName}',
                     ),
                     trailing: Text(
-                      'Updated at: ${DateTime.fromMillisecondsSinceEpoch(message.updatedAt).toString()}',
+                      '${Str.updatedAt}: ${DateTime.fromMillisecondsSinceEpoch(message.updatedAt).toString()}',
                     ),
                   ),
                 );

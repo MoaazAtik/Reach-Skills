@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../core/constants/strings.dart';
+import '../../auth/data/auth_repository_impl.dart';
 import '../../auth/domain/auth_repository.dart';
 import '../data/chat_model.dart';
 import '../domain/chat_repository.dart';
@@ -22,6 +25,14 @@ class ChatViewModel extends ChangeNotifier {
   bool _isLoggedIn = false;
 
   bool get isLoggedIn => _isLoggedIn;
+  User? _currentUser;
+  String? _authError;
+
+  String? get authError => _authError;
+  String? currentSenderId;
+  String? currentSenderName;
+  String? currentReceiverId;
+  String? currentReceiverName;
 
   List<ChatModel>? _allChats;
 
@@ -41,9 +52,23 @@ class ChatViewModel extends ChangeNotifier {
 
     _isLoggedIn = _authRepository.isLoggedIn.value;
     notifyListeners();
+    _currentUser = _authRepository.currentUserNotifier.value;
+    _authError = (_authRepository as AuthRepositoryImpl).authError.value;
+    notifyListeners();
 
     _authRepository.isLoggedIn.addListener(() {
       _isLoggedIn = _authRepository.isLoggedIn.value;
+      notifyListeners();
+    });
+
+    _authRepository.currentUserNotifier.addListener(() {
+      _currentUser = _authRepository.currentUserNotifier.value;
+      _authError = null;
+      notifyListeners();
+    });
+
+    _authRepository.authError.addListener(() {
+      _authError = _authRepository.authError.value;
       notifyListeners();
     });
   }
@@ -60,8 +85,7 @@ class ChatViewModel extends ChangeNotifier {
           notifyListeners();
         },
         onError: (errorObject, stackTrace) {
-          _chatsError =
-              'Server error.\nPlease contact our support team or try again later.';
+          _chatsError = Str.serverErrorMessage;
           loading = false;
           notifyListeners();
         },
@@ -74,6 +98,20 @@ class ChatViewModel extends ChangeNotifier {
 
     _chatRepository.unsubscribeFromChatsStream();
     _allChatsSubscription?.cancel();
+  }
+
+  void updateSelectedChatFields(ChatModel chat) {
+    if (_currentUser!.uid == chat.person1Id) {
+      currentSenderId = chat.person1Id;
+      currentSenderName = chat.person1Name;
+      currentReceiverId = chat.person2Id;
+      currentReceiverName = chat.person2Name;
+    } else {
+      currentSenderId = chat.person2Id;
+      currentSenderName = chat.person2Name;
+      currentReceiverId = chat.person1Id;
+      currentReceiverName = chat.person1Name;
+    }
   }
 
   @override

@@ -1,5 +1,4 @@
 class ProfileModel {
-
   final String uid;
   final String name;
   final String email;
@@ -8,38 +7,46 @@ class ProfileModel {
   final List<String> wishes;
   final int lastEditedTime;
 
+  static const String COLLECTION_NAME = 'profiles';
+  static const String FIELD_UID = 'uid';
+  static const String FIELD_NAME = 'name';
+  static const String FIELD_EMAIL = 'email';
+  static const String FIELD_BIO = 'bio';
+  static const String FIELD_SKILLS = 'skills';
+  static const String FIELD_WISHES = 'wishes';
+  static const String FIELD_LAST_EDITED_TIME = 'lastEditedTime';
+
   ProfileModel({
-    required this.uid,
-    required this.name,
-    required this.email,
-    required this.bio,
-    required this.skills,
-    required this.wishes,
-    required this.lastEditedTime,
+    this.uid = '',
+    this.name = '',
+    this.email = '',
+    this.bio = '',
+    this.skills = const <String>[],
+    this.wishes = const <String>[],
+    this.lastEditedTime = 0,
   });
 
   factory ProfileModel.fromMap(Map<String, dynamic> map) {
     return ProfileModel(
-      uid: map['uid'] ?? '',
-      name: map['name'] ?? '',
-      email: map['email'] ?? '',
-      bio: map['bio'] ?? '',
-      skills: List<String>.from(map['skills'] ?? []),
-      wishes: List<String>.from(map['wishes'] ?? []),
-      lastEditedTime: map['lastEditedTime'].toInt() ?? 0,
+      uid: map[FIELD_UID],
+      name: map[FIELD_NAME],
+      email: map[FIELD_EMAIL],
+      bio: map[FIELD_BIO],
+      skills: List<String>.from(map[FIELD_SKILLS]),
+      wishes: List<String>.from(map[FIELD_WISHES]),
+      lastEditedTime: map[FIELD_LAST_EDITED_TIME],
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'uid': uid,
-      'name': name,
-      'email': email,
-      'bio': bio,
-      'skills': skills,
-      'wishes': wishes,
-      'lastEditedTime': lastEditedTime,
+      FIELD_UID: uid,
+      FIELD_NAME: name,
+      FIELD_EMAIL: email,
+      FIELD_BIO: bio,
+      FIELD_SKILLS: skills,
+      FIELD_WISHES: wishes,
+      FIELD_LAST_EDITED_TIME: lastEditedTime,
     };
   }
-
 }

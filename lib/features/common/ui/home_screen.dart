@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../auth/ui/auth_screen.dart';
 import '../../auth/ui/auth_viewmodel.dart';
 import '../../chat/ui/chat_screen.dart';
@@ -24,19 +25,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final authError = authViewModel.authError;
 
     return Scaffold(
-
       appBar: AppBar(
-        title: const Text('SkillSwap - Home'),
+        title: const Text(Str.homeScreenTitle),
         actions: [
+          if (authError != null) Text('${Str.error}: $authError'),
 
-          if (authError != null)
-            Text('Error: $authError'),
+          if (isLoggedIn) const Text(Str.loggedIn),
 
-          if (isLoggedIn)
-            const Text('Logged in'),
-
-          if (!isLoggedIn)
-            const Text('Not logged in'),
+          if (!isLoggedIn) const Text(Str.notLoggedIn),
 
           if (isLoggedIn)
             IconButton(
@@ -48,30 +44,37 @@ class _HomeScreenState extends State<HomeScreen> {
             IconButton(
               icon: const Icon(Icons.login),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const AuthScreen()),
-                );
-              }
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => const AuthScreen()));
+              },
             ),
-
         ],
       ),
 
       body: Center(
-        child:
-          switch (_selectedIndex) {
-            0 => const ExploreScreen(),
-            1 => const ProfileScreen(),
-            2 => const ChatScreen(),
-            _ => const Text('Unknown Screen'),
-          },
+        child: switch (_selectedIndex) {
+          0 => const ExploreScreen(),
+          1 => const ProfileScreen(),
+          2 => const ChatScreen(),
+          _ => const Text(Str.unknownScreenMessage),
+        },
       ),
 
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(ChatScreen.icon), label: ChatScreen.title),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.explore),
+            label: Str.exploreScreenTitle,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: Str.profileScreenTitle,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: Str.chatScreenTitle,
+          ),
         ],
         currentIndex: _selectedIndex,
         onTap: (index) {
@@ -80,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
       ),
-
     );
   }
 }

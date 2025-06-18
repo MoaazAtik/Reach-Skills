@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../auth/ui/auth_screen.dart';
 import '../domain/profile_model.dart';
 import 'profile_viewmodel.dart';
@@ -53,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return Column(
         children: [
           const SizedBox(height: 40),
-          Text('No user info available.'),
+          Text(Str.noUserInfoMessage),
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
@@ -61,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 context,
               ).push(MaterialPageRoute(builder: (_) => const AuthScreen()));
             },
-            child: const Text('Sign in'),
+            child: const Text(Str.signIn),
           ),
         ],
       );
@@ -72,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile')),
+      appBar: AppBar(title: const Text(Str.editProfile)),
 
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -82,38 +83,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(labelText: Str.name),
                 validator:
                     (value) =>
-                        value == null || value.isEmpty ? 'Required' : null,
+                        value == null || value.isEmpty ? Str.required : null,
               ),
               TextFormField(
                 controller: _bioController,
-                decoration: const InputDecoration(labelText: 'Bio'),
+                decoration: const InputDecoration(labelText: Str.bio),
               ),
               TextFormField(
                 controller: _skillsController,
                 decoration: const InputDecoration(
-                  labelText: 'Skills (comma-separated)',
+                  labelText: Str.skillsInputDescription,
                 ),
               ),
               TextFormField(
                 controller: _wishesController,
                 decoration: const InputDecoration(
-                  labelText: 'Wishes (comma-separated)',
+                  labelText: Str.wishesInputDescription,
                 ),
               ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () => _saveProfile(updateProfile),
-                child: const Text('Save Profile'),
+                child: const Text(Str.saveProfile),
               ),
               const SizedBox(height: 24),
-              Text('Email: $_email'),
+              Text('${Str.email}: $_email'),
               const SizedBox(height: 24),
               if (_profile != null)
                 Text(
-                  'Last edited: ${DateTime.fromMillisecondsSinceEpoch(_profile!.lastEditedTime).toString()}',
+                  '${Str.lastEdited}: ${DateTime.fromMillisecondsSinceEpoch(_profile!.lastEditedTime).toString()}',
                 ),
             ],
           ),
@@ -128,9 +129,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String updatingResult;
 
     if (!_formKey.currentState!.validate()) {
-      updatingResult = 'Please fill in all required fields.';
+      updatingResult = Str.fillRequiredFields;
     } else if (_uid == null) {
-      updatingResult = 'Unknown Error. Try signing out and signing in again.';
+      updatingResult = Str.unknownErrorSignAgain;
     } else {
       final newProfile = ProfileModel(
         uid: _uid!,

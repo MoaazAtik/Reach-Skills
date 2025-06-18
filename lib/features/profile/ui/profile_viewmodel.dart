@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../auth/domain/auth_repository.dart';
 import '../domain/profile_model.dart';
 import '../domain/profile_repository.dart';
@@ -43,12 +44,12 @@ class ProfileViewModel extends ChangeNotifier {
       edited = validateProfileUpdates(newProfile);
     }
 
-    if (!edited) return 'No changes to save';
+    if (!edited) return Str.noChanges;
 
     await _profileRepository.saveProfile(newProfile);
     loadProfile();
 
-    return 'Profile Saved';
+    return Str.profileSaved;
   }
 
   bool validateProfileUpdates(ProfileModel newProfile) {
@@ -56,14 +57,14 @@ class ProfileViewModel extends ChangeNotifier {
 
     for (final entry in newProfile.toMap().entries) {
       // skip uid, email, lastEditedTime
-      if (entry.key == 'uid' ||
-          entry.key == 'email' ||
-          entry.key == 'lastEditedTime') {
+      if (entry.key == ProfileModel.FIELD_UID ||
+          entry.key == ProfileModel.FIELD_EMAIL ||
+          entry.key == ProfileModel.FIELD_LAST_EDITED_TIME) {
         continue;
       }
 
       // check skills
-      if (entry.key == 'skills') {
+      if (entry.key == ProfileModel.FIELD_SKILLS) {
         if (entry.value.toString() != profile!.toMap()[entry.key].toString()) {
           edited = true;
           break;
@@ -72,7 +73,7 @@ class ProfileViewModel extends ChangeNotifier {
       }
 
       // check wishes
-      if (entry.key == 'wishes') {
+      if (entry.key == ProfileModel.FIELD_WISHES) {
         if (entry.value.toString() != profile!.toMap()[entry.key].toString()) {
           edited = true;
           break;

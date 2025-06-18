@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../auth/domain/auth_repository.dart';
 import '../data/message_model.dart';
 import '../domain/chat_repository.dart';
@@ -41,6 +42,7 @@ class MessagesViewModel extends ChangeNotifier {
   }
 
   void updateFields({
+    String? chatId,
     String? currentSenderId,
     String? currentSenderName,
     String? currentReceiverId,
@@ -51,9 +53,9 @@ class MessagesViewModel extends ChangeNotifier {
     this.currentReceiverId = currentReceiverId;
     this.currentReceiverName = currentReceiverName;
 
-    // notifyListeners is called by setChatId
+    /* notifyListeners is called via setChatId by startMessagesSubscription */
 
-    getChatId();
+    chatId != null ? setChatId(chatId) : getChatId();
   }
 
   Future<void> getChatId() async {
@@ -86,8 +88,7 @@ class MessagesViewModel extends ChangeNotifier {
           notifyListeners();
         },
         onError: (errorObject, stackTrace) {
-          messagesError =
-              'Server error.\nPlease contact our support team or try again later.';
+          messagesError = Str.serverErrorMessage;
           loading = false;
           notifyListeners();
         },
