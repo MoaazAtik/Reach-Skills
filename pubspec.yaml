@@ -37,14 +37,14 @@ dependencies:
   # Provider Package for state management
   provider: ^6.1.5
   # Firebase core
-  firebase_core: ^3.13.1
+  firebase_core: ^3.14.0
   # Firebase auth
-  firebase_auth: ^5.5.4
-  firebase_ui_auth: ^1.16.1
+  firebase_auth: ^5.6.0
+  firebase_ui_auth: ^1.17.0
   # Firebase localization
-  firebase_ui_localizations: ^1.13.1
+  firebase_ui_localizations: ^1.14.0
   # Firebase Cloud Firestore Database
-  cloud_firestore: ^5.6.8
+  cloud_firestore: ^5.6.9
 
 dev_dependencies:
   flutter_test:
@@ -55,7 +55,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
