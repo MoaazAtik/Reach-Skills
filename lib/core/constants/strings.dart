@@ -2,14 +2,19 @@ class Str {
   static const appTitle = 'Reach Skills';
   static const homeScreenTitle = 'ReachSkills - Home';
   static const profileScreenTitle = 'Profile';
-  static const exploreScreenTitle = 'Explore';
+  static const exploreScreenTitle = 'Interests';
+  static const exploreScreenLabel = 'Explore';
   static const chatScreenTitle = 'Chat';
   static const messagesScreenTitle = 'Messages';
   static const unknownScreenMessage = 'Unknown Screen';
+  static const screenNotFoundMessage = '404\nScreen Not Found';
 
-  static const chatScreenRouteName = '/chat';
+  static const chatScreenRouteName = 'chat';
+  static const chatScreenRoutePath = '/chat';
   static const profileScreenRouteName = '/profile';
-  static const exploreScreenRouteName = '/explore';
+  // static const exploreScreenRouteName = '/explore';
+  static const exploreScreenRouteName = 'explore';
+  static const exploreScreenRoutePath = '/';
   static const messagesScreenRouteName = '/messages';
 
   static const error = 'Error';
