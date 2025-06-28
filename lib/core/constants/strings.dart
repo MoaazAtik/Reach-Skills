@@ -10,7 +10,9 @@ class Str {
   static const screenNotFoundMessage = '404\nScreen Not Found';
 
   static const chatScreenRouteName = 'chat';
-  static const chatScreenRoutePath = '/chat';
+  // static const chatScreenRoutePath = '/chat'; // Todo: fix this
+  static const chatScreenRoutePath = '/chat/:id';
+  // static const chatScreenRoutePath = '/chat/:id?';
   static const profileScreenRouteName = '/profile';
   // static const exploreScreenRouteName = '/explore';
   static const exploreScreenRouteName = 'explore';
