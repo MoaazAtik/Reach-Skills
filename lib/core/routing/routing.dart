@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/chat/ui/chat_body.dart';
-import '../../features/common/widgets/rs_app_bar.dart';
-import '../../features/common/widgets/rs_bottom_navigation_bar.dart';
-import '../../features/common/widgets/rs_navigation_drawer.dart';
+import '../../features/common/widgets/error_route.dart';
+import '../../features/common/widgets/navigation_shell_scaffold.dart';
+import '../../features/common/widgets/scaffold_app_bar.dart';
 import '../../features/explore/ui/explore_body.dart';
 import '../constants/strings.dart';
 
@@ -24,33 +24,7 @@ final router = GoRouter(
         GoRouterState state,
         StatefulNavigationShell navigationShell,
       ) {
-        final isLargeScreen =
-            MediaQuery.sizeOf(context).width > Str.smallScreenWidthThreshold;
-
-        return Scaffold(
-          body: Row(
-            children: [
-              if (isLargeScreen)
-                RsNavigationRail(
-                  currentIndex: navigationShell.currentIndex,
-                  onTap:
-                      (int index) =>
-                          goToBranchDestination(index, navigationShell),
-                ),
-              Expanded(child: navigationShell),
-            ],
-          ),
-          bottomNavigationBar:
-              isLargeScreen
-                  ? null
-                  : RsBottomNavigationBar(
-                    onTap:
-                        (int index) =>
-                            goToBranchDestination(index, navigationShell),
-                    currentIndex: navigationShell.currentIndex,
-                    // selectedIndex: state.uri.pathSegments.last,
-                  ),
-        );
+        return NavigationShellScaffold(navigationShell: navigationShell);
       },
       branches: [
         StatefulShellBranch(
@@ -59,20 +33,9 @@ final router = GoRouter(
               name: Str.exploreScreenRouteName,
               path: Str.exploreScreenRoutePath,
               builder: (BuildContext context, GoRouterState state) {
-                return Scaffold(
+                return ScaffoldAppBar(
                   body: ExploreBody(),
-                  appBar: rsAppBar(
-                    title: Str.exploreScreenTitle,
-                    actions: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.more_vert_rounded),
-                        ),
-                      ),
-                    ],
-                  ),
+                  appBarTitle: Str.exploreScreenTitle,
                 );
               },
             ),
@@ -84,7 +47,10 @@ final router = GoRouter(
               name: Str.chatScreenRouteName,
               path: Str.chatScreenRoutePath,
               builder: (BuildContext context, GoRouterState state) {
-                return ChatBody();
+                return ScaffoldAppBar(
+                  body: ChatBody(),
+                  appBarTitle: Str.chatScreenTitle,
+                );
               },
               routes: [
                 GoRoute(
@@ -93,7 +59,10 @@ final router = GoRouter(
                   builder: (BuildContext context, GoRouterState state) {
                     final chatId =
                         state.pathParameters[Str.messagesScreenParamId];
-                    return ChatBody(selectedChatId: chatId);
+                    return ScaffoldAppBar(
+                      body: ChatBody(selectedChatId: chatId),
+                      appBarTitle: Str.chatScreenTitle,
+                    );
                   },
                 ),
               ],
@@ -104,23 +73,7 @@ final router = GoRouter(
     ),
   ],
   errorBuilder: (context, state) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              Str.screenNotFoundMessage,
-              style: TextStyle(color: Colors.amber),
-            ),
-            ElevatedButton(
-              onPressed: () => context.go(Str.exploreScreenRoutePath),
-              child: Text(Str.exploreScreenRouteName),
-            ),
-          ],
-        ),
-      ),
-    );
+    return ErrorRoute();
   },
 );
 
