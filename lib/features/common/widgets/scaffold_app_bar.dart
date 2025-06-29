@@ -17,6 +17,7 @@ class ScaffoldAppBar extends StatelessWidget {
     return Scaffold(
       body: body,
       appBar: rsAppBar(
+        context: context,
         title: appBarTitle,
         actions: [
           Padding(

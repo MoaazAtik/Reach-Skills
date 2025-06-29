@@ -1,23 +1,45 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/strings.dart';
+import '../../../core/constants/values.dart';
+import '../../common/widgets/rs_chip.dart';
+
 class ExploreBody extends StatelessWidget {
   const ExploreBody({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: Values.padding12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
+            spacing: Values.spacingMedium,
             children: [
-              Card(child: FilledButton(onPressed: () {}, child: Text('All'))),
-              Card(
-                child: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+              RsChip(
+                onTap: () {},
+                paddingRight: Values.paddingSmall,
+                children: [
+                  Text(
+                    Str.filterAll,
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontSize: Values.fontSizeChip,
+                      fontWeight: Values.fontWeightChip,
+                    ),
+                  ),
+                  Icon(Icons.keyboard_arrow_down_rounded, size: 24),
+                ],
+              ),
+              RsChip(
+                onTap: () {},
+                paddingRight: Values.paddingSmall,
+                paddingLeft: Values.paddingSmall,
+                children: [Icon(Icons.search_rounded, size: 20)],
               ),
             ],
           ),
+          const SizedBox(height: Values.spacingMedium),
           Expanded(
             child: GridView(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(

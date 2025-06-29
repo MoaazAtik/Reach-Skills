@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/constants/strings.dart';
+import '../../../core/constants/values.dart';
 
 class ChatBody extends StatelessWidget {
   final String? selectedChatId;
@@ -11,7 +11,7 @@ class ChatBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLargeScreen =
-        MediaQuery.sizeOf(context).width > Str.smallScreenWidthThreshold;
+        MediaQuery.sizeOf(context).width > Values.smallScreenWidthThreshold;
 
     return Row(
       children: [

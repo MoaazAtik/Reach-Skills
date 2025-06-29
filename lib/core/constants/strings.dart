@@ -1,4 +1,4 @@
-class Str {
+abstract class Str {
   static const appTitle = 'Reach Skills';
   static const homeScreenTitle = 'ReachSkills - Home';
   static const profileScreenTitle = 'Profile';
@@ -24,10 +24,9 @@ class Str {
 
   static const messagesScreenParamId = 'id';
 
-  static const smallScreenWidthThreshold = 600;
-  static const largeScreenWidthThreshold = 1200;
-
   static const error = 'Error';
+
+  static const filterAll = 'All';
 
   static const pleaseSignIn = 'Please sign in.';
   static const cannotReachYourself = 'Trying to reach yourself?';
