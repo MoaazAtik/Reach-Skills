@@ -11,17 +11,12 @@ class ReachSkillsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = View.of(context).platformDispatcher.platformBrightness;
-
-    TextTheme textTheme = createTextTheme(context, "Plus Jakarta Sans", "Plus Jakarta Sans");
-
+    final textTheme = Theme.of(context).textTheme;
     MaterialTheme theme = MaterialTheme(textTheme);
 
     return MaterialApp.router(
       title: Str.appTitle,
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      // theme: ThemeData(
-      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      // ),
       debugShowCheckedModeBanner: false,
 
       localizationsDelegates: [FirebaseUILocalizations.delegate],
@@ -30,22 +25,4 @@ class ReachSkillsApp extends StatelessWidget {
       routerConfig: router,
     );
   }
-}
-
-
-TextTheme createTextTheme(
-    BuildContext context, String bodyFontString, String displayFontString) {
-  TextTheme baseTextTheme = Theme.of(context).textTheme;
-  TextTheme bodyTextTheme = GoogleFonts.getTextTheme(bodyFontString, baseTextTheme);
-  TextTheme displayTextTheme =
-  GoogleFonts.getTextTheme(displayFontString, baseTextTheme);
-  TextTheme textTheme = displayTextTheme.copyWith(
-    bodyLarge: bodyTextTheme.bodyLarge,
-    bodyMedium: bodyTextTheme.bodyMedium,
-    bodySmall: bodyTextTheme.bodySmall,
-    labelLarge: bodyTextTheme.labelLarge,
-    labelMedium: bodyTextTheme.labelMedium,
-    labelSmall: bodyTextTheme.labelSmall,
-  );
-  return textTheme;
 }
