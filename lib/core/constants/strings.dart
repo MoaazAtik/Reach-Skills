@@ -9,15 +9,23 @@ class Str {
   static const unknownScreenMessage = 'Unknown Screen';
   static const screenNotFoundMessage = '404\nScreen Not Found';
 
-  static const chatScreenRouteName = 'chat';
-  // static const chatScreenRoutePath = '/chat'; // Todo: fix this
-  static const chatScreenRoutePath = '/chat/:id';
-  // static const chatScreenRoutePath = '/chat/:id?';
-  static const profileScreenRouteName = '/profile';
-  // static const exploreScreenRouteName = '/explore';
   static const exploreScreenRouteName = 'explore';
   static const exploreScreenRoutePath = '/';
-  static const messagesScreenRouteName = '/messages';
+  static const chatScreenRouteName = 'chat';
+  static const chatScreenRoutePath = '/chat';
+  static const messagesScreenRouteName = 'messages';
+
+  /* When used as subroute of a StatefulShellBranch,
+  '/:id' is equivalent to ':id' */
+  static const messagesScreenRoutePath = '/:id';
+  static const messagesScreenRouteFullPath = '/chat/:id';
+  static const profileScreenRouteName = 'profile';
+  static const profileScreenRoutePath = '/profile';
+
+  static const messagesScreenParamId = 'id';
+
+  static const smallScreenWidthThreshold = 600;
+  static const largeScreenWidthThreshold = 1200;
 
   static const error = 'Error';
 
