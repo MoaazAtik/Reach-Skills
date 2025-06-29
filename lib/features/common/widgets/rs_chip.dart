@@ -25,11 +25,10 @@ class RsChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return GestureDetector(
-    return InkWell( // Todo fix clicking
+    return InkWell(
       onTap: onTap,
-
-      child: Container(
+      borderRadius: BorderRadius.circular(Values.borderRadius),
+      child: Ink(
         height: Values.chipHeight,
         padding: EdgeInsets.only(
           left: paddingLeft,
@@ -40,29 +39,9 @@ class RsChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: chipColor,
           borderRadius: BorderRadius.circular(Values.borderRadius),
-          // border: Border.all(
-          //   color: Colors.grey,
-          //   width: 1,
-          // ),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.grey.withOpacity(0.5),
-          //     spreadRadius: 2,
-          //     blurRadius: 5,
-          //     offset: const Offset(0, 3),
-          //   ),
-          // ],
         ),
         child: Row(spacing: Values.spacingSmall, children: children),
       ),
-
-      // child: Padding(
-      //   padding: const EdgeInsets.symmetric(
-      //     vertical: Values.paddingMedium,
-      //     horizontal: Values.paddingMedium,
-      //   ),
-      //   child: Row(children: children),
-      // ),
     );
   }
 }

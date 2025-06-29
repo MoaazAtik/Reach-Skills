@@ -18,7 +18,9 @@ class ExploreBody extends StatelessWidget {
             spacing: Values.spacingMedium,
             children: [
               RsChip(
-                onTap: () {},
+                onTap: () {
+                  print('tap');
+                },
                 paddingRight: Values.paddingSmall,
                 children: [
                   Text(
@@ -32,7 +34,7 @@ class ExploreBody extends StatelessWidget {
                 ],
               ),
               RsChip(
-                onTap: () {},
+                // onTap: () {},
                 paddingRight: Values.paddingSmall,
                 paddingLeft: Values.paddingSmall,
                 children: [Icon(Icons.search_rounded, size: 20)],
