@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
+import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/ui/chat_body.dart';
 import '../../features/common/widgets/error_route.dart';
 import '../../features/common/widgets/navigation_shell_scaffold.dart';
@@ -36,6 +38,7 @@ final router = GoRouter(
                 return ScaffoldAppBar(
                   body: ExploreBody(),
                   appBarTitle: Str.exploreScreenTitle,
+                  isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                 );
               },
             ),
@@ -50,6 +53,7 @@ final router = GoRouter(
                 return ScaffoldAppBar(
                   body: ChatBody(),
                   appBarTitle: Str.chatScreenTitle,
+                  isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                 );
               },
               routes: [
@@ -62,6 +66,7 @@ final router = GoRouter(
                     return ScaffoldAppBar(
                       body: ChatBody(selectedChatId: chatId),
                       appBarTitle: Str.chatScreenTitle,
+                      isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                     );
                   },
                 ),
