@@ -44,7 +44,9 @@ abstract class Str {
   static const to = 'To';
 
   static const signIn = 'Sign in';
+  static const signOut = 'Sign out';
   static const editProfile = 'Edit Profile';
+  static const help = 'Help';
   static const loggedIn = 'Logged in';
 
   static const notLoggedIn = 'Not logged in';

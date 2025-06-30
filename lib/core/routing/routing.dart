@@ -16,7 +16,7 @@ final router = GoRouter(
   // For showing 'details' dialog later perhaps
   navigatorKey: rootNavigatorKey,
   initialLocation: Str.exploreScreenRoutePath,
-  debugLogDiagnostics: true,
+  // debugLogDiagnostics: true,
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (

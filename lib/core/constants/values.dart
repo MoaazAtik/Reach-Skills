@@ -16,8 +16,10 @@ abstract class Values {
 
   static const chipHeight = 32.0;
 
+  static var interestIconSize = 64.0;
+
   static const fontSizeChip = 14.0;
   static const fontWeightChip = FontWeight.w500;
 
-  static var interestIconSize = 64.0;
+  static var menuElevation = 8.0;
 }
