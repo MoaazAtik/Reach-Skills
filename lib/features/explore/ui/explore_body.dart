@@ -1,14 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:reach_skills/features/explore/ui/search_widget.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../../core/constants/values.dart';
 import '../../common/widgets/rs_chip.dart';
+import 'explore_viewmodel.dart';
+import 'interest_card.dart';
 
-class ExploreBody extends StatelessWidget {
+class ExploreBody extends StatefulWidget {
   const ExploreBody({super.key});
 
   @override
+  State<ExploreBody> createState() => _ExploreBodyState();
+}
+
+class _ExploreBodyState extends State<ExploreBody> {
+  @override
   Widget build(BuildContext context) {
+    final exploreViewModel = context.watch<ExploreViewModel>();
+    final loading = exploreViewModel.loading;
+
+    final interests = exploreViewModel.interests;
+    final interestsStreamError = exploreViewModel.interestsStreamError;
+
+    if (loading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (interestsStreamError != null) {
+      return Center(child: Text(interestsStreamError));
+    }
+
+    if (interests == null || interests.isEmpty) {
+      return const Text(Str.noSkillsFound);
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Values.padding12),
       child: Column(
@@ -18,9 +45,7 @@ class ExploreBody extends StatelessWidget {
             spacing: Values.spacingMedium,
             children: [
               RsChip(
-                onTap: () {
-                  print('tap');
-                },
+                onTap: () {},
                 paddingRight: Values.paddingSmall,
                 children: [
                   Text(
@@ -33,12 +58,7 @@ class ExploreBody extends StatelessWidget {
                   Icon(Icons.keyboard_arrow_down_rounded, size: 24),
                 ],
               ),
-              RsChip(
-                // onTap: () {},
-                paddingRight: Values.paddingSmall,
-                paddingLeft: Values.paddingSmall,
-                children: [Icon(Icons.search_rounded, size: 20)],
-              ),
+              SearchWidget(onSearch: () {}),
             ],
           ),
           const SizedBox(height: Values.spacingMedium),
@@ -46,42 +66,46 @@ class ExploreBody extends StatelessWidget {
             child: GridView(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 200,
-                childAspectRatio: 2 / 3,
-                // crossAxisSpacing: 20,
-                // mainAxisSpacing: 20,
+                childAspectRatio: 3 / 4,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
               ),
               children: [
-                Column(
-                  children: [
-                    Card(child: SizedBox(width: 100, height: 100)),
-                    Text('data'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Card(child: SizedBox(width: 100, height: 100)),
-                    Text('data'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Card(child: SizedBox(width: 100, height: 100)),
-                    Text('data'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Card(child: SizedBox(width: 100, height: 100)),
-                    Text('data'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Card(child: SizedBox(width: 100, height: 100)),
-                    Text('data'),
-                  ],
-                ),
-                // Card(child: ListTile(title: Text("Item 0"))),
+                for (final interest in interests)
+                  InterestCard(
+                    interestType: interest.interestType,
+                    title: interest.title,
+                    userName: interest.userName,
+                    onReach: () async {
+                      String? errorMessage;
+                      errorMessage = await exploreViewModel.updateFields(
+                        currentReceiverId: interest.uid,
+                        currentReceiverName: interest.userName,
+                      );
+
+                      if (errorMessage != null) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(errorMessage)));
+                        return;
+                      }
+
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder:
+                      //         (_) => MessagesScreen(
+                      //       currentSenderId: exploreViewModel.currentSenderId,
+                      //       currentSenderName:
+                      //       exploreViewModel.currentSenderName,
+                      //       currentReceiverId:
+                      //       exploreViewModel.currentReceiverId,
+                      //       currentReceiverName:
+                      //       exploreViewModel.currentReceiverName,
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                  ),
               ],
             ),
           ),

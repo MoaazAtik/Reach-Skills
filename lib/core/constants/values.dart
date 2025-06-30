@@ -18,4 +18,6 @@ abstract class Values {
 
   static const fontSizeChip = 14.0;
   static const fontWeightChip = FontWeight.w500;
+
+  static var interestIconSize = 64.0;
 }

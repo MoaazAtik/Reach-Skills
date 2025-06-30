@@ -28,6 +28,7 @@ abstract class Str {
 
   static const filterAll = 'All';
 
+  static const searchHint = 'Search interests...';
   static const pleaseSignIn = 'Please sign in.';
   static const cannotReachYourself = 'Trying to reach yourself?';
   static const serverErrorMessage =
