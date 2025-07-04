@@ -33,10 +33,6 @@ abstract class Styles {
 
   static const rsDefaultSurfaceColor = Color(0xfff7fafc); // bluish from Stitch
 
-  // TextStyle interestDetailsTitleTextStyle(BuildContext context) {
-  //   return Theme.of(context).textTheme.headlineSmall!;
-  // }
-
   static const interestDetailsTitleTextStyle = TextStyle(
     fontSize: Values.fontSizeInterestDetailsTitle,
     fontWeight: FontWeight.bold,
@@ -77,26 +73,4 @@ abstract class Styles {
     fontSize: Values.fontSizeButton,
     fontWeight: FontWeight.bold,
   );
-
-  // static ButtonStyle rsFilledButtonStyle = ButtonStyle(
-  //   shape: WidgetStateProperty.all(
-  //     RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(Values.borderRadius),
-  //     ),
-  //   ),
-  // );
-
-  // static ButtonStyle rsFilledButtonStyle(BuildContext context) => Theme.of(context).filledButtonTheme.style!.copyWith(
-  //   shape: WidgetStateProperty.all(
-  //     RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(Values.borderRadius),
-  //     ),
-  //   ),
-  // );
-  //
-
-  // static const rsFilledButtonStyle = ButtonStyle(
-  //   backgroundColor: MaterialStateProperty.all(Colors.blue),
-  //   foregroundColor: MaterialStateProperty.all(Colors.white),
-  // );
 }
