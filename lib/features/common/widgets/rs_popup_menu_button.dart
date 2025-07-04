@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/strings.dart';
-import '../../../core/constants/values.dart';
 import '../../../core/theme/styles.dart';
 
 class RsPopupMenuButton extends StatelessWidget {
@@ -16,9 +15,9 @@ class RsPopupMenuButton extends StatelessWidget {
       offset: const Offset(0, 50),
       color: Styles.skillChipBackgroundColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Values.borderRadius),
+        borderRadius: BorderRadius.circular(Styles.borderRadius),
       ),
-      elevation: Values.menuElevation,
+      elevation: Styles.menuElevation,
       itemBuilder: (BuildContext context) => _getMenuItems(isLoggedIn),
       onSelected: _onMenuItemSelected,
     );

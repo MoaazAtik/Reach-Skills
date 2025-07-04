@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/strings.dart';
-import '../../../core/constants/values.dart';
 import '../../../core/theme/styles.dart';
 import '../../common/widgets/rs_chip.dart';
 
@@ -28,18 +27,18 @@ class _SearchWidgetState extends State<SearchWidget> {
             _isSearching = true;
           });
         },
-        paddingRight: Values.paddingSmall,
-        paddingLeft: Values.paddingSmall,
+        paddingRight: Styles.paddingSmall,
+        paddingLeft: Styles.paddingSmall,
         children: [Icon(Icons.search_rounded, size: 20)],
       );
     }
 
     return Ink(
-      height: Values.chipHeight,
-      padding: EdgeInsets.only(left: Values.paddingMedium),
+      height: Styles.chipHeight,
+      padding: EdgeInsets.only(left: Styles.paddingMedium),
       decoration: BoxDecoration(
         color: Styles.skillChipBackgroundColor,
-        borderRadius: BorderRadius.circular(Values.borderRadius),
+        borderRadius: BorderRadius.circular(Styles.borderRadius),
       ),
       child: Row(
         children: [
@@ -48,7 +47,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             decoration: const InputDecoration(
               hintText: Str.searchHint,
               border: InputBorder.none,
-              hintStyle: TextStyle(fontSize: Values.fontSizeChip),
+              hintStyle: TextStyle(fontSize: Styles.fontSizeChip),
               constraints: BoxConstraints(maxWidth: 150),
               isDense: true,
               isCollapsed: true,

@@ -1,13 +1,39 @@
 import 'package:flutter/material.dart';
 
-import '../constants/values.dart';
-
 abstract class Styles {
-  // headline text style:
+  // eg, headline text style:
 
-  // skill background color
+  /// Values
 
-  // interest background color
+  static const smallScreenWidthThreshold = 600;
+  static const largeScreenWidthThreshold = 1200;
+
+  static const paddingExtraSmall = 4.0;
+  static const paddingSmall = 8.0;
+  static const padding12 = 12.0;
+  static const paddingMedium = 16.0;
+
+  static const borderRadius = 12.0;
+
+  static const spacingSmall = 8.0;
+  static const spacingMedium = 12.0;
+
+  static const chipHeight = 32.0;
+  static const buttonHeight = 48.0;
+
+  static var interestIconSize = 64.0;
+
+  static const fontSizeChip = 14.0;
+  static const fontWeightChip = FontWeight.w500;
+  static const fontSizeInterestDetailsTitle = 22.0;
+  static const fontSizeInterestDetailsSectionTitle = 18.0;
+  static const fontSizeInterestDetailsUser = 16.0;
+  static const fontSizeInterestDetailsDescription = 16.0;
+  static const fontSizeButton = 16.0;
+
+  static var menuElevation = 8.0;
+
+  /// Colors
 
   static const skillChipBackgroundColor = Color(0xFFE8F0F2);
   static const wishChipBackgroundColor = Color(0xFFF6E7DF);
@@ -33,36 +59,38 @@ abstract class Styles {
 
   static const rsDefaultSurfaceColor = Color(0xfff7fafc); // bluish from Stitch
 
+  /// Styles
+
   static const interestDetailsTitleTextStyle = TextStyle(
-    fontSize: Values.fontSizeInterestDetailsTitle,
+    fontSize: fontSizeInterestDetailsTitle,
     fontWeight: FontWeight.bold,
   );
 
   static const interestDetailsSectionTitleTextStyle = TextStyle(
-    fontSize: Values.fontSizeInterestDetailsSectionTitle,
+    fontSize: fontSizeInterestDetailsSectionTitle,
     fontWeight: FontWeight.bold,
   );
 
   static const interestDetailsUserTextStyle = TextStyle(
-    fontSize: Values.fontSizeInterestDetailsUser,
+    fontSize: fontSizeInterestDetailsUser,
     color: secondaryTextBlueColor,
   );
 
   static const interestDetailsDescriptionTextStyle = TextStyle(
-    fontSize: Values.fontSizeInterestDetailsDescription,
+    fontSize: fontSizeInterestDetailsDescription,
   );
 
-  static const interestChipTextStyle = TextStyle(fontSize: Values.fontSizeChip);
+  static const interestChipTextStyle = TextStyle(fontSize: fontSizeChip);
 
   static FilledButtonThemeData rsFilledButtonStyle = FilledButtonThemeData(
     style: ButtonStyle(
       minimumSize: WidgetStateProperty.all(
-        const Size(double.infinity, Values.buttonHeight),
+        const Size(double.infinity, buttonHeight),
       ),
       backgroundColor: WidgetStateProperty.all(buttonFullBackgroundColor),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Values.borderRadius),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
       ),
     ),
@@ -70,7 +98,7 @@ abstract class Styles {
 
   static const rsFilledButtonTextStyle = TextStyle(
     color: primaryTextBlackColor,
-    fontSize: Values.fontSizeButton,
+    fontSize: fontSizeButton,
     fontWeight: FontWeight.bold,
   );
 }

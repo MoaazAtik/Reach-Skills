@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/values.dart';
 import '../../../core/theme/styles.dart';
 
 class RsChip extends StatelessWidget {
@@ -17,19 +16,19 @@ class RsChip extends StatelessWidget {
     required this.children,
     this.onTap,
     this.chipColor = Styles.skillChipBackgroundColor,
-    this.paddingLeft = Values.paddingMedium,
-    this.paddingRight = Values.paddingMedium,
-    this.paddingTop = Values.paddingExtraSmall,
-    this.paddingBottom = Values.paddingExtraSmall,
+    this.paddingLeft = Styles.paddingMedium,
+    this.paddingRight = Styles.paddingMedium,
+    this.paddingTop = Styles.paddingExtraSmall,
+    this.paddingBottom = Styles.paddingExtraSmall,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(Values.borderRadius),
+      borderRadius: BorderRadius.circular(Styles.borderRadius),
       child: Ink(
-        height: Values.chipHeight,
+        height: Styles.chipHeight,
         padding: EdgeInsets.only(
           left: paddingLeft,
           right: paddingRight,
@@ -38,10 +37,10 @@ class RsChip extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: chipColor,
-          borderRadius: BorderRadius.circular(Values.borderRadius),
+          borderRadius: BorderRadius.circular(Styles.borderRadius),
         ),
         child: Row(
-          spacing: Values.spacingSmall,
+          spacing: Styles.spacingSmall,
           mainAxisSize: MainAxisSize.min,
           children: children,
         ),

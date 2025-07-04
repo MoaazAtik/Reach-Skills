@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:reach_skills/core/constants/strings.dart';
-import 'package:reach_skills/core/constants/values.dart';
 import 'package:reach_skills/core/theme/styles.dart';
 import 'package:reach_skills/features/common/widgets/rs_chip.dart';
 
@@ -10,7 +9,7 @@ class InterestDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(Values.paddingMedium),
+      padding: const EdgeInsets.all(Styles.paddingMedium),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -51,8 +50,8 @@ class InterestDetails extends StatelessWidget {
           Text(Str.tags, style: Styles.interestDetailsSectionTitleTextStyle),
           SizedBox(height: 16),
           Wrap(
-            spacing: Values.spacingMedium,
-            runSpacing: Values.spacingMedium,
+            spacing: Styles.spacingMedium,
+            runSpacing: Styles.spacingMedium,
             children: List.generate(Str.mockTags.length, (index) {
               return RsChip(
                 children: [

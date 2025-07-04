@@ -5,7 +5,6 @@ import 'package:reach_skills/features/common/widgets/interest_details.dart';
 import 'package:reach_skills/features/explore/ui/search_widget.dart';
 
 import '../../../core/constants/strings.dart';
-import '../../../core/constants/values.dart';
 import '../../common/widgets/rs_chip.dart';
 import 'explore_viewmodel.dart';
 import 'interest_card.dart';
@@ -39,16 +38,16 @@ class _ExploreBodyState extends State<ExploreBody> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Values.padding12),
+      padding: const EdgeInsets.symmetric(horizontal: Styles.padding12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
-            spacing: Values.spacingMedium,
+            spacing: Styles.spacingMedium,
             children: [
               RsChip(
                 onTap: () {},
-                paddingRight: Values.paddingSmall,
+                paddingRight: Styles.paddingSmall,
                 children: [
                   Text(
                     Str.filterAll,
@@ -57,8 +56,8 @@ class _ExploreBodyState extends State<ExploreBody> {
                         .textTheme
                         .labelLarge
                         ?.copyWith(
-                      fontSize: Values.fontSizeChip,
-                      fontWeight: Values.fontWeightChip,
+                      fontSize: Styles.fontSizeChip,
+                      fontWeight: Styles.fontWeightChip,
                     ),
                   ),
                   Icon(Icons.keyboard_arrow_down_rounded, size: 24),
@@ -67,7 +66,7 @@ class _ExploreBodyState extends State<ExploreBody> {
               SearchWidget(onSearch: () {}),
             ],
           ),
-          const SizedBox(height: Values.spacingMedium),
+          const SizedBox(height: Styles.spacingMedium),
           Expanded(
             child: GridView(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -89,7 +88,7 @@ class _ExploreBodyState extends State<ExploreBody> {
                           return Dialog(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
-                                Values.borderRadius,
+                                Styles.borderRadius,
                               ),
                             ),
                             backgroundColor: Styles.rsDefaultSurfaceColor,

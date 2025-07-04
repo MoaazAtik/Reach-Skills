@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/strings.dart';
-import '../../../core/constants/values.dart';
 import '../../../core/theme/styles.dart';
 import '../../common/data/interest_model.dart';
 
@@ -30,7 +28,7 @@ class InterestCard extends StatelessWidget {
       onTap: () {
         onReach();
       },
-      borderRadius: BorderRadius.circular(Values.borderRadius),
+      borderRadius: BorderRadius.circular(Styles.borderRadius),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -39,22 +37,22 @@ class InterestCard extends StatelessWidget {
             child: Ink(
               decoration: BoxDecoration(
                 gradient: background,
-                borderRadius: BorderRadius.circular(Values.borderRadius),
+                borderRadius: BorderRadius.circular(Styles.borderRadius),
               ),
               child: Icon(
                 Icons.explore,
-                size: Values.interestIconSize,
+                size: Styles.interestIconSize,
                 blendMode: BlendMode.overlay, // BlendMode.clear,
               ),
             ),
           ),
           SizedBox(height: 4),
           Padding(
-            padding: const EdgeInsets.all(Values.paddingExtraSmall),
+            padding: const EdgeInsets.all(Styles.paddingExtraSmall),
             child: Text(
               '$title, $userName',
               style: TextStyle(
-                fontSize: Values.fontSizeChip,
+                fontSize: Styles.fontSizeChip,
                 // color: Colors.grey[900],
               ),
             ),
