@@ -15,11 +15,17 @@ abstract class Values {
   static const spacingMedium = 12.0;
 
   static const chipHeight = 32.0;
+  static const buttonHeight = 48.0;
 
   static var interestIconSize = 64.0;
 
   static const fontSizeChip = 14.0;
   static const fontWeightChip = FontWeight.w500;
+  static const fontSizeInterestDetailsTitle = 22.0;
+  static const fontSizeInterestDetailsSectionTitle = 18.0;
+  static const fontSizeInterestDetailsUser = 16.0;
+  static const fontSizeInterestDetailsDescription = 16.0;
+  static const fontSizeButton = 16.0;
 
   static var menuElevation = 8.0;
 }

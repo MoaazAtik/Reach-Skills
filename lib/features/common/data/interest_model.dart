@@ -7,6 +7,7 @@ abstract class InterestModel {
     required this.uid,
     required this.userName,
   });
+  // todo add id, uid -> userId, description, tags
 
   InterestType interestType;
   String title;

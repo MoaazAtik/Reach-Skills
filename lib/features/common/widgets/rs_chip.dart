@@ -40,7 +40,11 @@ class RsChip extends StatelessWidget {
           color: chipColor,
           borderRadius: BorderRadius.circular(Values.borderRadius),
         ),
-        child: Row(spacing: Values.spacingSmall, children: children),
+        child: Row(
+          spacing: Values.spacingSmall,
+          mainAxisSize: MainAxisSize.min,
+          children: children,
+        ),
       ),
     );
   }

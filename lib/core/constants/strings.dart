@@ -22,7 +22,12 @@ abstract class Str {
   static const profileScreenRouteName = 'profile';
   static const profileScreenRoutePath = '/profile';
 
+  // Todo add details route
+  // static const detailsScreenRouteName = 'details';
+  // static const detailsScreenRoutePath = '/details';
+
   static const messagesScreenParamId = 'id';
+
 
   static const error = 'Error';
 
@@ -52,7 +57,7 @@ abstract class Str {
   static const notLoggedIn = 'Not logged in';
   static const explore = 'Explore';
   static const interests = 'interests';
-  static const reach = 'REACH';
+  static const reach = 'Reach';
 
   static const name = 'Name';
   static const required = 'Required';
@@ -68,4 +73,16 @@ abstract class Str {
       'Unknown Error. Try signing out and signing in again.';
   static const noChanges = 'No changes to save';
   static const profileSaved = 'Profile Saved';
+
+  static const skill = 'Skill';
+  static const wish = 'Wish';
+
+  static const by = 'by';
+  static const type = 'Type';
+  static const tags = 'Tags';
+
+  static const mockInterestTitle = 'Graphic Design';
+  static const mockUserName = 'Ethan Carter';
+  static const mockInterestDescription = 'I\'m looking to learn how to play the guitar.\nI\'m a beginner and would love to find someone who can teach me the basics. I\'m available for lessons on weekends.';
+  static const mockTags = ['Guitar', 'Music', 'Lessons', 'Art'];
 }

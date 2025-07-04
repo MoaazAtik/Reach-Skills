@@ -1,4 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import '../constants/values.dart';
 
 abstract class Styles {
   // headline text style:
@@ -16,10 +18,85 @@ abstract class Styles {
   static const skillCardGradientStartColor = Color(0xFFD7E8EC);
   static const skillCardGradientEndColor = Color(0xFF96C6C5);
 
+  static const primaryTextBlackColor = Color(0xFF0D171C);
+  static const secondaryTextBlueColor = Color(0xFF4F8096);
+
+  static const buttonFullBackgroundColor = Color(0xFF47B5EB);
+  static const buttonPaleBackgroundColor = Color(0xFFADD6EB);
+
   static const wishCardBackgroundColor = LinearGradient(
     colors: [wishCardGradientStartColor, wishCardGradientEndColor],
   );
   static const skillCardBackgroundColor = LinearGradient(
     colors: [skillCardGradientStartColor, skillCardGradientEndColor],
   );
+
+  static const rsDefaultSurfaceColor = Color(0xfff7fafc); // bluish from Stitch
+
+  // TextStyle interestDetailsTitleTextStyle(BuildContext context) {
+  //   return Theme.of(context).textTheme.headlineSmall!;
+  // }
+
+  static const interestDetailsTitleTextStyle = TextStyle(
+    fontSize: Values.fontSizeInterestDetailsTitle,
+    fontWeight: FontWeight.bold,
+  );
+
+  static const interestDetailsSectionTitleTextStyle = TextStyle(
+    fontSize: Values.fontSizeInterestDetailsSectionTitle,
+    fontWeight: FontWeight.bold,
+  );
+
+  static const interestDetailsUserTextStyle = TextStyle(
+    fontSize: Values.fontSizeInterestDetailsUser,
+    color: secondaryTextBlueColor,
+  );
+
+  static const interestDetailsDescriptionTextStyle = TextStyle(
+    fontSize: Values.fontSizeInterestDetailsDescription,
+  );
+
+  static const interestChipTextStyle = TextStyle(fontSize: Values.fontSizeChip);
+
+  static FilledButtonThemeData rsFilledButtonStyle = FilledButtonThemeData(
+    style: ButtonStyle(
+      minimumSize: WidgetStateProperty.all(
+        const Size(double.infinity, Values.buttonHeight),
+      ),
+      backgroundColor: WidgetStateProperty.all(buttonFullBackgroundColor),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Values.borderRadius),
+        ),
+      ),
+    ),
+  );
+
+  static const rsFilledButtonTextStyle = TextStyle(
+    color: primaryTextBlackColor,
+    fontSize: Values.fontSizeButton,
+    fontWeight: FontWeight.bold,
+  );
+
+  // static ButtonStyle rsFilledButtonStyle = ButtonStyle(
+  //   shape: WidgetStateProperty.all(
+  //     RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(Values.borderRadius),
+  //     ),
+  //   ),
+  // );
+
+  // static ButtonStyle rsFilledButtonStyle(BuildContext context) => Theme.of(context).filledButtonTheme.style!.copyWith(
+  //   shape: WidgetStateProperty.all(
+  //     RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(Values.borderRadius),
+  //     ),
+  //   ),
+  // );
+  //
+
+  // static const rsFilledButtonStyle = ButtonStyle(
+  //   backgroundColor: MaterialStateProperty.all(Colors.blue),
+  //   foregroundColor: MaterialStateProperty.all(Colors.white),
+  // );
 }

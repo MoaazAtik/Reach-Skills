@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:reach_skills/core/theme/styles.dart";
 
 class MaterialTheme {
   final TextTheme textTheme;
@@ -348,6 +349,9 @@ class MaterialTheme {
     ),
     scaffoldBackgroundColor: colorScheme.surface,
     canvasColor: colorScheme.surface,
+
+    // Custom filled button theme
+    filledButtonTheme: Styles.rsFilledButtonStyle
   );
 
 

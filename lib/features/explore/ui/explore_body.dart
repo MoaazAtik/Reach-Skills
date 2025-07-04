@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reach_skills/core/theme/styles.dart';
+import 'package:reach_skills/features/common/widgets/interest_details.dart';
 import 'package:reach_skills/features/explore/ui/search_widget.dart';
 
 import '../../../core/constants/strings.dart';
@@ -50,7 +52,11 @@ class _ExploreBodyState extends State<ExploreBody> {
                 children: [
                   Text(
                     Str.filterAll,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .labelLarge
+                        ?.copyWith(
                       fontSize: Values.fontSizeChip,
                       fontWeight: Values.fontWeightChip,
                     ),
@@ -76,35 +82,51 @@ class _ExploreBodyState extends State<ExploreBody> {
                     interestType: interest.interestType,
                     title: interest.title,
                     userName: interest.userName,
-                    onReach: () async {
-                      String? errorMessage;
-                      errorMessage = await exploreViewModel.updateFields(
-                        currentReceiverId: interest.uid,
-                        currentReceiverName: interest.userName,
+                    onReach: () {
+                      showAdaptiveDialog(
+                        context: context,
+                        builder: (context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                Values.borderRadius,
+                              ),
+                            ),
+                            backgroundColor: Styles.rsDefaultSurfaceColor,
+                            child: InterestDetails(),
+                          );
+                        },
                       );
-
-                      if (errorMessage != null) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text(errorMessage)));
-                        return;
-                      }
-
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder:
-                      //         (_) => MessagesScreen(
-                      //       currentSenderId: exploreViewModel.currentSenderId,
-                      //       currentSenderName:
-                      //       exploreViewModel.currentSenderName,
-                      //       currentReceiverId:
-                      //       exploreViewModel.currentReceiverId,
-                      //       currentReceiverName:
-                      //       exploreViewModel.currentReceiverName,
-                      //     ),
-                      //   ),
-                      // );
                     },
+                    // onReach: () async {
+                    //   String? errorMessage;
+                    //   errorMessage = await exploreViewModel.updateFields(
+                    //     currentReceiverId: interest.uid,
+                    //     currentReceiverName: interest.userName,
+                    //   );
+                    //
+                    //   if (errorMessage != null) {
+                    //     ScaffoldMessenger.of(
+                    //       context,
+                    //     ).showSnackBar(SnackBar(content: Text(errorMessage)));
+                    //     return;
+                    //   }
+
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder:
+                    //         (_) => MessagesScreen(
+                    //       currentSenderId: exploreViewModel.currentSenderId,
+                    //       currentSenderName:
+                    //       exploreViewModel.currentSenderName,
+                    //       currentReceiverId:
+                    //       exploreViewModel.currentReceiverId,
+                    //       currentReceiverName:
+                    //       exploreViewModel.currentReceiverName,
+                    //     ),
+                    //   ),
+                    // );
+                    // },
                   ),
               ],
             ),

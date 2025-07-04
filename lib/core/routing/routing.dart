@@ -41,6 +41,11 @@ final router = GoRouter(
                   isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                 );
               },
+              // routes: [ // Todo add details route
+              //   GoRoute(
+              //     path: Str.detailsScreenRoutePath, builder: (context, state) {}
+              //   ),
+              // ]
             ),
           ],
         ),
