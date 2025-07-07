@@ -12,6 +12,7 @@ class InterestDetails extends StatelessWidget {
   });
 
   final bool isOwner;
+  // Todo replace Str.mock... with interest...
   final InterestModel interest;
 
   @override

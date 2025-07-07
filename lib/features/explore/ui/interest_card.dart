@@ -9,13 +9,13 @@ class InterestCard extends StatelessWidget {
     required this.interestType,
     required this.title,
     required this.userName,
-    required this.onReach,
+    required this.onTap,
   });
 
   final InterestType interestType;
   final String title;
   final String userName;
-  final Function onReach;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class InterestCard extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        onReach();
+        onTap();
       },
       borderRadius: BorderRadius.circular(Styles.borderRadius),
       child: Column(

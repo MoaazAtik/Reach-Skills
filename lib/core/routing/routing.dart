@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:reach_skills/core/utils/utils.dart';
+import 'package:reach_skills/features/common/widgets/scaffold_app_bar_bodies.dart';
 
 import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/ui/chat_body.dart';
@@ -38,12 +40,39 @@ final router = GoRouter(
               name: Str.exploreScreenRouteName,
               path: Str.exploreScreenRoutePath,
               builder: (BuildContext context, GoRouterState state) {
-                return ScaffoldAppBar(
-                  body: ExploreBody(),
+                return ScaffoldAppBarBodies(
+                  masterBody: ExploreBody(
+                    onInterestTap: (interest) {
+                      onInterestTap(context, interest);
+                    },
+                  ),
                   appBarTitle: Str.exploreScreenTitle,
                   isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                 );
               },
+              routes: [
+                GoRoute(
+                  name: Str.detailsScreenRouteName,
+                  path: Str.detailsScreenRoutePath,
+                  builder: (BuildContext context, GoRouterState state) {
+                    final interest = state.extra;
+
+                    return ScaffoldAppBarBodies(
+                      masterBody: ExploreBody(
+                        onInterestTap: (interest) {
+                          onInterestTap(context, interest);
+                        },
+                      ),
+                      detailBody: InterestDetails(
+                        isOwner: false,
+                        interest: interest as InterestModel,
+                      ),
+                      appBarTitle: Str.exploreScreenTitle,
+                      isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -79,32 +108,6 @@ final router = GoRouter(
         ),
       ],
     ),
-
-    GoRoute(
-      name: Str.detailsScreenRouteName,
-      path: Str.detailsScreenRoutePath,
-      builder: (context, state) {
-        WidgetsBinding.instance.addPostFrameCallback((duration) {
-          showAdaptiveDialog(
-            context: context,
-            builder: (context) {
-              final interest = state.extra;
-              return Dialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Styles.borderRadius),
-                ),
-                backgroundColor: Styles.rsDefaultSurfaceColor,
-                child: InterestDetails(
-                  isOwner: false,
-                  interest: interest as InterestModel,
-                ),
-              );
-            },
-          );
-        });
-        return SizedBox.shrink();
-      },
-    ),
   ],
 
   errorBuilder: (context, state) {
@@ -117,4 +120,28 @@ void goToBranchDestination(int index, StatefulNavigationShell navigationShell) {
     index,
     initialLocation: index == navigationShell.currentIndex,
   );
+}
+
+void onInterestTap(BuildContext context, InterestModel interest) {
+  if (checkLargeScreen(context)) {
+    // Todo: replace interest.userId with interest.id
+    context.goNamed(
+      Str.detailsScreenRouteName,
+      pathParameters: {Str.detailsScreenParamId: interest.userId},
+      extra: interest,
+    );
+  } else {
+    showAdaptiveDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Styles.borderRadius),
+          ),
+          backgroundColor: Styles.rsDefaultSurfaceColor,
+          child: InterestDetails(isOwner: false, interest: interest),
+        );
+      },
+    );
+  }
 }

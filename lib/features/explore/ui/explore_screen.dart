@@ -51,7 +51,7 @@ class ExploreScreen extends StatelessWidget {
                   interestType: interest.interestType,
                   title: interest.title,
                   userName: interest.userName,
-                  onReach: () async {
+                  onTap: () async {
                     String? errorMessage;
                     errorMessage = await exploreViewModel.updateFields(
                       currentReceiverId: interest.userId,

@@ -6,12 +6,15 @@ import 'package:reach_skills/features/common/widgets/interest_details.dart';
 import 'package:reach_skills/features/explore/ui/search_widget.dart';
 
 import '../../../core/constants/strings.dart';
+import '../../common/data/interest_model.dart';
 import '../../common/widgets/rs_chip.dart';
 import 'explore_viewmodel.dart';
 import 'interest_card.dart';
 
 class ExploreBody extends StatefulWidget {
-  const ExploreBody({super.key});
+  const ExploreBody({super.key, required this.onInterestTap});
+
+  final void Function(InterestModel interest) onInterestTap;
 
   @override
   State<ExploreBody> createState() => _ExploreBodyState();
@@ -78,15 +81,8 @@ class _ExploreBodyState extends State<ExploreBody> {
                     interestType: interest.interestType,
                     title: interest.title,
                     userName: interest.userName,
-                    onReach: () {
-                      // Todo: replace interest.userId with interest.id
-                      context.goNamed(
-                        Str.detailsScreenRouteName,
-                        pathParameters: {
-                          Str.detailsScreenParamId: interest.userId,
-                        },
-                        extra: interest,
-                      );
+                    onTap: () {
+                      widget.onInterestTap(interest);
                     },
                     // onReach: () async {
                     //   String? errorMessage;
