@@ -72,11 +72,14 @@ class ProfileRepositoryImpl extends ProfileRepository {
                     interestTypes.contains(InterestType.wish)
                         ? doc.data()[ProfileModel.FIELD_WISHES]
                         : [];
+
+                // Todo fix this after model schema was updated
+
                 for (var skillInAProfile in profileSkillsList) {
                   tempInterests.add(
                     SkillModel(
                       title: skillInAProfile,
-                      uid: uid,
+                      userId: uid,
                       userName: userName,
                     ),
                   );
@@ -85,7 +88,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
                   tempInterests.add(
                     WishModel(
                       title: wishInAProfile,
-                      uid: uid,
+                      userId: uid,
                       userName: userName,
                     ),
                   );

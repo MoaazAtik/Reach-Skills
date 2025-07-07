@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:reach_skills/core/constants/strings.dart';
 import 'package:reach_skills/core/theme/styles.dart';
+import 'package:reach_skills/features/common/data/interest_model.dart';
 import 'package:reach_skills/features/common/widgets/rs_chip.dart';
 
 class InterestDetails extends StatelessWidget {
-  const InterestDetails({super.key});
+  const InterestDetails({
+    super.key,
+    required this.isOwner,
+    required this.interest,
+  });
+
+  final bool isOwner;
+  final InterestModel interest;
 
   @override
   Widget build(BuildContext context) {

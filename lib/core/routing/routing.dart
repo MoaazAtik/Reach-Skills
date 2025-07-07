@@ -4,11 +4,14 @@ import 'package:provider/provider.dart';
 
 import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/ui/chat_body.dart';
+import '../../features/common/data/interest_model.dart';
 import '../../features/common/widgets/error_route.dart';
+import '../../features/common/widgets/interest_details.dart';
 import '../../features/common/widgets/navigation_shell_scaffold.dart';
 import '../../features/common/widgets/scaffold_app_bar.dart';
 import '../../features/explore/ui/explore_body.dart';
 import '../constants/strings.dart';
+import '../theme/styles.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
@@ -41,11 +44,6 @@ final router = GoRouter(
                   isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                 );
               },
-              // routes: [ // Todo add details route
-              //   GoRoute(
-              //     path: Str.detailsScreenRoutePath, builder: (context, state) {}
-              //   ),
-              // ]
             ),
           ],
         ),
@@ -81,7 +79,34 @@ final router = GoRouter(
         ),
       ],
     ),
+
+    GoRoute(
+      name: Str.detailsScreenRouteName,
+      path: Str.detailsScreenRoutePath,
+      builder: (context, state) {
+        WidgetsBinding.instance.addPostFrameCallback((duration) {
+          showAdaptiveDialog(
+            context: context,
+            builder: (context) {
+              final interest = state.extra;
+              return Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(Styles.borderRadius),
+                ),
+                backgroundColor: Styles.rsDefaultSurfaceColor,
+                child: InterestDetails(
+                  isOwner: false,
+                  interest: interest as InterestModel,
+                ),
+              );
+            },
+          );
+        });
+        return SizedBox.shrink();
+      },
+    ),
   ],
+
   errorBuilder: (context, state) {
     return ErrorRoute();
   },

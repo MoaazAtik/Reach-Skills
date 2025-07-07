@@ -1,6 +1,12 @@
 import 'interest_model.dart';
 
 class SkillModel extends InterestModel {
-  SkillModel({required super.title, required super.uid, required super.userName})
-    : super(interestType: InterestType.skill);
+  SkillModel({
+    super.id = '',
+    super.title = '',
+    super.description = '',
+    super.tags = '',
+    super.userId = '',
+    super.userName = '',
+  }) : super(interestType: InterestType.skill);
 }

@@ -9,6 +9,8 @@ abstract class Str {
   static const unknownScreenMessage = 'Unknown Screen';
   static const screenNotFoundMessage = '404\nScreen Not Found';
 
+  /// Routes start
+
   static const exploreScreenRouteName = 'explore';
   static const exploreScreenRoutePath = '/';
   static const chatScreenRouteName = 'chat';
@@ -22,11 +24,17 @@ abstract class Str {
   static const profileScreenRouteName = 'profile';
   static const profileScreenRoutePath = '/profile';
 
-  // Todo add details route
-  // static const detailsScreenRouteName = 'details';
-  // static const detailsScreenRoutePath = '/details';
+  // static const interestScreenRouteName = 'interest';
+  static const detailsScreenRouteName = 'details';
+  // static const interestScreenRoutePath = '/interest';
+  // static const detailsScreenRoutePath = '/:id';
+  // static const detailsScreenRouteFullPath = '/details/:id';
+  static const detailsScreenRoutePath = '/details/:id';
 
   static const messagesScreenParamId = 'id';
+  static const detailsScreenParamId = 'id'; // only for deep linking
+
+  /// Routes end
 
 
   static const error = 'Error';

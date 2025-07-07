@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/theme/styles.dart';
 import 'package:reach_skills/features/common/widgets/interest_details.dart';
@@ -51,11 +52,7 @@ class _ExploreBodyState extends State<ExploreBody> {
                 children: [
                   Text(
                     Str.filterAll,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .labelLarge
-                        ?.copyWith(
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       fontSize: Styles.fontSizeChip,
                       fontWeight: Styles.fontWeightChip,
                     ),
@@ -82,19 +79,13 @@ class _ExploreBodyState extends State<ExploreBody> {
                     title: interest.title,
                     userName: interest.userName,
                     onReach: () {
-                      showAdaptiveDialog(
-                        context: context,
-                        builder: (context) {
-                          return Dialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                Styles.borderRadius,
-                              ),
-                            ),
-                            backgroundColor: Styles.rsDefaultSurfaceColor,
-                            child: InterestDetails(),
-                          );
+                      // Todo: replace interest.userId with interest.id
+                      context.goNamed(
+                        Str.detailsScreenRouteName,
+                        pathParameters: {
+                          Str.detailsScreenParamId: interest.userId,
                         },
+                        extra: interest,
                       );
                     },
                     // onReach: () async {

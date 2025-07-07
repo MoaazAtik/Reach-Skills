@@ -3,14 +3,19 @@ enum InterestType { skill, wish }
 abstract class InterestModel {
   InterestModel({
     required this.interestType,
+    required this.id,
     required this.title,
-    required this.uid,
+    required this.description,
+    required this.tags,
+    required this.userId,
     required this.userName,
   });
-  // todo add id, uid -> userId, description, tags
 
   InterestType interestType;
+  String id;
   String title;
-  String uid;
+  String description;
+  String tags;
+  String userId;
   String userName;
 }

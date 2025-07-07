@@ -54,7 +54,7 @@ class ExploreScreen extends StatelessWidget {
                   onReach: () async {
                     String? errorMessage;
                     errorMessage = await exploreViewModel.updateFields(
-                      currentReceiverId: interest.uid,
+                      currentReceiverId: interest.userId,
                       currentReceiverName: interest.userName,
                     );
 

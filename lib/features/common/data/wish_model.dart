@@ -1,6 +1,12 @@
 import 'interest_model.dart';
 
 class WishModel extends InterestModel {
-  WishModel({required super.title, required super.uid, required super.userName})
-    : super(interestType: InterestType.wish);
+  WishModel({
+    super.id = '',
+    super.title = '',
+    super.description = '',
+    super.tags = '',
+    super.userId = '',
+    super.userName = '',
+  }) : super(interestType: InterestType.wish);
 }
