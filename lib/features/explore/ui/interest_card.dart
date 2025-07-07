@@ -46,14 +46,17 @@ class InterestCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 4),
-          Padding(
-            padding: const EdgeInsets.all(Styles.paddingExtraSmall),
-            child: Text(
-              '$title, $userName',
-              style: TextStyle(
-                fontSize: Styles.fontSizeChip,
-                // color: Colors.grey[900],
+          SizedBox(height: 2),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.all(Styles.paddingExtraSmall),
+              child: Text(
+                '$title, $userName',
+                style: TextStyle(
+                  overflow: TextOverflow.fade,
+                  fontSize: Styles.fontSizeChip,
+                  // color: Colors.grey[900],
+                ),
               ),
             ),
           ),

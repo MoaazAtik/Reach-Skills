@@ -71,7 +71,7 @@ class _ExploreBodyState extends State<ExploreBody> {
             child: GridView(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 200,
-                childAspectRatio: 3 / 4,
+                childAspectRatio: 3 / 4.1,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
