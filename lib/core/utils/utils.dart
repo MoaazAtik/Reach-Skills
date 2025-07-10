@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../features/common/data/interest_model.dart';
+import '../../features/common/widgets/interest_details.dart';
 import '../constants/strings.dart';
 import '../theme/styles.dart';
 
@@ -54,4 +56,23 @@ extension StringExtensions on String {
 
 String? textValidator(String? value) {
   return value == null || value.isEmpty ? Str.required : null;
+}
+
+void showDetailsScreenDialog(
+  BuildContext context, {
+  required bool isOwner,
+  required InterestModel interest,
+}) {
+  showAdaptiveDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Styles.borderRadius),
+        ),
+        backgroundColor: Styles.rsDefaultSurfaceColor,
+        child: InterestDetails(isOwner: isOwner, interest: interest),
+      );
+    },
+  );
 }

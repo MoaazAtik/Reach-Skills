@@ -130,7 +130,7 @@ class _ProfileBodyState extends State<ProfileBody> {
   List<Widget> _buildInterestsChips({required List<String> interests}) {
     final chips = List.generate(interests.length * 3, (index) {
       return RsChip(
-        // onTap: () => _onTapInterest(null),
+        // onTap: () => showDetailsScreenDialog(context, isOwner: true, interest: interest),
         chipColor:
             index % 3 == 0
                 ? Styles.wishChipBackgroundColor
@@ -148,7 +148,7 @@ class _ProfileBodyState extends State<ProfileBody> {
     chips.insert(
       chips.length,
       RsChip(
-        onTap: () => _onTapAdd,
+        // onTap: () => showDetailsScreenDialog(context, isOwner: true, interest: null),
         paddingRight: Styles.paddingSmall,
         paddingLeft: Styles.paddingSmall,
         children: [Icon(Icons.add_rounded, size: 20)],
@@ -156,32 +156,5 @@ class _ProfileBodyState extends State<ProfileBody> {
     );
 
     return chips;
-  }
-
-  void _onTapAdd() {
-    // showAdaptiveDialog(context: context, builder: (context) {
-    //   return Dialog(
-    //     shape: RoundedRectangleBorder(
-    //       borderRadius: BorderRadius.circular(Styles.borderRadius),
-    //     ),
-    //     backgroundColor: Styles.rsDefaultSurfaceColor,
-    //     child: InterestDetails(isOwner: true, interest: null),
-    //   );
-    // });
-  }
-
-  void _onTapInterest(InterestModel interest) {
-    showAdaptiveDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Styles.borderRadius),
-          ),
-          backgroundColor: Styles.rsDefaultSurfaceColor,
-          child: InterestDetails(isOwner: true, interest: interest),
-        );
-      },
-    );
   }
 }

@@ -117,8 +117,8 @@ final router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         VoidCallback toggleEdit = context.read<ProfileViewModel>().toggleEdit;
 
-        return ScaffoldAppBar(
-          body: ProfileBody(),
+        return ScaffoldAppBarBodies(
+          masterBody: ProfileBody(),
           appBarTitle: Str.profileScreenTitle,
           isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
           appBarEditAction: true,
@@ -149,17 +149,7 @@ void onInterestTap(BuildContext context, InterestModel interest) {
       extra: interest,
     );
   } else {
-    showAdaptiveDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Styles.borderRadius),
-          ),
-          backgroundColor: Styles.rsDefaultSurfaceColor,
-          child: InterestDetails(isOwner: false, interest: interest),
-        );
-      },
-    );
+    // Todo: replace isOwner
+    showDetailsScreenDialog(context, isOwner: false, interest: interest);
   }
 }

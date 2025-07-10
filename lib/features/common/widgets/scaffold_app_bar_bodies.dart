@@ -9,12 +9,16 @@ class ScaffoldAppBarBodies extends StatelessWidget {
     this.detailBody,
     required this.appBarTitle,
     required this.isLoggedIn,
+    this.appBarEditAction = false,
+    this.onTapEdit,
   });
 
   final Widget masterBody;
   final Widget? detailBody;
   final String appBarTitle;
   final bool isLoggedIn;
+  final bool appBarEditAction;
+  final VoidCallback? onTapEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +35,11 @@ class ScaffoldAppBarBodies extends StatelessWidget {
       appBar: rsAppBar(
         context: context,
         title: appBarTitle,
-        actions: [RsPopupMenuButton(isLoggedIn: isLoggedIn)],
+        actions: [
+          if (!appBarEditAction) RsPopupMenuButton(isLoggedIn: isLoggedIn),
+          if (appBarEditAction)
+            IconButton(icon: Icon(Icons.edit_outlined), onPressed: onTapEdit),
+        ],
       ),
     );
   }
