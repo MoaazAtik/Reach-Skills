@@ -11,12 +11,14 @@ class ScaffoldAppBar extends StatelessWidget {
     required this.appBarTitle,
     required this.isLoggedIn,
     this.appBarEditAction = false,
+    this.onTapEdit,
   });
 
   final Widget body;
   final String appBarTitle;
   final bool isLoggedIn;
   final bool appBarEditAction;
+  final VoidCallback? onTapEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +32,7 @@ class ScaffoldAppBar extends StatelessWidget {
           if (appBarEditAction)
             IconButton(
               icon: Icon(Icons.edit),
-              onPressed: () {
-                print('Edit button pressed');
-              },
+              onPressed: onTapEdit,
             ),
         ],
       ),

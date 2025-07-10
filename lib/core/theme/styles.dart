@@ -59,6 +59,8 @@ abstract class Styles {
 
   static const rsDefaultSurfaceColor = Color(0xfff7fafc); // bluish from Stitch
 
+  static const hintColor = Colors.blueGrey;
+
   /// Styles
 
   static const interestDetailsTitleTextStyle = TextStyle(
@@ -101,4 +103,22 @@ abstract class Styles {
     fontSize: fontSizeButton,
     fontWeight: FontWeight.bold,
   );
+
+  static const TextStyle hintTextStyle = TextStyle(
+    fontSize: Styles.fontSizeChip,
+    color: hintColor,
+  );
+
+  static InputDecoration rsInputDecoration({
+    required String? label,
+    required String? hint,
+  }) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: Styles.interestDetailsSectionTitleTextStyle,
+      border: InputBorder.none,
+      hintText: hint,
+      hintStyle: hintTextStyle,
+    );
+  }
 }

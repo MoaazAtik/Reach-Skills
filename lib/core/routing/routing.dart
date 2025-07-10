@@ -13,6 +13,7 @@ import '../../features/common/widgets/navigation_shell_scaffold.dart';
 import '../../features/common/widgets/scaffold_app_bar.dart';
 import '../../features/explore/ui/explore_body.dart';
 import '../../features/profile/ui/profile_body.dart';
+import '../../features/profile/ui/profile_viewmodel.dart';
 import '../constants/strings.dart';
 import '../theme/styles.dart';
 
@@ -114,11 +115,14 @@ final router = GoRouter(
       name: Str.profileScreenRouteName,
       path: Str.profileScreenRoutePath,
       builder: (BuildContext context, GoRouterState state) {
+        VoidCallback toggleEdit = context.read<ProfileViewModel>().toggleEdit;
+
         return ScaffoldAppBar(
           body: ProfileBody(),
           appBarTitle: Str.profileScreenTitle,
           isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
           appBarEditAction: true,
+          onTapEdit: toggleEdit,
         );
       },
     ),

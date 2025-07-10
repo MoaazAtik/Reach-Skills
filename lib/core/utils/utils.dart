@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../constants/strings.dart';
 import '../theme/styles.dart';
 
 bool checkLargeScreen(BuildContext context) {
@@ -49,4 +50,8 @@ extension StringExtensions on String {
   String xToTitleCase() {
     return split(' ').map((word) => word.xToSentenceCase()).join(' ');
   }
+}
+
+String? textValidator(String? value) {
+  return value == null || value.isEmpty ? Str.required : null;
 }

@@ -71,6 +71,8 @@ abstract class Str {
   static const name = 'Name';
   static const required = 'Required';
   static const bio = 'Bio';
+  static const nameHint = 'Enter your name...';
+  static const bioHint = 'Write a short bio about yourself...';
   static const skillsInputDescription = 'Skills (comma-separated)';
   static const wishesInputDescription = 'Wishes (comma-separated)';
   static const email = 'Email';

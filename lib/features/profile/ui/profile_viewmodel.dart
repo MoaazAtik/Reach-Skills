@@ -16,6 +16,7 @@ class ProfileViewModel extends ChangeNotifier {
   final ProfileRepository _profileRepository;
 
   bool loading = true;
+  bool isEditing = false;
   String? uid;
   String? email;
   ProfileModel? profile;
@@ -33,6 +34,11 @@ class ProfileViewModel extends ChangeNotifier {
       loading = false;
       notifyListeners();
     }
+  }
+
+  void toggleEdit() {
+    isEditing = !isEditing;
+    notifyListeners();
   }
 
   Future<String> updateProfile(ProfileModel newProfile) async {
