@@ -61,7 +61,7 @@ String? textValidator(String? value) {
 void showDetailsScreenDialog(
   BuildContext context, {
   required bool isOwner,
-  required InterestModel interest,
+  required InterestModel? interest,
 }) {
   showAdaptiveDialog(
     context: context,

@@ -13,11 +13,11 @@ class InterestDetails extends StatelessWidget {
 
   final bool isOwner;
   // Todo replace Str.mock... with interest...
-  final InterestModel interest;
+  final InterestModel? interest;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(Styles.paddingMedium),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

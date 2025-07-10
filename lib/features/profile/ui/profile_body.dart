@@ -148,7 +148,7 @@ class _ProfileBodyState extends State<ProfileBody> {
     chips.insert(
       chips.length,
       RsChip(
-        // onTap: () => showDetailsScreenDialog(context, isOwner: true, interest: null),
+        onTap: () => showDetailsScreenDialog(context, isOwner: true, interest: null),
         paddingRight: Styles.paddingSmall,
         paddingLeft: Styles.paddingSmall,
         children: [Icon(Icons.add_rounded, size: 20)],
