@@ -114,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 24),
               if (_profile != null)
                 Text(
-                  '${Str.lastEdited}: ${DateTime.fromMillisecondsSinceEpoch(_profile!.lastEditedTime).toString()}',
+                  '${Str.lastUpdated}: ${DateTime.fromMillisecondsSinceEpoch(_profile!.lastEditedTime).toString()}',
                 ),
             ],
           ),

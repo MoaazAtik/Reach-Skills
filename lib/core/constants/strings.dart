@@ -67,13 +67,15 @@ abstract class Str {
   static const interests = 'interests';
   static const reach = 'Reach';
 
+  static const account = 'Account';
   static const name = 'Name';
   static const required = 'Required';
   static const bio = 'Bio';
   static const skillsInputDescription = 'Skills (comma-separated)';
   static const wishesInputDescription = 'Wishes (comma-separated)';
   static const email = 'Email';
-  static const lastEdited = 'Last edited';
+  static const lastUpdated = 'Last updated';
+  static const daysAgo = 'days ago';
 
   static const saveProfile = 'Save Profile';
   static const fillRequiredFields = 'Please fill in all required fields.';
@@ -93,4 +95,5 @@ abstract class Str {
   static const mockUserName = 'Ethan Carter';
   static const mockInterestDescription = 'I\'m looking to learn how to play the guitar.\nI\'m a beginner and would love to find someone who can teach me the basics. I\'m available for lessons on weekends.';
   static const mockTags = ['Guitar', 'Music', 'Lessons', 'Art'];
+  static const mockEmail = 'william.henry.harrison@example-pet-store.com';
 }

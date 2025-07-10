@@ -12,6 +12,7 @@ import '../../features/common/widgets/interest_details.dart';
 import '../../features/common/widgets/navigation_shell_scaffold.dart';
 import '../../features/common/widgets/scaffold_app_bar.dart';
 import '../../features/explore/ui/explore_body.dart';
+import '../../features/profile/ui/profile_body.dart';
 import '../constants/strings.dart';
 import '../theme/styles.dart';
 
@@ -22,7 +23,8 @@ final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
 final router = GoRouter(
   // For showing 'details' dialog later perhaps
   navigatorKey: rootNavigatorKey,
-  initialLocation: Str.exploreScreenRoutePath,
+  // initialLocation: Str.exploreScreenRoutePath,
+  initialLocation: Str.profileScreenRoutePath,
   // debugLogDiagnostics: true,
   routes: [
     StatefulShellRoute.indexedStack(
@@ -107,6 +109,18 @@ final router = GoRouter(
           ],
         ),
       ],
+    ),
+    GoRoute(
+      name: Str.profileScreenRouteName,
+      path: Str.profileScreenRoutePath,
+      builder: (BuildContext context, GoRouterState state) {
+        return ScaffoldAppBar(
+          body: ProfileBody(),
+          appBarTitle: Str.profileScreenTitle,
+          isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
+          appBarEditAction: true,
+        );
+      },
     ),
   ],
 
