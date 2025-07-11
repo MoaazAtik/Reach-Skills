@@ -95,9 +95,12 @@ abstract class Str {
 
   static const mockInterestTitle = 'Graphic Design';
   static const mockUserName = 'Ethan Carter';
+  static const mockUserName2 = 'Liam Johannes';
   static const mockInterestDescription = 'I\'m looking to learn how to play the guitar.\nI\'m a beginner and would love to find someone who can teach me the basics. I\'m available for lessons on weekends.';
   static const mockTags = ['Guitar', 'Music', 'Lessons', 'Art'];
   static const mockEmail = 'william.henry.harrison@example-pet-store.com';
   static const mockMessage1 = 'I\'ve found some great resources for learning Spanish. Let\'s schedule a session!';
   static const mockMessage2 = 'I\'ve been working on my graphic design portfolio. Let me know if you need any feedback.';
+  static const mockMessage3 = 'I\'m  interested  in  learning  how  to  play  the  guitar.  I  can  teach  you  how  to  code  in  Python  in  return.';
+  static const mockMessage4 = 'That  sounds  like  a  great  exchange!  I\'m  excited  to  get  started.  When  are  you  available?';
 }

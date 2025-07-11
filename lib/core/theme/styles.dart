@@ -15,6 +15,7 @@ abstract class Styles {
 
   static const borderRadius = 12.0;
 
+  static const spacingExtraSmall = 4.0;
   static const spacingSmall = 8.0;
   static const spacingMedium = 12.0;
 
@@ -33,10 +34,13 @@ abstract class Styles {
   static const fontSizeChatSubtitle = 14.0;
   static const fontSizeButton = 16.0;
   static const fontSizeChatAvatar = 10.0;
+  static const fontSizeMessageName = 13.0;
+  static const fontSizeMessageContent = 16.0;
 
   static var menuElevation = 8.0;
 
   static const radiusChatAvatar = 8.0;
+  static const radiusMessageAvatar = 4.0;
 
   /// Colors
 
@@ -144,4 +148,14 @@ abstract class Styles {
       hintStyle: hintTextStyle,
     );
   }
+
+  static const TextStyle messageNameTextStyle = TextStyle(
+    fontSize: Styles.fontSizeMessageName,
+    color: secondaryTextBlueColor,
+  );
+
+  static const TextStyle messageContentTextStyle = TextStyle(
+    fontSize: Styles.fontSizeMessageContent,
+    color: primaryTextBlackColor,
+  );
 }
