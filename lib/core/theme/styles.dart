@@ -29,9 +29,14 @@ abstract class Styles {
   static const fontSizeInterestDetailsSectionTitle = 18.0;
   static const fontSizeInterestDetailsUser = 16.0;
   static const fontSizeInterestDetailsDescription = 16.0;
+  static const fontSizeChatTitle = 16.0;
+  static const fontSizeChatSubtitle = 14.0;
   static const fontSizeButton = 16.0;
+  static const fontSizeChatAvatar = 10.0;
 
   static var menuElevation = 8.0;
+
+  static const radiusChatAvatar = 8.0;
 
   /// Colors
 
@@ -61,6 +66,8 @@ abstract class Styles {
 
   static const hintColor = Colors.blueGrey;
 
+  static const chatSubtitleColor = Color(0xFF577D8F);
+
   /// Styles
 
   static const interestDetailsTitleTextStyle = TextStyle(
@@ -81,6 +88,22 @@ abstract class Styles {
   static const interestDetailsDescriptionTextStyle = TextStyle(
     fontSize: fontSizeInterestDetailsDescription,
   );
+
+  static const chatTitleTextStyle = TextStyle(
+    fontSize: fontSizeChatTitle,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const chatSubtitleTextStyle = TextStyle(
+    fontSize: fontSizeChatSubtitle,
+    color: chatSubtitleColor,
+    overflow: TextOverflow.fade,
+  );
+
+  // static const chatTimestampTextStyle = TextStyle(
+  //   fontSize: fontSizeChatSubtitle,
+  //   color: secondaryTextBlueColor,
+  // );
 
   static const interestChipTextStyle = TextStyle(fontSize: fontSizeChip);
 

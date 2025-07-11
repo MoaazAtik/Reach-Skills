@@ -4,8 +4,8 @@ abstract class Str {
   static const profileScreenTitle = 'Profile';
   static const exploreScreenTitle = 'Interests';
   static const exploreScreenLabel = 'Explore';
-  static const chatScreenTitle = 'Chat';
-  static const messagesScreenTitle = 'Messages';
+  static const chatScreenTitle = 'Chats';
+  static const messagesScreenTitle = 'Reach';
   static const unknownScreenMessage = 'Unknown Screen';
   static const screenNotFoundMessage = '404\nScreen Not Found';
 
@@ -77,7 +77,7 @@ abstract class Str {
   static const wishesInputDescription = 'Wishes (comma-separated)';
   static const email = 'Email';
   static const lastUpdated = 'Last updated';
-  static const daysAgo = 'days ago';
+  static const mockDaysAgo = 'x days ago';
 
   static const saveProfile = 'Save Profile';
   static const fillRequiredFields = 'Please fill in all required fields.';
@@ -98,4 +98,6 @@ abstract class Str {
   static const mockInterestDescription = 'I\'m looking to learn how to play the guitar.\nI\'m a beginner and would love to find someone who can teach me the basics. I\'m available for lessons on weekends.';
   static const mockTags = ['Guitar', 'Music', 'Lessons', 'Art'];
   static const mockEmail = 'william.henry.harrison@example-pet-store.com';
+  static const mockMessage1 = 'I\'ve found some great resources for learning Spanish. Let\'s schedule a session!';
+  static const mockMessage2 = 'I\'ve been working on my graphic design portfolio. Let me know if you need any feedback.';
 }

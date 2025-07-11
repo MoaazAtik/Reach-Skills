@@ -120,7 +120,7 @@ final router = GoRouter(
                     return ScaffoldAppBarBodies(
                       masterBody: masterBody,
                       detailBody: detailBody,
-                      appBarTitle: Str.chatScreenTitle,
+                      appBarTitle: Str.messagesScreenTitle,
                       isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                     );
                   },
