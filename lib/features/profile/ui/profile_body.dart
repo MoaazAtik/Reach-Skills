@@ -5,10 +5,10 @@ import 'package:reach_skills/features/profile/ui/profile_viewmodel.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../../core/theme/styles.dart';
-import '../../common/data/interest_model.dart';
-import '../../common/widgets/interest_details.dart';
+// import '../../common/data/interest_model.dart';
+// import '../../common/widgets/interest_details.dart';
 import '../../common/widgets/rs_chip.dart';
-import '../domain/profile_model.dart';
+// import '../domain/profile_model.dart';
 
 class ProfileBody extends StatefulWidget {
   const ProfileBody({super.key});
@@ -18,7 +18,7 @@ class ProfileBody extends StatefulWidget {
 }
 
 class _ProfileBodyState extends State<ProfileBody> {
-  final _formKey = GlobalKey<FormState>(debugLabel: '_ProfileBodyState');
+  // final _formKey = GlobalKey<FormState>(debugLabel: '_ProfileBodyState');
   late TextEditingController _nameController;
   late TextEditingController _bioController;
 

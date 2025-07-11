@@ -127,6 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Future<String> Function(ProfileModel newProfile) updateProfile,
   ) async {
     String updatingResult;
+    final ScaffoldMessengerState scaffoldMessengerState = ScaffoldMessenger.of(context);
 
     if (!_formKey.currentState!.validate()) {
       updatingResult = Str.fillRequiredFields;
@@ -156,11 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       updatingResult = await updateProfile(newProfile);
     }
 
-    if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(updatingResult)));
-    }
+      scaffoldMessengerState.showSnackBar(SnackBar(content: Text(updatingResult)));
   }
 
   @override

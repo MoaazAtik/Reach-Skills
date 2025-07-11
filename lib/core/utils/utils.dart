@@ -46,7 +46,7 @@ String formatDateTimeDifference(DateTime dateTime) {
 
 extension StringExtensions on String {
   String xToSentenceCase() {
-    return "${this[0].toUpperCase()}${this.substring(1)}";
+    return "${this[0].toUpperCase()}${substring(1)}";
   }
 
   String xToTitleCase() {

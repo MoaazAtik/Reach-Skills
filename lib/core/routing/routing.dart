@@ -15,7 +15,6 @@ import '../../features/explore/ui/explore_body.dart';
 import '../../features/profile/ui/profile_body.dart';
 import '../../features/profile/ui/profile_viewmodel.dart';
 import '../constants/strings.dart';
-import '../theme/styles.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',

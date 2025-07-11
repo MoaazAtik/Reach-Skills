@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reach_skills/features/common/widgets/rs_popup_menu_button.dart';
 
-import '../../../core/theme/styles.dart';
 import 'rs_app_bar.dart';
 
 class ScaffoldAppBar extends StatelessWidget {
