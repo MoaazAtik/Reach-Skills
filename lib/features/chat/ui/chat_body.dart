@@ -1,61 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
-import '../../../core/theme/styles.dart';
 
 class ChatBody extends StatelessWidget {
   final String? selectedChatId;
+  final void Function(String selectedChatId) onTapChat;
 
-  const ChatBody({super.key, this.selectedChatId});
+  const ChatBody({super.key, this.selectedChatId, required this.onTapChat});
 
   @override
   Widget build(BuildContext context) {
-    final isLargeScreen =
-        MediaQuery.sizeOf(context).width > Styles.smallScreenWidthThreshold;
-
-    return Row(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: 10,
-            itemBuilder:
-                (context, index) => ListTile(
-                  title: Text('Chat $index'),
-                  onTap: () {
-                    if (isLargeScreen) {
-                      context.go('/chat/$index');
-                    } else {
-                      // context.push('/chat/$index');
-                      context.go('/chat/$index');
-                    }
-                  },
-                ),
+    return ListView.builder(
+      itemCount: 10,
+      itemBuilder:
+          (context, index) => ListTile(
+            title: Text('Chat $index'),
+            onTap: () {
+              onTapChat(index.toString());
+            },
           ),
-        ),
-        if (isLargeScreen && selectedChatId != null)
-          Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder:
-                  (context, index) => ListTile(
-                    title: Text('chatId: $selectedChatId,\n Message $index'),
-                  ),
-            ),
-          )
-        else if (!isLargeScreen && selectedChatId != null)
-          Expanded(
-            // Todo replace with MessageScreen
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder:
-                  (context, index) => ListTile(
-                    title: Text(
-                      'smallll\n chatId: $selectedChatId,\n Message $index',
-                    ),
-                  ),
-            ),
-          ),
-      ],
     );
   }
 }

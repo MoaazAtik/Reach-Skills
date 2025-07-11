@@ -6,11 +6,11 @@ import 'package:reach_skills/features/common/widgets/scaffold_app_bar_bodies.dar
 
 import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/ui/chat_body.dart';
+import '../../features/chat/ui/messages_body.dart';
 import '../../features/common/data/interest_model.dart';
 import '../../features/common/widgets/error_route.dart';
 import '../../features/common/widgets/interest_details.dart';
 import '../../features/common/widgets/navigation_shell_scaffold.dart';
-import '../../features/common/widgets/scaffold_app_bar.dart';
 import '../../features/explore/ui/explore_body.dart';
 import '../../features/profile/ui/profile_body.dart';
 import '../../features/profile/ui/profile_viewmodel.dart';
@@ -24,7 +24,7 @@ final router = GoRouter(
   // For showing 'details' dialog later perhaps
   navigatorKey: rootNavigatorKey,
   // initialLocation: Str.exploreScreenRoutePath,
-  initialLocation: Str.profileScreenRoutePath,
+  initialLocation: Str.chatScreenRoutePath,
   // debugLogDiagnostics: true,
   routes: [
     StatefulShellRoute.indexedStack(
@@ -84,8 +84,13 @@ final router = GoRouter(
               name: Str.chatScreenRouteName,
               path: Str.chatScreenRoutePath,
               builder: (BuildContext context, GoRouterState state) {
-                return ScaffoldAppBar(
-                  body: ChatBody(),
+                return ScaffoldAppBarBodies(
+                  masterBody: ChatBody(
+                    selectedChatId: null,
+                    onTapChat: (String chatId) {
+                      onTapChat(context, chatId);
+                    },
+                  ),
                   appBarTitle: Str.chatScreenTitle,
                   isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                 );
@@ -97,8 +102,24 @@ final router = GoRouter(
                   builder: (BuildContext context, GoRouterState state) {
                     final chatId =
                         state.pathParameters[Str.messagesScreenParamId];
-                    return ScaffoldAppBar(
-                      body: ChatBody(selectedChatId: chatId),
+                    final isLargeScreen = checkLargeScreen(context);
+                    Widget masterBody;
+                    Widget? detailBody;
+                    if (isLargeScreen) {
+                      masterBody = ChatBody(
+                        selectedChatId: chatId,
+                        onTapChat: (String chatId) {
+                          onTapChat(context, chatId);
+                        },
+                      );
+                      detailBody = MessagesBody(selectedChatId: chatId!);
+                    } else {
+                      masterBody = MessagesBody(selectedChatId: chatId!);
+                    }
+
+                    return ScaffoldAppBarBodies(
+                      masterBody: masterBody,
+                      detailBody: detailBody,
                       appBarTitle: Str.chatScreenTitle,
                       isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                     );
@@ -151,4 +172,12 @@ void onInterestTap(BuildContext context, InterestModel interest) {
     // Todo: replace isOwner
     showDetailsScreenDialog(context, isOwner: false, interest: interest);
   }
+}
+
+void onTapChat(BuildContext context, String selectedChatId) {
+  context.go('${Str.chatScreenRoutePath}/$selectedChatId');
+  // else if (!isLargeScreen) {
+  //   // context.push('/chat/$index');
+  //   context.go('/chat/$index');
+  // }
 }
