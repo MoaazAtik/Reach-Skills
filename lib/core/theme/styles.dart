@@ -36,6 +36,8 @@ abstract class Styles {
   static const fontSizeChatAvatar = 10.0;
   static const fontSizeMessageName = 13.0;
   static const fontSizeMessageContent = 16.0;
+  static const fontSizeSupportEmail = 16.0;
+  static const fontSizeDeveloper = 20.0;
 
   static var menuElevation = 8.0;
 
@@ -75,11 +77,13 @@ abstract class Styles {
   /// Styles
 
   static const interestDetailsTitleTextStyle = TextStyle(
+    color: primaryTextBlackColor,
     fontSize: fontSizeInterestDetailsTitle,
     fontWeight: FontWeight.bold,
   );
 
   static const interestDetailsSectionTitleTextStyle = TextStyle(
+    color: primaryTextBlackColor,
     fontSize: fontSizeInterestDetailsSectionTitle,
     fontWeight: FontWeight.bold,
   );
@@ -87,6 +91,18 @@ abstract class Styles {
   static const interestDetailsUserTextStyle = TextStyle(
     fontSize: fontSizeInterestDetailsUser,
     color: secondaryTextBlueColor,
+  );
+
+  static const supportEmailTextStyle = TextStyle(
+    fontSize: fontSizeSupportEmail,
+    color: primaryTextBlackColor,
+  );
+
+  static const developerTextStyle = TextStyle(
+    fontSize: fontSizeDeveloper,
+    color: secondaryTextBlueColor,
+    fontFamily: fontFamilyDancingScript,
+    fontVariations: [FontVariation(fontVariationAxisTagWeight, 700)],
   );
 
   static const interestDetailsDescriptionTextStyle = TextStyle(
@@ -158,4 +174,17 @@ abstract class Styles {
     fontSize: Styles.fontSizeMessageContent,
     color: primaryTextBlackColor,
   );
+
+  /// Font Families
+
+  static const fontFamilyPlusJakartaSans = 'PlusJakartaSans';
+  static const fontFamilyDancingScript = 'DancingScript';
+
+  /// Font Axis Tag Names
+
+  static const fontVariationAxisTagItalic = 'ital';
+  static const fontVariationAxisTagOpticalSize = 'opsz';
+  static const fontVariationAxisTagSlant = 'slnt';
+  static const fontVariationAxisTagWidth = 'wdth';
+  static const fontVariationAxisTagWeight = 'wght';
 }

@@ -6,6 +6,7 @@ abstract class Str {
   static const exploreScreenLabel = 'Explore';
   static const chatScreenTitle = 'Chats';
   static const messagesScreenTitle = 'Reach';
+  static const helpScreenTitle = 'Help';
   static const unknownScreenMessage = 'Unknown Screen';
   static const screenNotFoundMessage = '404\nScreen Not Found';
 
@@ -30,6 +31,9 @@ abstract class Str {
   // static const detailsScreenRoutePath = '/:id';
   // static const detailsScreenRouteFullPath = '/details/:id';
   static const detailsScreenRoutePath = '/details/:id';
+
+  static const helpScreenRouteName = 'help';
+  static const helpScreenRoutePath = '/help';
 
   static const messagesScreenParamId = 'id';
   static const detailsScreenParamId = 'id'; // only for deep linking
@@ -92,6 +96,12 @@ abstract class Str {
   static const by = 'by';
   static const type = 'Type';
   static const tags = 'Tags';
+
+  static const contactUs = 'Contact Us';
+  static const supportEmail = 'info.thewhitewings@gmail.com';
+  static const onboardingGuide = 'Onboarding Guide';
+  static const poweredBy = 'Powered by';
+  static const whiteWings = 'White Wings';
 
   static const mockInterestTitle = 'Graphic Design';
   static const mockUserName = 'Ethan Carter';

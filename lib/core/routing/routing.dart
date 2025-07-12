@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/utils/utils.dart';
 import 'package:reach_skills/features/common/widgets/scaffold_app_bar_bodies.dart';
+import 'package:reach_skills/features/help/ui/help_body.dart';
 
 import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/ui/chat_body.dart';
@@ -24,7 +25,7 @@ final router = GoRouter(
   // For showing 'details' dialog later perhaps
   navigatorKey: rootNavigatorKey,
   // initialLocation: Str.exploreScreenRoutePath,
-  initialLocation: Str.chatScreenRoutePath,
+  initialLocation: Str.helpScreenRoutePath,
   // debugLogDiagnostics: true,
   routes: [
     StatefulShellRoute.indexedStack(
@@ -146,6 +147,22 @@ final router = GoRouter(
         );
       },
     ),
+
+    GoRoute(
+      name: Str.helpScreenRouteName,
+      path: Str.helpScreenRoutePath,
+      builder: (BuildContext context, GoRouterState state) {
+        return ScaffoldAppBarBodies(
+          masterBody: HelpBody(
+            onTapOnboardingGuide: () {
+              onTapOnboardingGuide(context);
+            },
+          ),
+          appBarTitle: Str.helpScreenTitle,
+          isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
+        );
+      },
+    ),
   ],
 
   errorBuilder: (context, state) {
@@ -180,4 +197,8 @@ void onTapChat(BuildContext context, String selectedChatId) {
   //   // context.push('/chat/$index');
   //   context.go('/chat/$index');
   // }
+}
+
+void onTapOnboardingGuide(BuildContext context) {
+  // Todo implement
 }

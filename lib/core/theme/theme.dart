@@ -343,7 +343,7 @@ class MaterialTheme {
     brightness: colorScheme.brightness,
     colorScheme: colorScheme,
     textTheme: textTheme.apply(
-      fontFamily: 'PlusJakartaSans',
+      fontFamily: Styles.fontFamilyPlusJakartaSans,
       bodyColor: colorScheme.onSurface,
       displayColor: colorScheme.onSurface,
     ),
