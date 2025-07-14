@@ -58,51 +58,6 @@ class OnboardingBase extends StatelessWidget {
     );
   }
 
-  // Widget build(BuildContext context) {
-  //   return SingleChildScrollView(
-  //     // padding: EdgeInsets.symmetric(horizontal: Styles.paddingMedium, vertical: Styles.padding12,),
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       children: [
-  //         Column(
-  //           children: [
-  //             SizedBox(height: _getSizedBoxHeight(onboardingProgress)),
-  //             if (onboardingProgress > 0)
-  //               Row(
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 spacing: Styles.spacing12,
-  //                 children: List.generate(4, (index) {
-  //                   return onboardingProgressChip(
-  //                     _getProgressChipColor(index, onboardingProgress),
-  //                   );
-  //                 }),
-  //               ),
-  //             if (onboardingProgress > 0) SizedBox(height: 20),
-  //             onboardingBody,
-  //           ],
-  //         ),
-  //         FilledButton(
-  //           onPressed: onTapNext,
-  //           style: Theme.of(context).filledButtonTheme.style?.copyWith(
-  //             backgroundColor: WidgetStateProperty.all(
-  //               _getButtonBackground(onboardingProgress),
-  //             ),
-  //           ),
-  //           child: Text(
-  //             _getButtonText(onboardingProgress),
-  //             style: Styles.rsFilledButtonTextStyle,
-  //           ),
-  //         ),
-  //       ],
-  //       // ),
-  //     ),
-  //   );
-  // }
-
-  // double _getSizedBoxHeight(int onboardingProgress) {
-  //   return onboardingProgress == 0 ? 140.0 : 32.0;
-  // }
-
   Color _getProgressChipColor(int progressIndex, int onboardingProgress) {
     return (progressIndex + 1) == onboardingProgress
         ? Styles.buttonPaleBackgroundColor

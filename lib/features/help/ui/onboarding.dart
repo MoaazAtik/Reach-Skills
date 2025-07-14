@@ -67,13 +67,11 @@ Widget buildOnboarding0() => Column(
       style: Styles.interestDetailsSectionTitleTextStyle,
     ),
     SizedBox(height: 32.0),
-    // const SizedBox(height: 160),
   ],
 );
 
 Widget buildOnboarding1() => Column(
   children: [
-    // const SizedBox(height: 40),
     const Text(Str.onboarding1Title, style: Styles.onboardingTitleTextStyle),
     const SizedBox(height: Styles.spacingMedium),
     const Text(
@@ -135,13 +133,11 @@ Widget buildOnboarding1() => Column(
     ),
 
     SizedBox(height: 32.0),
-    // const SizedBox(height: 160),
   ],
 );
 
 Widget buildOnboarding2() => Column(
   children: [
-    // const SizedBox(height: 20),
     Container(
       constraints: const BoxConstraints(
         maxWidth: Styles.illustrationMaxWidth,
@@ -159,13 +155,11 @@ Widget buildOnboarding2() => Column(
       textAlign: TextAlign.center,
     ),
     SizedBox(height: 32.0),
-    // const SizedBox(height: 252),
   ],
 );
 
 Widget buildOnboarding3() => Column(
   children: [
-    // const SizedBox(height: 20),
     Container(
       constraints: const BoxConstraints(
         maxWidth: Styles.illustrationMaxWidth,
@@ -183,13 +177,11 @@ Widget buildOnboarding3() => Column(
       textAlign: TextAlign.center,
     ),
     SizedBox(height: 32.0),
-    // const SizedBox(height: 252),
   ],
 );
 
 Widget buildOnboarding4() => Column(
   children: [
-    // const SizedBox(height: 20),
     Container(
       constraints: const BoxConstraints(
         maxWidth: Styles.illustrationMaxWidth,
@@ -207,6 +199,5 @@ Widget buildOnboarding4() => Column(
       textAlign: TextAlign.center,
     ),
     SizedBox(height: 32.0),
-    // const SizedBox(height: 252),
   ],
 );
