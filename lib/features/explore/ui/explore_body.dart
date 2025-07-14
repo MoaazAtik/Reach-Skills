@@ -45,7 +45,7 @@ class _ExploreBodyState extends State<ExploreBody> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
-            spacing: Styles.spacingMedium,
+            spacing: Styles.spacing12,
             children: [
               RsChip(
                 onTap: () {},
@@ -64,7 +64,7 @@ class _ExploreBodyState extends State<ExploreBody> {
               SearchWidget(onSearch: () {}),
             ],
           ),
-          const SizedBox(height: Styles.spacingMedium),
+          const SizedBox(height: Styles.spacing12),
           Expanded(
             child: GridView(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(

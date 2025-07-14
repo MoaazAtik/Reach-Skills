@@ -31,9 +31,10 @@ abstract class Str {
   // static const detailsScreenRoutePath = '/:id';
   // static const detailsScreenRouteFullPath = '/details/:id';
   static const detailsScreenRoutePath = '/details/:id';
-
   static const helpScreenRouteName = 'help';
   static const helpScreenRoutePath = '/help';
+  static const onboardingScreenRouteName = 'onboarding';
+  static const onboardingScreenRoutePath = '/onboarding';
 
   static const messagesScreenParamId = 'id';
   static const detailsScreenParamId = 'id'; // only for deep linking
@@ -102,6 +103,24 @@ abstract class Str {
   static const onboardingGuide = 'Onboarding Guide';
   static const poweredBy = 'Powered by';
   static const whiteWings = 'White Wings';
+
+  static const onboarding0Title = 'Connect, Share, Grow';
+  static const onboarding0Description = 'Reach Skills is a vibrant community where you can exchange skills, pursue your aspirations, and connect with like-minded individuals.';
+
+  static const onboarding1Title = 'What are Interests?';
+  static const onboarding1Description = 'Interests are the core of Reach Skills. They represent what you can offer (Skills) and what you\'re looking for (Wishes).';
+  static const skills = 'Skills';
+  static const skillsDefinition = 'What you can offer to others';
+  static const wishes = 'Wishes';
+  static const wishesDefinition = 'What you want to learn or receive help with';
+  static const skillsReachDefinition = 'Connect with others who share your skills. Collaborate on projects, exchange ideas, and grow together.';
+  static const wishesReachDefinition = 'Find others with similar goals and support each other\'s journeys.';
+  static const skillForWishReachDefinition = 'Exchange your skills for wishes.\nOffer your skills to help others achieve their wishes, and vice versa.';
+  static const skillForWish = 'Skill for Wish';
+
+  static const getStarted = 'Get Started';
+  static const next = 'Next';
+  static const letsGo = 'Let\'s Go';
 
   static const mockInterestTitle = 'Graphic Design';
   static const mockUserName = 'Ethan Carter';

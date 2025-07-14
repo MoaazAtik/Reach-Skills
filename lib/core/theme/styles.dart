@@ -12,17 +12,22 @@ abstract class Styles {
   static const paddingSmall = 8.0;
   static const padding12 = 12.0;
   static const paddingMedium = 16.0;
+  static const padding20 = 20.0;
 
   static const borderRadius = 12.0;
 
   static const spacingExtraSmall = 4.0;
   static const spacingSmall = 8.0;
-  static const spacingMedium = 12.0;
+  static const spacing12 = 12.0;
+  static const spacingMedium = 16.0;
 
   static const chipHeight = 32.0;
   static const buttonHeight = 48.0;
+  static const progressChipHeight = 8.0;
 
-  static var interestIconSize = 64.0;
+  static const interestIconSize = 64.0;
+  static const appLogoSize = 40.0;
+  static const illustrationMaxWidth = 500.0;
 
   static const fontSizeChip = 14.0;
   static const fontWeightChip = FontWeight.w500;
@@ -38,8 +43,12 @@ abstract class Styles {
   static const fontSizeMessageContent = 16.0;
   static const fontSizeSupportEmail = 16.0;
   static const fontSizeDeveloper = 20.0;
+  static const fontSizeOnboardingTitle = 28.0;
+  static const fontSizeOnboardingDescription = 16.0;
+  static const fontSize16 = 16.0;
+  static const fontSize14 = 16.0;
 
-  static var menuElevation = 8.0;
+  static const menuElevation = 8.0;
 
   static const radiusChatAvatar = 8.0;
   static const radiusMessageAvatar = 4.0;
@@ -60,6 +69,7 @@ abstract class Styles {
 
   static const buttonFullBackgroundColor = Color(0xFF47B5EB);
   static const buttonPaleBackgroundColor = Color(0xFFADD6EB);
+  static const progressUndoneBackgroundColor = Color(0xFFD4DEE3);
 
   static const wishCardBackgroundColor = LinearGradient(
     colors: [wishCardGradientStartColor, wishCardGradientEndColor],
@@ -173,6 +183,28 @@ abstract class Styles {
   static const TextStyle messageContentTextStyle = TextStyle(
     fontSize: Styles.fontSizeMessageContent,
     color: primaryTextBlackColor,
+  );
+
+  static const TextStyle onboardingTitleTextStyle = TextStyle(
+    fontSize: Styles.fontSizeOnboardingTitle,
+    color: primaryTextBlackColor,
+    fontWeight: FontWeight.bold,
+  );
+
+  static const TextStyle onboardingDescriptionTextStyle = TextStyle(
+    fontSize: Styles.fontSizeOnboardingDescription,
+    color: primaryTextBlackColor,
+  );
+
+  static const TextStyle textStyle16BlackWeightMedium = TextStyle(
+    fontSize: fontSize16,
+    color: primaryTextBlackColor,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const TextStyle textStyle14SubtitleBlue = TextStyle(
+    fontSize: fontSize16,
+    color: chatSubtitleColor,
   );
 
   /// Font Families

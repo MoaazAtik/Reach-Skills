@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:reach_skills/core/utils/utils.dart';
 import 'package:reach_skills/features/common/widgets/scaffold_app_bar_bodies.dart';
 import 'package:reach_skills/features/help/ui/help_body.dart';
+import 'package:reach_skills/features/help/ui/onboarding.dart';
 
 import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/ui/chat_body.dart';
@@ -25,7 +26,7 @@ final router = GoRouter(
   // For showing 'details' dialog later perhaps
   navigatorKey: rootNavigatorKey,
   // initialLocation: Str.exploreScreenRoutePath,
-  initialLocation: Str.helpScreenRoutePath,
+  initialLocation: Str.onboardingScreenRoutePath,
   // debugLogDiagnostics: true,
   routes: [
     StatefulShellRoute.indexedStack(
@@ -131,6 +132,17 @@ final router = GoRouter(
           ],
         ),
       ],
+    ),
+    GoRoute(
+      name: Str.onboardingScreenRouteName,
+      path: Str.onboardingScreenRoutePath,
+      builder: (BuildContext context, GoRouterState state) {
+        return Scaffold(
+          body: Onboarding(
+            endOnboarding: () => context.goNamed(Str.exploreScreenRouteName),
+          ),
+        );
+      },
     ),
     GoRoute(
       name: Str.profileScreenRouteName,

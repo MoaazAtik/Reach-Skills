@@ -59,8 +59,8 @@ class InterestDetails extends StatelessWidget {
           Text(Str.tags, style: Styles.interestDetailsSectionTitleTextStyle),
           SizedBox(height: 16),
           Wrap(
-            spacing: Styles.spacingMedium,
-            runSpacing: Styles.spacingMedium,
+            spacing: Styles.spacing12,
+            runSpacing: Styles.spacing12,
             children: List.generate(Str.mockTags.length, (index) {
               return RsChip(
                 children: [

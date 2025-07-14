@@ -84,8 +84,8 @@ class _ProfileBodyState extends State<ProfileBody> {
             ),
             SizedBox(height: 20),
             Wrap(
-              spacing: Styles.spacingMedium,
-              runSpacing: Styles.spacingMedium,
+              spacing: Styles.spacing12,
+              runSpacing: Styles.spacing12,
               children: _buildInterestsChips(interests: Str.mockTags),
             ),
             SizedBox(height: 28),
