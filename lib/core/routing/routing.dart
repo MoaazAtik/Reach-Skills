@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/utils/utils.dart';
 import 'package:reach_skills/features/common/widgets/scaffold_app_bar_bodies.dart';
+import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
 import 'package:reach_skills/features/help/ui/help_body.dart';
 import 'package:reach_skills/features/help/ui/onboarding.dart';
 
@@ -22,11 +23,13 @@ final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
 );
 
-final router = GoRouter(
+GoRouter getRouter(bool isFirstInitialization) => GoRouter(
   // For showing 'details' dialog later perhaps
   navigatorKey: rootNavigatorKey,
-  // initialLocation: Str.exploreScreenRoutePath,
-  initialLocation: Str.onboardingScreenRoutePath,
+  initialLocation:
+      isFirstInitialization
+          ? Str.onboardingScreenRoutePath
+          : Str.exploreScreenRoutePath,
   // debugLogDiagnostics: true,
   routes: [
     StatefulShellRoute.indexedStack(
@@ -139,7 +142,9 @@ final router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return Scaffold(
           body: Onboarding(
-            endOnboarding: () => context.goNamed(Str.exploreScreenRouteName),
+            endOnboarding: () {
+              endOnboarding(context);
+            },
           ),
         );
       },
@@ -212,5 +217,11 @@ void onTapChat(BuildContext context, String selectedChatId) {
 }
 
 void onTapOnboardingGuide(BuildContext context) {
-  // Todo implement
+  context.goNamed(Str.onboardingScreenRouteName);
+  // context.read<ExploreViewModel>().setIsFirstInitialization(true);
+}
+
+void endOnboarding(BuildContext context) {
+  context.goNamed(Str.exploreScreenRouteName);
+  context.read<ExploreViewModel>().setIsFirstInitialization(false);
 }

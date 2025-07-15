@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:reach_skills/core/preferences_repository/domain/preferences_repository.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../auth/domain/auth_repository.dart';
@@ -10,13 +11,16 @@ import '../../profile/domain/profile_repository.dart';
 
 class ExploreViewModel extends ChangeNotifier {
   ExploreViewModel({
+    required PreferencesRepository preferencesRepository,
     required AuthRepository authRepository,
     required ProfileRepository profileRepository,
-  }) : _authRepository = authRepository,
+  }) : _preferencesRepository = preferencesRepository,
+       _authRepository = authRepository,
        _profileRepository = profileRepository {
     init();
   }
 
+  final PreferencesRepository _preferencesRepository;
   final AuthRepository _authRepository;
   final ProfileRepository _profileRepository;
 
@@ -26,13 +30,28 @@ class ExploreViewModel extends ChangeNotifier {
   String? interestsStreamError;
   bool loading = true;
 
+  bool? isFirstInitialization;
+
   String? currentSenderId;
   String? currentSenderName;
   String? currentReceiverId;
   String? currentReceiverName;
 
   void init() {
+    getIsFirstInitialization();
     startInterestsSubscription(interestTypes);
+    notifyListeners(); /* Investigate why app works fine even without this line. */
+  }
+
+  Future<void> setIsFirstInitialization(bool value) async {
+    await _preferencesRepository.setIsFirstInitialization(value);
+    getIsFirstInitialization();
+  }
+
+  Future<void> getIsFirstInitialization() async {
+    isFirstInitialization =
+        await _preferencesRepository.isFirstInitialization();
+    // notifyListeners();
   }
 
   Future<String?> updateFields({
@@ -69,23 +88,19 @@ class ExploreViewModel extends ChangeNotifier {
     _interestsSubscription?.cancel();
     _profileRepository.subscribeToInterestsStream(interestTypes: interestTypes);
 
-    if (_profileRepository.interestsStream == null) {
-      loading = true;
-    } else {
-      _interestsSubscription = _profileRepository.interestsStream!.listen(
-        (interests) {
-          this.interests = interests;
-          interestsStreamError = null;
-          loading = false;
-          notifyListeners();
-        },
-        onError: (errorObject, stackTrace) {
-          interestsStreamError = Str.serverErrorMessage;
-          loading = false;
-          notifyListeners();
-        },
-      );
-    }
+    _interestsSubscription = _profileRepository.interestsStream!.listen(
+      (interests) {
+        this.interests = interests;
+        interestsStreamError = null;
+        loading = false;
+        // notifyListeners();
+      },
+      onError: (errorObject, stackTrace) {
+        interestsStreamError = Str.serverErrorMessage;
+        loading = false;
+        // notifyListeners();
+      },
+    );
   }
 
   void stopSubscriptions() {

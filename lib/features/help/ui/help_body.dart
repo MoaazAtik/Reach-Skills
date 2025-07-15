@@ -34,7 +34,7 @@ class HelpBody extends StatelessWidget {
               ),
             ),
             FilledButton(
-              onPressed: () {},
+              onPressed: onTapOnboardingGuide,
               style: Theme.of(context).filledButtonTheme.style?.copyWith(
                 minimumSize: WidgetStateProperty.all(
                   const Size(300.0, Styles.buttonHeight),

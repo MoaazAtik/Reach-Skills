@@ -47,6 +47,8 @@ dependencies:
   cloud_firestore: ^5.6.9
   # Navigation: Go Router
   go_router: ^15.2.4
+  # Shared Preferences
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:
