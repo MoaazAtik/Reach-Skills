@@ -12,6 +12,8 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authViewModel = context.watch<AuthViewModel>();
+    // Todo perhaps remove this isLoggedIn
+    // and use the one passed to the widget by routing
     final isLoggedIn = authViewModel.isLoggedIn;
 
     final authError = authViewModel.authError;

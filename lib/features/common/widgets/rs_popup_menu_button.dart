@@ -4,9 +4,21 @@ import '../../../core/constants/strings.dart';
 import '../../../core/theme/styles.dart';
 
 class RsPopupMenuButton extends StatelessWidget {
-  const RsPopupMenuButton({super.key, required this.isLoggedIn});
+  const RsPopupMenuButton({
+    super.key,
+    required this.isLoggedIn,
+    required this.onTapSignIn,
+    required this.onTapSignOut,
+    required this.onTapEditProfile,
+    required this.onTapHelp,
+  });
 
   final bool isLoggedIn;
+
+  final void Function() onTapSignIn;
+  final void Function() onTapSignOut;
+  final void Function() onTapEditProfile;
+  final void Function() onTapHelp;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +33,22 @@ class RsPopupMenuButton extends StatelessWidget {
       itemBuilder: (BuildContext context) => _getMenuItems(isLoggedIn),
       onSelected: _onMenuItemSelected,
     );
+  }
+
+  void _onMenuItemSelected(dynamic value) {
+    if (value == _menuItemSignOut.value) {
+      print('Sign out selected');
+      onTapSignOut();
+    } else if (value == _menuItemEditProfile.value) {
+      print('Edit profile selected');
+      onTapEditProfile();
+    } else if (value == _menuItemHelp.value) {
+      print('Help selected');
+      onTapHelp();
+    } else if (value == _menuItemSignIn.value) {
+      print('Sign in selected');
+      onTapSignIn();
+    }
   }
 }
 
@@ -51,30 +79,4 @@ List<PopupMenuItem<dynamic>> _getMenuItems(bool isLoggedIn) {
   } else {
     return <PopupMenuItem>[_menuItemSignIn, _menuItemHelp];
   }
-}
-
-void _onMenuItemSelected(dynamic value) {
-  if (value == _menuItemSignOut.value) {
-    print('Sign out selected');
-  } else if (value == _menuItemEditProfile.value) {
-    print('Edit profile selected');
-  } else if (value == _menuItemHelp.value) {
-    print('Help selected');
-  } else if (value == _menuItemSignIn.value) {
-    print('Sign in selected');
-  }
-  // switch (value) {
-  //   case Str.signOut:
-  //     print('Sign out selected');
-  //     break;
-  //   case Str.editProfile:
-  //     print('Edit profile selected');
-  //     break;
-  //   case Str.help:
-  //     print('Help selected');
-  //     break;
-  //   case Str.signIn:
-  //     print('Sign in selected');
-  //     break;
-  // }
 }

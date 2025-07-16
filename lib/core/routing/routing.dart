@@ -7,6 +7,7 @@ import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
 import 'package:reach_skills/features/help/ui/help_body.dart';
 import 'package:reach_skills/features/help/ui/onboarding.dart';
 
+import '../../features/auth/ui/auth_screen.dart';
 import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/ui/chat_body.dart';
 import '../../features/chat/ui/messages_body.dart';
@@ -47,14 +48,14 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
               name: Str.exploreScreenRouteName,
               path: Str.exploreScreenRoutePath,
               builder: (BuildContext context, GoRouterState state) {
-                return ScaffoldAppBarBodies(
+                return buildScaffoldAppBarBodies(
+                  context: context,
                   masterBody: ExploreBody(
                     onInterestTap: (interest) {
                       onInterestTap(context, interest);
                     },
                   ),
                   appBarTitle: Str.exploreScreenTitle,
-                  isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                 );
               },
               routes: [
@@ -64,7 +65,8 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                   builder: (BuildContext context, GoRouterState state) {
                     final interest = state.extra;
 
-                    return ScaffoldAppBarBodies(
+                    return buildScaffoldAppBarBodies(
+                      context: context,
                       masterBody: ExploreBody(
                         onInterestTap: (interest) {
                           onInterestTap(context, interest);
@@ -75,7 +77,6 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                         interest: interest as InterestModel,
                       ),
                       appBarTitle: Str.exploreScreenTitle,
-                      isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                     );
                   },
                 ),
@@ -89,7 +90,8 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
               name: Str.chatScreenRouteName,
               path: Str.chatScreenRoutePath,
               builder: (BuildContext context, GoRouterState state) {
-                return ScaffoldAppBarBodies(
+                return buildScaffoldAppBarBodies(
+                  context: context,
                   masterBody: ChatBody(
                     selectedChatId: null,
                     onTapChat: (String chatId) {
@@ -97,7 +99,6 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                     },
                   ),
                   appBarTitle: Str.chatScreenTitle,
-                  isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                 );
               },
               routes: [
@@ -122,11 +123,11 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                       masterBody = MessagesBody(selectedChatId: chatId!);
                     }
 
-                    return ScaffoldAppBarBodies(
+                    return buildScaffoldAppBarBodies(
+                      context: context,
                       masterBody: masterBody,
                       detailBody: detailBody,
                       appBarTitle: Str.messagesScreenTitle,
-                      isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
                     );
                   },
                 ),
@@ -136,6 +137,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
         ),
       ],
     ),
+
     GoRoute(
       name: Str.onboardingScreenRouteName,
       path: Str.onboardingScreenRoutePath,
@@ -149,16 +151,29 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
         );
       },
     ),
+
+    GoRoute(
+      name: Str.authScreenRouteName,
+      path: Str.authScreenRoutePath,
+      builder: (BuildContext context, GoRouterState state) {
+        return buildScaffoldAppBarBodies(
+          context: context,
+          masterBody: AuthScreen(),
+          appBarTitle: Str.authScreenTitle,
+        );
+      },
+    ),
+
     GoRoute(
       name: Str.profileScreenRouteName,
       path: Str.profileScreenRoutePath,
       builder: (BuildContext context, GoRouterState state) {
         VoidCallback toggleEdit = context.read<ProfileViewModel>().toggleEdit;
 
-        return ScaffoldAppBarBodies(
+        return buildScaffoldAppBarBodies(
+          context: context,
           masterBody: ProfileBody(),
           appBarTitle: Str.profileScreenTitle,
-          isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
           appBarEditAction: true,
           onTapEdit: toggleEdit,
         );
@@ -169,14 +184,14 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       name: Str.helpScreenRouteName,
       path: Str.helpScreenRoutePath,
       builder: (BuildContext context, GoRouterState state) {
-        return ScaffoldAppBarBodies(
+        return buildScaffoldAppBarBodies(
+          context: context,
           masterBody: HelpBody(
             onTapOnboardingGuide: () {
               onTapOnboardingGuide(context);
             },
           ),
           appBarTitle: Str.helpScreenTitle,
-          isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
         );
       },
     ),
@@ -186,6 +201,27 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
     return ErrorRoute();
   },
 );
+
+Widget buildScaffoldAppBarBodies({
+  required BuildContext context,
+  required Widget masterBody,
+  Widget? detailBody,
+  required String appBarTitle,
+  bool appBarEditAction = false,
+  VoidCallback? onTapEdit,
+}) {
+  return ScaffoldAppBarBodies(
+    masterBody: masterBody,
+    appBarTitle: appBarTitle,
+    isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
+    onTapSignIn: () => onTapSignIn(context),
+    onTapSignOut: () => onTapSignOut(context),
+    onTapEditProfile: () => onTapEditProfile(context),
+    onTapHelp: () => onTapHelp(context),
+    appBarEditAction: appBarEditAction,
+    onTapEdit: onTapEdit,
+  );
+}
 
 void goToBranchDestination(int index, StatefulNavigationShell navigationShell) {
   navigationShell.goBranch(
@@ -224,4 +260,21 @@ void onTapOnboardingGuide(BuildContext context) {
 void endOnboarding(BuildContext context) {
   context.goNamed(Str.exploreScreenRouteName);
   context.read<ExploreViewModel>().setIsFirstInitialization(false);
+}
+
+void onTapSignIn(BuildContext context) {
+  context.goNamed(Str.authScreenRouteName);
+}
+
+void onTapSignOut(BuildContext context) {
+  context.read<AuthViewModel>().signOut();
+  context.goNamed(Str.exploreScreenRouteName);
+}
+
+void onTapEditProfile(BuildContext context) {
+  context.goNamed(Str.profileScreenRouteName);
+}
+
+void onTapHelp(BuildContext context) {
+  context.goNamed(Str.helpScreenRouteName);
 }

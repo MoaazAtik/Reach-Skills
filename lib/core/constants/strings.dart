@@ -6,6 +6,7 @@ abstract class Str {
   static const exploreScreenLabel = 'Explore';
   static const chatScreenTitle = 'Chats';
   static const messagesScreenTitle = 'Reach';
+  static const authScreenTitle = 'Authentication';
   static const helpScreenTitle = 'Help';
   static const unknownScreenMessage = 'Unknown Screen';
   static const screenNotFoundMessage = '404\nScreen Not Found';
@@ -31,6 +32,8 @@ abstract class Str {
   // static const detailsScreenRoutePath = '/:id';
   // static const detailsScreenRouteFullPath = '/details/:id';
   static const detailsScreenRoutePath = '/details/:id';
+  static const authScreenRouteName = 'auth';
+  static const authScreenRoutePath = '/auth';
   static const helpScreenRouteName = 'help';
   static const helpScreenRoutePath = '/help';
   static const onboardingScreenRouteName = 'onboarding';
