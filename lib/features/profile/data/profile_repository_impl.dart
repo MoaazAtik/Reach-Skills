@@ -25,7 +25,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
   @override
   Future<void> saveProfile(ProfileModel profile) async {
     await _firestore
-        .collection('profiles')
+        .collection(ProfileModel.COLLECTION_NAME)
         .doc(profile.uid)
         .set(profile.toMap());
   }
@@ -61,6 +61,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
               final List<InterestModel> tempInterests = [];
 
               for (var doc in snapshot.docs) {
+                // Todo remove these 2 lines of uid and userName perhaps
                 String uid = doc.data()[ProfileModel.FIELD_UID];
                 String userName = doc.data()[ProfileModel.FIELD_NAME];
 
@@ -73,24 +74,23 @@ class ProfileRepositoryImpl extends ProfileRepository {
                         ? doc.data()[ProfileModel.FIELD_WISHES]
                         : [];
 
-                // Todo fix this after model schema was updated
-
                 for (var skillInAProfile in profileSkillsList) {
                   tempInterests.add(
-                    SkillModel(
-                      title: skillInAProfile,
-                      userId: uid,
-                      userName: userName,
-                    ),
+                    SkillModel.fromMap(skillInAProfile)
+                    // SkillModel.fromMap(skillInAProfile).copyWith({ // Todo remove
+                    //   ProfileModel.FIELD_UID: uid,
+                    //   ProfileModel.FIELD_NAME: userName,
+                    // }),
                   );
                 }
                 for (var wishInAProfile in profileWishesList) {
                   tempInterests.add(
-                    WishModel(
-                      title: wishInAProfile,
-                      userId: uid,
-                      userName: userName,
-                    ),
+                    WishModel.fromMap(wishInAProfile)
+                    // WishModel( // Todo remove
+                    //   title: wishInAProfile,
+                    //   userId: uid,
+                    //   userName: userName,
+                    // ),
                   );
                 }
               }

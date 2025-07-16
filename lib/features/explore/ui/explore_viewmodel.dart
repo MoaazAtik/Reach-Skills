@@ -26,6 +26,7 @@ class ExploreViewModel extends ChangeNotifier {
 
   StreamSubscription<List<InterestModel>>? _interestsSubscription;
   List<InterestModel>? interests;
+  // Todo replace '= InterestType.values' with values from UI
   List<InterestType> interestTypes = InterestType.values;
   String? interestsStreamError;
   bool loading = true;
@@ -54,7 +55,7 @@ class ExploreViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
-  Future<String?> updateFields({
+  Future<String?> updateFields({ // Todo remove
     required String currentReceiverId,
     required String currentReceiverName,
   }) async {

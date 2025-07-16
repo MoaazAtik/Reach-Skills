@@ -47,7 +47,7 @@ class _ExploreBodyState extends State<ExploreBody> {
           Row(
             spacing: Styles.spacing12,
             children: [
-              RsChip(
+              RsChip( // Todo implement
                 onTap: () {},
                 paddingRight: Styles.paddingSmall,
                 children: [
@@ -61,7 +61,7 @@ class _ExploreBodyState extends State<ExploreBody> {
                   Icon(Icons.keyboard_arrow_down_rounded, size: 24),
                 ],
               ),
-              SearchWidget(onSearch: () {}),
+              SearchWidget(onSearch: () {}), // Todo implement
             ],
           ),
           const SizedBox(height: Styles.spacing12),

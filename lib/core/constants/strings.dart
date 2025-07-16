@@ -41,6 +41,20 @@ abstract class Str {
 
   /// Routes end
 
+  /// Model fields start
+
+  /// Interest (Skill / Wish) model fields
+  static const String INTEREST_FIELD_INTEREST_TYPE = 'interestType';
+  static const String INTEREST_FIELD_ID = 'id';
+  static const String INTEREST_FIELD_TITLE = 'title';
+  static const String INTEREST_FIELD_DESCRIPTION = 'description';
+  static const String INTEREST_FIELD_TAGS = 'tags';
+  static const String INTEREST_FIELD_USER_ID = 'userId';
+  static const String INTEREST_FIELD_USER_NAME = 'userName';
+
+
+  /// Model fields end
+
 
   static const error = 'Error';
 

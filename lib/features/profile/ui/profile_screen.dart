@@ -139,18 +139,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         name: _nameController.text.trim(),
         email: _email!,
         bio: _bioController.text.trim(),
-        skills:
-            _skillsController.text
-                .trim()
-                .split(',')
-                .map((s) => s.trim())
-                .toList(),
-        wishes:
-            _wishesController.text
-                .trim()
-                .split(',')
-                .map((s) => s.trim())
-                .toList(),
+        // skills: // Todo implement
+        //     _skillsController.text
+        //         .trim()
+        //         .split(',')
+        //         .map((s) => s.trim())
+        //         .toList(),
+        // wishes:
+        //     _wishesController.text
+        //         .trim()
+        //         .split(',')
+        //         .map((s) => s.trim())
+        //         .toList(),
         lastEditedTime: DateTime.now().millisecondsSinceEpoch,
       );
 

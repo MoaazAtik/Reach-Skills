@@ -18,4 +18,20 @@ abstract class InterestModel {
   String tags;
   String userId;
   String userName;
+
+  // InterestModel fromMap(Map<String, dynamic> map);
+  // factory InterestModel.fromMap(Map<String, dynamic> map);
+
+  Map<String, dynamic> toMap();
+
+  InterestModel copyWith(Map<String, dynamic> map);
+
+  @override
+  String toString();
+
+  @override
+  bool operator ==(Object other);
+
+  @override
+  int get hashCode => super.hashCode;
 }
