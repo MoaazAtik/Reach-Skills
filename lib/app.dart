@@ -15,8 +15,11 @@ class ReachSkillsApp extends StatelessWidget {
     final brightness = View.of(context).platformDispatcher.platformBrightness;
     final textTheme = Theme.of(context).textTheme;
     MaterialTheme theme = MaterialTheme(textTheme);
-    bool? isFirstInitialization =
-        context.read<ExploreViewModel>().isFirstInitialization;
+    bool? isFirstInitialization = context.select<ExploreViewModel, bool?>((
+      viewModel,
+    ) {
+      return viewModel.isFirstInitialization;
+    });
 
     if (isFirstInitialization == null) {
       return Center(child: const CircularProgressIndicator());
