@@ -1,3 +1,5 @@
+import '../../../core/constants/strings.dart';
+
 class ChatModel {
   final String id;
   final String person1Id;
@@ -6,15 +8,6 @@ class ChatModel {
   final String person2Name;
   final int createdAt;
   final int updatedAt;
-
-  static const String COLLECTION_NAME = 'chats';
-  static const String FIELD_ID = 'id';
-  static const String FIELD_PERSON1_ID = 'person1Id';
-  static const String FIELD_PERSON1_NAME = 'person1Name';
-  static const String FIELD_PERSON2_ID = 'person2Id';
-  static const String FIELD_PERSON2_NAME = 'person2Name';
-  static const String FIELD_CREATED_AT = 'createdAt';
-  static const String FIELD_UPDATED_AT = 'updatedAt';
 
   ChatModel({
     this.id = '',
@@ -29,24 +22,24 @@ class ChatModel {
   factory ChatModel.fromMapAndId(String id, Map<String, dynamic> map) {
     return ChatModel(
       id: id,
-      person1Id: map[FIELD_PERSON1_ID],
-      person1Name: map[FIELD_PERSON1_NAME],
-      person2Id: map[FIELD_PERSON2_ID],
-      person2Name: map[FIELD_PERSON2_NAME],
-      createdAt: map[FIELD_CREATED_AT],
-      updatedAt: map[FIELD_UPDATED_AT],
+      person1Id: map[Str.CHAT_FIELD_PERSON1_ID],
+      person1Name: map[Str.CHAT_FIELD_PERSON1_NAME],
+      person2Id: map[Str.CHAT_FIELD_PERSON2_ID],
+      person2Name: map[Str.CHAT_FIELD_PERSON2_NAME],
+      createdAt: map[Str.CHAT_FIELD_CREATED_AT],
+      updatedAt: map[Str.CHAT_FIELD_UPDATED_AT],
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      FIELD_ID: id,
-      FIELD_PERSON1_ID: person1Id,
-      FIELD_PERSON1_NAME: person1Name,
-      FIELD_PERSON2_ID: person2Id,
-      FIELD_PERSON2_NAME: person2Name,
-      FIELD_CREATED_AT: createdAt,
-      FIELD_UPDATED_AT: updatedAt,
+      Str.CHAT_FIELD_ID: id,
+      Str.CHAT_FIELD_PERSON1_ID: person1Id,
+      Str.CHAT_FIELD_PERSON1_NAME: person1Name,
+      Str.CHAT_FIELD_PERSON2_ID: person2Id,
+      Str.CHAT_FIELD_PERSON2_NAME: person2Name,
+      Str.CHAT_FIELD_CREATED_AT: createdAt,
+      Str.CHAT_FIELD_UPDATED_AT: updatedAt,
     };
   }
 }

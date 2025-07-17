@@ -63,14 +63,14 @@ class ProfileViewModel extends ChangeNotifier {
 
     for (final entry in newProfile.toMap().entries) {
       // skip uid, email, lastEditedTime
-      if (entry.key == ProfileModel.FIELD_UID ||
-          entry.key == ProfileModel.FIELD_EMAIL ||
-          entry.key == ProfileModel.FIELD_LAST_EDITED_TIME) {
+      if (entry.key == Str.PROFILE_FIELD_UID ||
+          entry.key == Str.PROFILE_FIELD_EMAIL ||
+          entry.key == Str.PROFILE_FIELD_LAST_EDITED_TIME) {
         continue;
       }
 
       // check skills
-      if (entry.key == ProfileModel.FIELD_SKILLS) {
+      if (entry.key == Str.PROFILE_FIELD_SKILLS) {
         if (entry.value.toString() != profile!.toMap()[entry.key].toString()) {
           edited = true;
           break;
@@ -79,7 +79,7 @@ class ProfileViewModel extends ChangeNotifier {
       }
 
       // check wishes
-      if (entry.key == ProfileModel.FIELD_WISHES) {
+      if (entry.key == Str.PROFILE_FIELD_WISHES) {
         if (entry.value.toString() != profile!.toMap()[entry.key].toString()) {
           edited = true;
           break;

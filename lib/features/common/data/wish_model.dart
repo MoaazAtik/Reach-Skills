@@ -11,16 +11,17 @@ class WishModel extends InterestModel {
     super.userName = '',
   }) : super(interestType: InterestType.wish);
 
-  factory WishModel.fromMap(Map<String, dynamic> map) {
-    return WishModel(
-      id: map[Str.INTEREST_FIELD_ID],
-      title: map[Str.INTEREST_FIELD_TITLE],
-      description: map[Str.INTEREST_FIELD_DESCRIPTION],
-      tags: map[Str.INTEREST_FIELD_TAGS],
-      userId: map[Str.INTEREST_FIELD_USER_ID],
-      userName: map[Str.INTEREST_FIELD_USER_NAME],
-    );
-  }
+  /* Not necessary. The implementation of InterestModel.fromMap is enough */
+  WishModel.fromMap(Map<String, dynamic> map)
+    : super(
+        interestType: InterestType.wish,
+        id: map[Str.INTEREST_FIELD_ID],
+        title: map[Str.INTEREST_FIELD_TITLE],
+        description: map[Str.INTEREST_FIELD_DESCRIPTION],
+        tags: map[Str.INTEREST_FIELD_TAGS],
+        userId: map[Str.INTEREST_FIELD_USER_ID],
+        userName: map[Str.INTEREST_FIELD_USER_NAME],
+      );
 
   @override
   Map<String, dynamic> toMap() {

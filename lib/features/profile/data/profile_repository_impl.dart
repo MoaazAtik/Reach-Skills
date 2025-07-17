@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../common/data/interest_model.dart';
 import '../../common/data/skill_model.dart';
 import '../../common/data/wish_model.dart';
@@ -25,7 +26,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
   @override
   Future<void> saveProfile(ProfileModel profile) async {
     await _firestore
-        .collection(ProfileModel.COLLECTION_NAME)
+        .collection(Str.PROFILE_COLLECTION_NAME)
         .doc(profile.uid)
         .set(profile.toMap());
   }
@@ -34,7 +35,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
   Future<ProfileModel?> getProfile(String uid) async {
     final doc =
         await _firestore
-            .collection(ProfileModel.COLLECTION_NAME)
+            .collection(Str.PROFILE_COLLECTION_NAME)
             .doc(uid)
             .get();
 
@@ -54,7 +55,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
       _interestsStream = _interestsController.stream;
 
       _interestsSubscription = _firestore
-          .collection(ProfileModel.COLLECTION_NAME)
+          .collection(Str.PROFILE_COLLECTION_NAME)
           .snapshots()
           .listen(
             (snapshot) {
@@ -62,16 +63,16 @@ class ProfileRepositoryImpl extends ProfileRepository {
 
               for (var doc in snapshot.docs) {
                 // Todo remove these 2 lines of uid and userName perhaps
-                String uid = doc.data()[ProfileModel.FIELD_UID];
-                String userName = doc.data()[ProfileModel.FIELD_NAME];
+                String uid = doc.data()[Str.PROFILE_FIELD_UID];
+                String userName = doc.data()[Str.PROFILE_FIELD_NAME];
 
                 List<dynamic> profileSkillsList =
                     interestTypes.contains(InterestType.skill)
-                        ? doc.data()[ProfileModel.FIELD_SKILLS]
+                        ? doc.data()[Str.PROFILE_FIELD_SKILLS]
                         : [];
                 List<dynamic> profileWishesList =
                     interestTypes.contains(InterestType.wish)
-                        ? doc.data()[ProfileModel.FIELD_WISHES]
+                        ? doc.data()[Str.PROFILE_FIELD_WISHES]
                         : [];
 
                 for (var skillInAProfile in profileSkillsList) {

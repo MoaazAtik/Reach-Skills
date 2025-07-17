@@ -1,3 +1,5 @@
+import '../../../core/constants/strings.dart';
+
 class MessageModel {
   final String id;
   final String chatId;
@@ -10,17 +12,6 @@ class MessageModel {
   final int createdAt;
   final int updatedAt;
   final String content;
-
-  static const String COLLECTION_NAME = 'messages';
-  static const String FIELD_ID = 'id';
-  static const String FIELD_CHAT_ID = 'chatId';
-  static const String FIELD_SENDER_ID = 'senderId';
-  static const String FIELD_SENDER_NAME = 'senderName';
-  static const String FIELD_RECEIVER_ID = 'receiverId';
-  static const String FIELD_RECEIVER_NAME = 'receiverName';
-  static const String FIELD_CREATED_AT = 'createdAt';
-  static const String FIELD_UPDATED_AT = 'updatedAt';
-  static const String FIELD_CONTENT = 'content';
 
   MessageModel({
     this.id = '',
@@ -37,14 +28,14 @@ class MessageModel {
   factory MessageModel.fromMapAndId(String id, Map<String, dynamic> map) {
     return MessageModel(
       id: id,
-      chatId: map[FIELD_CHAT_ID],
-      senderId: map[FIELD_SENDER_ID],
-      senderName: map[FIELD_SENDER_NAME],
-      receiverId: map[FIELD_RECEIVER_ID],
-      receiverName: map[FIELD_RECEIVER_NAME],
-      createdAt: map[FIELD_CREATED_AT],
-      updatedAt: map[FIELD_UPDATED_AT],
-      content: map[FIELD_CONTENT],
+      chatId: map[Str.MESSAGE_FIELD_CHAT_ID],
+      senderId: map[Str.MESSAGE_FIELD_SENDER_ID],
+      senderName: map[Str.MESSAGE_FIELD_SENDER_NAME],
+      receiverId: map[Str.MESSAGE_FIELD_RECEIVER_ID],
+      receiverName: map[Str.MESSAGE_FIELD_RECEIVER_NAME],
+      createdAt: map[Str.MESSAGE_FIELD_CREATED_AT],
+      updatedAt: map[Str.MESSAGE_FIELD_UPDATED_AT],
+      content: map[Str.MESSAGE_FIELD_CONTENT],
     );
   }
 
@@ -71,15 +62,15 @@ class MessageModel {
 
   Map<String, dynamic> toMap() {
     return {
-      FIELD_ID: id,
-      FIELD_CHAT_ID: chatId,
-      FIELD_SENDER_ID: senderId,
-      FIELD_SENDER_NAME: senderName,
-      FIELD_RECEIVER_ID: receiverId,
-      FIELD_RECEIVER_NAME: receiverName,
-      FIELD_CREATED_AT: createdAt,
-      FIELD_UPDATED_AT: updatedAt,
-      FIELD_CONTENT: content,
+      Str.MESSAGE_FIELD_ID: id,
+      Str.MESSAGE_FIELD_CHAT_ID: chatId,
+      Str.MESSAGE_FIELD_SENDER_ID: senderId,
+      Str.MESSAGE_FIELD_SENDER_NAME: senderName,
+      Str.MESSAGE_FIELD_RECEIVER_ID: receiverId,
+      Str.MESSAGE_FIELD_RECEIVER_NAME: receiverName,
+      Str.MESSAGE_FIELD_CREATED_AT: createdAt,
+      Str.MESSAGE_FIELD_UPDATED_AT: updatedAt,
+      Str.MESSAGE_FIELD_CONTENT: content,
     };
   }
 }

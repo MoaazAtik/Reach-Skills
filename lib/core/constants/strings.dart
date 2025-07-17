@@ -28,6 +28,7 @@ abstract class Str {
 
   // static const interestScreenRouteName = 'interest';
   static const detailsScreenRouteName = 'details';
+
   // static const interestScreenRoutePath = '/interest';
   // static const detailsScreenRoutePath = '/:id';
   // static const detailsScreenRouteFullPath = '/details/:id';
@@ -46,6 +47,38 @@ abstract class Str {
 
   /// Model fields start
 
+  /// Profile model fields
+  static const String PROFILE_COLLECTION_NAME = 'profiles';
+  static const String PROFILE_FIELD_UID = 'uid';
+  static const String PROFILE_FIELD_NAME = 'name';
+  static const String PROFILE_FIELD_EMAIL = 'email';
+  static const String PROFILE_FIELD_BIO = 'bio';
+  static const String PROFILE_FIELD_SKILLS = 'skills';
+  static const String PROFILE_FIELD_WISHES = 'wishes';
+  static const String PROFILE_FIELD_LAST_EDITED_TIME = 'lastEditedTime';
+
+  /// Chat model fields
+  static const String CHAT_COLLECTION_NAME = 'chats';
+  static const String CHAT_FIELD_ID = 'id';
+  static const String CHAT_FIELD_PERSON1_ID = 'person1Id';
+  static const String CHAT_FIELD_PERSON1_NAME = 'person1Name';
+  static const String CHAT_FIELD_PERSON2_ID = 'person2Id';
+  static const String CHAT_FIELD_PERSON2_NAME = 'person2Name';
+  static const String CHAT_FIELD_CREATED_AT = 'createdAt';
+  static const String CHAT_FIELD_UPDATED_AT = 'updatedAt';
+
+  /// Message model fields
+  static const String MESSAGE_COLLECTION_NAME = 'messages';
+  static const String MESSAGE_FIELD_ID = 'id';
+  static const String MESSAGE_FIELD_CHAT_ID = 'chatId';
+  static const String MESSAGE_FIELD_SENDER_ID = 'senderId';
+  static const String MESSAGE_FIELD_SENDER_NAME = 'senderName';
+  static const String MESSAGE_FIELD_RECEIVER_ID = 'receiverId';
+  static const String MESSAGE_FIELD_RECEIVER_NAME = 'receiverName';
+  static const String MESSAGE_FIELD_CREATED_AT = 'createdAt';
+  static const String MESSAGE_FIELD_UPDATED_AT = 'updatedAt';
+  static const String MESSAGE_FIELD_CONTENT = 'content';
+
   /// Interest (Skill / Wish) model fields
   static const String INTEREST_FIELD_INTEREST_TYPE = 'interestType';
   static const String INTEREST_FIELD_ID = 'id';
@@ -55,9 +88,9 @@ abstract class Str {
   static const String INTEREST_FIELD_USER_ID = 'userId';
   static const String INTEREST_FIELD_USER_NAME = 'userName';
 
-
   /// Model fields end
 
+  /// Localizable strings start
 
   static const error = 'Error';
 
@@ -122,31 +155,47 @@ abstract class Str {
   static const whiteWings = 'White Wings';
 
   static const onboarding0Title = 'Connect, Share, Grow';
-  static const onboarding0Description = 'Reach Skills is a vibrant community where you can exchange skills, pursue your aspirations, and connect with like-minded individuals.';
+  static const onboarding0Description =
+      'Reach Skills is a vibrant community where you can exchange skills, pursue your aspirations, and connect with like-minded individuals.';
 
   static const onboarding1Title = 'What are Interests?';
-  static const onboarding1Description = 'Interests are the core of Reach Skills. They represent what you can offer (Skills) and what you\'re looking for (Wishes).';
+  static const onboarding1Description =
+      'Interests are the core of Reach Skills. They represent what you can offer (Skills) and what you\'re looking for (Wishes).';
   static const skills = 'Skills';
   static const skillsDefinition = 'What you can offer to others';
   static const wishes = 'Wishes';
   static const wishesDefinition = 'What you want to learn or receive help with';
-  static const skillsReachDefinition = 'Connect with others who share your skills. Collaborate on projects, exchange ideas, and grow together.';
-  static const wishesReachDefinition = 'Find others with similar goals and support each other\'s journeys.';
-  static const skillForWishReachDefinition = 'Exchange your skills for wishes.\nOffer your skills to help others achieve their wishes, and vice versa.';
+  static const skillsReachDefinition =
+      'Connect with others who share your skills. Collaborate on projects, exchange ideas, and grow together.';
+  static const wishesReachDefinition =
+      'Find others with similar goals and support each other\'s journeys.';
+  static const skillForWishReachDefinition =
+      'Exchange your skills for wishes.\nOffer your skills to help others achieve their wishes, and vice versa.';
   static const skillForWish = 'Skill for Wish';
 
   static const getStarted = 'Get Started';
   static const next = 'Next';
   static const letsGo = 'Let\'s Go';
 
+  /// Localizable strings end
+
+  /// Mock data start
+
   static const mockInterestTitle = 'Graphic Design';
   static const mockUserName = 'Ethan Carter';
   static const mockUserName2 = 'Liam Johannes';
-  static const mockInterestDescription = 'I\'m looking to learn how to play the guitar.\nI\'m a beginner and would love to find someone who can teach me the basics. I\'m available for lessons on weekends.';
+  static const mockInterestDescription =
+      'I\'m looking to learn how to play the guitar.\nI\'m a beginner and would love to find someone who can teach me the basics. I\'m available for lessons on weekends.';
   static const mockTags = ['Guitar', 'Music', 'Lessons', 'Art'];
   static const mockEmail = 'william.henry.harrison@example-pet-store.com';
-  static const mockMessage1 = 'I\'ve found some great resources for learning Spanish. Let\'s schedule a session!';
-  static const mockMessage2 = 'I\'ve been working on my graphic design portfolio. Let me know if you need any feedback.';
-  static const mockMessage3 = 'I\'m  interested  in  learning  how  to  play  the  guitar.  I  can  teach  you  how  to  code  in  Python  in  return.';
-  static const mockMessage4 = 'That  sounds  like  a  great  exchange!  I\'m  excited  to  get  started.  When  are  you  available?';
+  static const mockMessage1 =
+      'I\'ve found some great resources for learning Spanish. Let\'s schedule a session!';
+  static const mockMessage2 =
+      'I\'ve been working on my graphic design portfolio. Let me know if you need any feedback.';
+  static const mockMessage3 =
+      'I\'m  interested  in  learning  how  to  play  the  guitar.  I  can  teach  you  how  to  code  in  Python  in  return.';
+  static const mockMessage4 =
+      'That  sounds  like  a  great  exchange!  I\'m  excited  to  get  started.  When  are  you  available?';
+
+  /// Mock data end
 }
