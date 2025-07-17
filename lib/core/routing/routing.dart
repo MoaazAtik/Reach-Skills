@@ -156,10 +156,17 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       name: Str.authScreenRouteName,
       path: Str.authScreenRoutePath,
       builder: (BuildContext context, GoRouterState state) {
+        final bool isLoggedIn = context.watch<AuthViewModel>().isLoggedIn;
+        if (isLoggedIn) {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (Duration duration) => context.goNamed(Str.exploreScreenRouteName),
+          );
+        }
         return buildScaffoldAppBarBodies(
           context: context,
           masterBody: AuthScreen(),
           appBarTitle: Str.authScreenTitle,
+          isLoggedIn: isLoggedIn,
         );
       },
     ),
@@ -207,13 +214,14 @@ Widget buildScaffoldAppBarBodies({
   required Widget masterBody,
   Widget? detailBody,
   required String appBarTitle,
+  bool? isLoggedIn,
   bool appBarEditAction = false,
   VoidCallback? onTapEdit,
 }) {
   return ScaffoldAppBarBodies(
     masterBody: masterBody,
     appBarTitle: appBarTitle,
-    isLoggedIn: context.watch<AuthViewModel>().isLoggedIn,
+    isLoggedIn: isLoggedIn ?? context.watch<AuthViewModel>().isLoggedIn,
     onTapSignIn: () => onTapSignIn(context),
     onTapSignOut: () => onTapSignOut(context),
     onTapEditProfile: () => onTapEditProfile(context),

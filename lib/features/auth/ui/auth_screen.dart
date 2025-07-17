@@ -22,14 +22,10 @@ class AuthScreen extends StatelessWidget {
       return Center(child: Text('${Str.error}: $authError'));
     }
 
-    if (isLoggedIn) {
-      return HomeScreen();
-    } else {
-      return SignInScreen(
-        providers: [
-          EmailAuthProvider(),
-        ],
-      );
-    }
+    // if (isLoggedIn) {
+    //   return HomeScreen();
+    // } else {
+    return SignInScreen(providers: [EmailAuthProvider()]);
+    // }
   }
 }
