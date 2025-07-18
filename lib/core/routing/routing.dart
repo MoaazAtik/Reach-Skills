@@ -179,7 +179,9 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
 
         return buildScaffoldAppBarBodies(
           context: context,
-          masterBody: ProfileBody(),
+          masterBody: ProfileBody(
+            onSignInPressed: () => onTapSignIn(context),
+          ),
           appBarTitle: Str.profileScreenTitle,
           appBarEditAction: true,
           onTapEdit: toggleEdit,

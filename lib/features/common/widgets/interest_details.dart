@@ -9,11 +9,15 @@ class InterestDetails extends StatelessWidget {
     super.key,
     required this.isOwner,
     required this.interest,
+    this.onTapReach,
+    this.onTapSave,
   });
 
   final bool isOwner;
   // Todo replace Str.mock... with interest...
   final InterestModel? interest;
+  final void Function()? onTapReach;
+  final InterestModel Function()? onTapSave;
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +78,26 @@ class InterestDetails extends StatelessWidget {
           ),
 
           SizedBox(height: 56),
+          // Todo implement
+          // if (!isOwner || isEditing)
           FilledButton(
-            onPressed: () {},
-            child: Text(Str.reach, style: Styles.rsFilledButtonTextStyle),
+            onPressed: () {
+              if (isOwner) {
+                if (onTapSave != null) {
+                  onTapSave!();
+                } else {
+                  throw Exception('onTapSave is not provided to InterestDetails widget');
+                }
+              } else if (onTapReach != null) {
+                onTapReach!();
+              } else {
+                throw Exception('onTapReach or onTapSave must be provided to InterestDetails widget');
+              }
+            },
+            child: Text(
+                isOwner ? Str.reach : Str.save,
+                style: Styles.rsFilledButtonTextStyle
+            ),
           ),
         ],
       ),

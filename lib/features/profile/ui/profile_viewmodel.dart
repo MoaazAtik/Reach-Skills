@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../auth/domain/auth_repository.dart';
+import '../../common/data/interest_model.dart';
 import '../domain/profile_model.dart';
 import '../domain/profile_repository.dart';
 
@@ -20,6 +23,7 @@ class ProfileViewModel extends ChangeNotifier {
   String? uid;
   String? email;
   ProfileModel? profile;
+  List<InterestModel> interests = [];
 
   /* When calling this method from the profile screen,
    The passed uid is from the auth repository aka, Firebase auth,
@@ -31,6 +35,10 @@ class ProfileViewModel extends ChangeNotifier {
     email = _authRepository.getUserEmail();
     if (uid != null) {
       profile = await _profileRepository.getProfile(uid!);
+      interests = [];
+      interests.addAll(profile!.skills);
+      interests.addAll(profile!.wishes);
+      interests.shuffle(Random());
       loading = false;
       notifyListeners();
     }

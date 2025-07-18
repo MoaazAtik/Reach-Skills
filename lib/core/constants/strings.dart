@@ -121,6 +121,7 @@ abstract class Str {
   static const explore = 'Explore';
   static const interests = 'interests';
   static const reach = 'Reach';
+  static const save = 'Save';
 
   static const account = 'Account';
   static const name = 'Name';
@@ -132,7 +133,10 @@ abstract class Str {
   static const wishesInputDescription = 'Wishes (comma-separated)';
   static const email = 'Email';
   static const lastUpdated = 'Last updated';
-  static const mockDaysAgo = 'x days ago';
+  static const today = 'Today';
+  static const yesterday = 'Yesterday';
+  static const daysAgo = 'days ago';
+  static const errorFetchingEmail = 'Could not fetch email';
 
   static const saveProfile = 'Save Profile';
   static const fillRequiredFields = 'Please fill in all required fields.';
@@ -181,6 +185,8 @@ abstract class Str {
 
   /// Mock data start
 
+  static const mockDaysAgo = 'x days ago';
+  static final mockDateTimeObject = DateTime(2025, 7, 1);
   static const mockInterestTitle = 'Graphic Design';
   static const mockUserName = 'Ethan Carter';
   static const mockUserName2 = 'Liam Johannes';

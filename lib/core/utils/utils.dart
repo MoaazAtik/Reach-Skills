@@ -5,30 +5,48 @@ import '../../features/common/widgets/interest_details.dart';
 import '../constants/strings.dart';
 import '../theme/styles.dart';
 
+extension WidgetFullWidth on Widget {
+  Widget withFullWidth() => SizedBox(width: double.infinity, child: this);
+}
+
 bool checkLargeScreen(BuildContext context) {
   final isLargeScreen =
       MediaQuery.sizeOf(context).width > Styles.smallScreenWidthThreshold;
   return isLargeScreen;
 }
 
-int _calculateDaysDifference(DateTime date) {
+int _calculateDaysDifference(DateTime? dateTime, int? dateInMillis) {
+  DateTime tempDate;
+  if (dateTime != null) {
+    tempDate = dateTime;
+  } else if (dateInMillis != null) {
+    tempDate = DateTime.fromMillisecondsSinceEpoch(dateInMillis);
+  } else {
+    throw Exception(
+      'dateTime or dateInMilliseconds must be provided to calculateDaysDifference function in utils.dart',
+    );
+  }
   final now = DateTime.now();
-  final difference = now.difference(date);
+  final difference = now.difference(tempDate);
   return difference.inDays;
 }
 
 String _formatDaysDifference(int days) {
   if (days == 0) {
-    return 'Today';
+    return Str.today;
   } else if (days == 1) {
-    return 'Yesterday';
+    return Str.yesterday;
   } else {
-    return '$days days ago';
+    return '$days ${Str.daysAgo}';
   }
 }
 
-String calculateDaysDifferenceAndFormat(DateTime date) {
-  final daysDifference = _calculateDaysDifference(date);
+/// Provide either dateTime or dateInMillis to calculate the difference in days between the provided date and today.
+String calculateDaysDifferenceAndFormat({
+  DateTime? dateTime,
+  int? dateInMillis,
+}) {
+  final daysDifference = _calculateDaysDifference(dateTime, dateInMillis);
   return _formatDaysDifference(daysDifference);
 }
 
