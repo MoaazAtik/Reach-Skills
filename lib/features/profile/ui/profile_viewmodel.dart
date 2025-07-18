@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../auth/domain/auth_repository.dart';
+import '../../common/data/interest_model.dart';
 import '../domain/profile_model.dart';
 import '../domain/profile_repository.dart';
 
@@ -16,9 +19,11 @@ class ProfileViewModel extends ChangeNotifier {
   final ProfileRepository _profileRepository;
 
   bool loading = true;
+  bool isEditing = false;
   String? uid;
   String? email;
   ProfileModel? profile;
+  List<InterestModel> interests = [];
 
   /* When calling this method from the profile screen,
    The passed uid is from the auth repository aka, Firebase auth,
@@ -30,9 +35,18 @@ class ProfileViewModel extends ChangeNotifier {
     email = _authRepository.getUserEmail();
     if (uid != null) {
       profile = await _profileRepository.getProfile(uid!);
+      interests = [];
+      interests.addAll(profile!.skills);
+      interests.addAll(profile!.wishes);
+      interests.shuffle(Random());
       loading = false;
       notifyListeners();
     }
+  }
+
+  void toggleEdit() {
+    isEditing = !isEditing;
+    notifyListeners();
   }
 
   Future<String> updateProfile(ProfileModel newProfile) async {
@@ -57,14 +71,14 @@ class ProfileViewModel extends ChangeNotifier {
 
     for (final entry in newProfile.toMap().entries) {
       // skip uid, email, lastEditedTime
-      if (entry.key == ProfileModel.FIELD_UID ||
-          entry.key == ProfileModel.FIELD_EMAIL ||
-          entry.key == ProfileModel.FIELD_LAST_EDITED_TIME) {
+      if (entry.key == Str.PROFILE_FIELD_UID ||
+          entry.key == Str.PROFILE_FIELD_EMAIL ||
+          entry.key == Str.PROFILE_FIELD_LAST_EDITED_TIME) {
         continue;
       }
 
       // check skills
-      if (entry.key == ProfileModel.FIELD_SKILLS) {
+      if (entry.key == Str.PROFILE_FIELD_SKILLS) {
         if (entry.value.toString() != profile!.toMap()[entry.key].toString()) {
           edited = true;
           break;
@@ -73,7 +87,7 @@ class ProfileViewModel extends ChangeNotifier {
       }
 
       // check wishes
-      if (entry.key == ProfileModel.FIELD_WISHES) {
+      if (entry.key == Str.PROFILE_FIELD_WISHES) {
         if (entry.value.toString() != profile!.toMap()[entry.key].toString()) {
           edited = true;
           break;

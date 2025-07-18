@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/strings.dart';
+import '../../../core/theme/styles.dart';
 import '../../common/data/interest_model.dart';
 
 class InterestCard extends StatelessWidget {
@@ -9,62 +9,58 @@ class InterestCard extends StatelessWidget {
     required this.interestType,
     required this.title,
     required this.userName,
-    required this.onReach,
+    required this.onTap,
   });
 
   final InterestType interestType;
   final String title;
   final String userName;
-  final Function onReach;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
-    final cardColor =
+    final background =
         interestType == InterestType.skill
-            ? Color(0x96AAFFD0)
-            : Color(0xD58DBAF6);
+            ? Styles.skillCardBackgroundColor
+            : Styles.wishCardBackgroundColor;
 
-    // final buttonTextColor = Colors.red;
-
-    return Card(
-      color: cardColor,
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(fontSize: 20, color: Colors.grey[900]),
-                ),
-                Container(height: 10),
-                Text(
-                  userName,
-                  style: TextStyle(fontSize: 13, color: Colors.grey[900]),
-                ),
-              ],
+    return InkWell(
+      onTap: () {
+        onTap();
+      },
+      borderRadius: BorderRadius.circular(Styles.borderRadius),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          AspectRatio(
+            aspectRatio: 1 / 1,
+            child: Ink(
+              decoration: BoxDecoration(
+                gradient: background,
+                borderRadius: BorderRadius.circular(Styles.borderRadius),
+              ),
+              child: Icon(
+                Icons.explore,
+                size: Styles.interestIconSize,
+                blendMode: BlendMode.overlay, // BlendMode.clear,
+              ),
             ),
-            TextButton(
-              style: TextButton.styleFrom(foregroundColor: Colors.transparent),
-              child: const Text(
-                "${Str.reach}...",
+          ),
+          SizedBox(height: 2),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.all(Styles.paddingExtraSmall),
+              child: Text(
+                '$title, $userName',
                 style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.fade,
+                  fontSize: Styles.fontSizeChip,
+                  // color: Colors.grey[900],
                 ),
               ),
-              onPressed: () {
-                onReach();
-              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

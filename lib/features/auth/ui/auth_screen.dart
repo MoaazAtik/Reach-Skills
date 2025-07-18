@@ -12,6 +12,8 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authViewModel = context.watch<AuthViewModel>();
+    // Todo perhaps remove this isLoggedIn
+    // and use the one passed to the widget by routing
     final isLoggedIn = authViewModel.isLoggedIn;
 
     final authError = authViewModel.authError;
@@ -20,14 +22,10 @@ class AuthScreen extends StatelessWidget {
       return Center(child: Text('${Str.error}: $authError'));
     }
 
-    if (isLoggedIn) {
-      return HomeScreen();
-    } else {
-      return SignInScreen(
-        providers: [
-          EmailAuthProvider(),
-        ],
-      );
-    }
+    // if (isLoggedIn) {
+    //   return HomeScreen();
+    // } else {
+    return SignInScreen(providers: [EmailAuthProvider()]);
+    // }
   }
 }

@@ -51,21 +51,22 @@ class ExploreScreen extends StatelessWidget {
                   interestType: interest.interestType,
                   title: interest.title,
                   userName: interest.userName,
-                  onReach: () async {
+                  onTap: () async {
                     String? errorMessage;
+                    final ScaffoldMessengerState scaffoldMessengerState = ScaffoldMessenger.of(context);
+                    final NavigatorState navigatorState = Navigator.of(context);
+
                     errorMessage = await exploreViewModel.updateFields(
-                      currentReceiverId: interest.uid,
+                      currentReceiverId: interest.userId,
                       currentReceiverName: interest.userName,
                     );
 
                     if (errorMessage != null) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(errorMessage)));
+                      scaffoldMessengerState.showSnackBar(SnackBar(content: Text(errorMessage)));
                       return;
                     }
 
-                    Navigator.of(context).push(
+                    navigatorState.push(
                       MaterialPageRoute(
                         builder:
                             (_) => MessagesScreen(

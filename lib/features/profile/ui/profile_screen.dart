@@ -114,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 24),
               if (_profile != null)
                 Text(
-                  '${Str.lastEdited}: ${DateTime.fromMillisecondsSinceEpoch(_profile!.lastEditedTime).toString()}',
+                  '${Str.lastUpdated}: ${DateTime.fromMillisecondsSinceEpoch(_profile!.lastEditedTime).toString()}',
                 ),
             ],
           ),
@@ -127,6 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Future<String> Function(ProfileModel newProfile) updateProfile,
   ) async {
     String updatingResult;
+    final ScaffoldMessengerState scaffoldMessengerState = ScaffoldMessenger.of(context);
 
     if (!_formKey.currentState!.validate()) {
       updatingResult = Str.fillRequiredFields;
@@ -138,29 +139,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
         name: _nameController.text.trim(),
         email: _email!,
         bio: _bioController.text.trim(),
-        skills:
-            _skillsController.text
-                .trim()
-                .split(',')
-                .map((s) => s.trim())
-                .toList(),
-        wishes:
-            _wishesController.text
-                .trim()
-                .split(',')
-                .map((s) => s.trim())
-                .toList(),
+        // skills: // Todo implement
+        //     _skillsController.text
+        //         .trim()
+        //         .split(',')
+        //         .map((s) => s.trim())
+        //         .toList(),
+        // wishes:
+        //     _wishesController.text
+        //         .trim()
+        //         .split(',')
+        //         .map((s) => s.trim())
+        //         .toList(),
         lastEditedTime: DateTime.now().millisecondsSinceEpoch,
       );
 
       updatingResult = await updateProfile(newProfile);
     }
 
-    if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(updatingResult)));
-    }
+      scaffoldMessengerState.showSnackBar(SnackBar(content: Text(updatingResult)));
   }
 
   @override

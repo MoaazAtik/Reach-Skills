@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../core/constants/strings.dart';
 import '../domain/chat_repository.dart';
 import 'chat_model.dart';
 import 'message_model.dart';
@@ -39,8 +40,8 @@ class ChatRepositoryImpl extends ChatRepository {
       _chatsStream = _chatsController.stream;
 
       _chatsSubscription = _firestore
-          .collection(ChatModel.COLLECTION_NAME)
-          .orderBy(ChatModel.FIELD_UPDATED_AT, descending: true)
+          .collection(Str.CHAT_COLLECTION_NAME)
+          .orderBy(Str.CHAT_FIELD_UPDATED_AT, descending: true)
           .limit(50)
           .snapshots()
           .listen(
@@ -101,16 +102,16 @@ class ChatRepositoryImpl extends ChatRepository {
     String? chatId;
 
     await _firestore
-        .collection(ChatModel.COLLECTION_NAME)
+        .collection(Str.CHAT_COLLECTION_NAME)
         .where(
           Filter.and(
             Filter.or(
-              Filter(ChatModel.FIELD_PERSON1_ID, isEqualTo: personAId),
-              Filter(ChatModel.FIELD_PERSON2_ID, isEqualTo: personAId),
+              Filter(Str.CHAT_FIELD_PERSON1_ID, isEqualTo: personAId),
+              Filter(Str.CHAT_FIELD_PERSON2_ID, isEqualTo: personAId),
             ),
             Filter.or(
-              Filter(ChatModel.FIELD_PERSON1_ID, isEqualTo: personBId),
-              Filter(ChatModel.FIELD_PERSON2_ID, isEqualTo: personBId),
+              Filter(Str.CHAT_FIELD_PERSON1_ID, isEqualTo: personBId),
+              Filter(Str.CHAT_FIELD_PERSON2_ID, isEqualTo: personBId),
             ),
           ),
         )
@@ -133,15 +134,15 @@ class ChatRepositoryImpl extends ChatRepository {
     String? chatId;
 
     await _firestore
-        .collection(ChatModel.COLLECTION_NAME)
+        .collection(Str.CHAT_COLLECTION_NAME)
         .add({
           // without ID. Firebase will generate one.
-          ChatModel.FIELD_PERSON1_ID: senderId,
-          ChatModel.FIELD_PERSON1_NAME: senderName,
-          ChatModel.FIELD_PERSON2_ID: receiverId,
-          ChatModel.FIELD_PERSON2_NAME: receiverName,
-          ChatModel.FIELD_CREATED_AT: DateTime.now().millisecondsSinceEpoch,
-          ChatModel.FIELD_UPDATED_AT: DateTime.now().millisecondsSinceEpoch,
+          Str.CHAT_FIELD_PERSON1_ID: senderId,
+          Str.CHAT_FIELD_PERSON1_NAME: senderName,
+          Str.CHAT_FIELD_PERSON2_ID: receiverId,
+          Str.CHAT_FIELD_PERSON2_NAME: receiverName,
+          Str.CHAT_FIELD_CREATED_AT: DateTime.now().millisecondsSinceEpoch,
+          Str.CHAT_FIELD_UPDATED_AT: DateTime.now().millisecondsSinceEpoch,
         })
         .then((documentReference) {
           chatId = documentReference.id;
@@ -157,8 +158,8 @@ class ChatRepositoryImpl extends ChatRepository {
   @override
   Future<void> sendMessage(MessageModel messageModel) async {
     final messageModelMap = messageModel.toMap();
-    final newDocRef = _firestore.collection(MessageModel.COLLECTION_NAME).doc();
-    messageModelMap[MessageModel.FIELD_ID] = newDocRef.id;
+    final newDocRef = _firestore.collection(Str.MESSAGE_COLLECTION_NAME).doc();
+    messageModelMap[Str.MESSAGE_FIELD_ID] = newDocRef.id;
     await newDocRef.set(messageModelMap);
   }
 
@@ -170,9 +171,9 @@ class ChatRepositoryImpl extends ChatRepository {
       _messagesStream = _messagesController.stream;
 
       _messagesSubscription = _firestore
-          .collection(MessageModel.COLLECTION_NAME)
-          .where(MessageModel.FIELD_CHAT_ID, isEqualTo: chatId)
-          .orderBy(MessageModel.FIELD_UPDATED_AT, descending: true)
+          .collection(Str.MESSAGE_COLLECTION_NAME)
+          .where(Str.MESSAGE_FIELD_CHAT_ID, isEqualTo: chatId)
+          .orderBy(Str.MESSAGE_FIELD_UPDATED_AT, descending: true)
           .limit(50)
           .snapshots()
           .listen(
