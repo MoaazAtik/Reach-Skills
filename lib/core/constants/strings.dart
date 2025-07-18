@@ -195,6 +195,9 @@ abstract class Str {
   static const mockDaysAgo = 'x days ago';
   static final mockDateTimeObject = DateTime(2025, 7, 1);
   static const mockInterestTitle = 'Graphic Design';
+  static const mockSkillsTitles = ['Web Development', 'Illustration', 'Graphic Design'];
+  static const mockWishesTitles = ['Piano', 'Content Writing', 'Latte Art', 'Digital Marketing'];
+  static const mockInterestsTitles = ['Web Development', 'Illustration', 'Graphic Design', 'Piano', 'Content Writing', 'Latte Art', 'Digital Marketing'];
   static const mockUserName = 'Ethan Carter';
   static const mockUserName2 = 'Liam Johannes';
   static const mockInterestDescription =

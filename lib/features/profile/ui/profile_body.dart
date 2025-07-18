@@ -83,8 +83,8 @@ class _ProfileBodyState extends State<ProfileBody> {
               children: [
                 if (!isEditing)
                   Text(
-                    // Str.mockUserName,
-                    _nameController.text,
+                    Str.mockUserName,
+                    // _nameController.text,
                     style: Styles.interestDetailsTitleTextStyle,
                   ),
                 if (isEditing)
@@ -99,8 +99,8 @@ class _ProfileBodyState extends State<ProfileBody> {
                 SizedBox(height: 8),
                 if (!isEditing)
                   Text(
-                    // Str.mockInterestDescription,
-                    _bioController.text,
+                    Str.mockInterestDescription,
+                    // _bioController.text,
                     textAlign: TextAlign.center,
                     style: Styles.interestDetailsUserTextStyle,
                   ),
@@ -127,8 +127,8 @@ class _ProfileBodyState extends State<ProfileBody> {
               spacing: Styles.spacing12,
               runSpacing: Styles.spacing12,
               // Todo implement
-              // children: _buildInterestsChips(interests: Str.mockTags),
-              children: _buildInterestsChips(interests: _interests),
+              children: _buildInterestsChips(interests: Str.mockTags),
+              // children: _buildInterestsChips(interests: _interests),
             ),
             SizedBox(height: 28),
             Text(
@@ -137,14 +137,14 @@ class _ProfileBodyState extends State<ProfileBody> {
             ),
             SizedBox(height: 16),
             Text(
-              // Str.mockEmail,
-              _email ?? Str.errorFetchingEmail,
+              Str.mockEmail,
+              // _email ?? Str.errorFetchingEmail,
               style: Styles.interestDetailsDescriptionTextStyle,
             ),
             SizedBox(height: 16),
             Text(
-              // '${Str.lastUpdated}: ${calculateDaysDifferenceAndFormat(dateTime: Str.mockDateTimeObject)}',
-              '${Str.lastUpdated}: ${calculateDaysDifferenceAndFormat(dateInMillis: _profile?.lastEditedTime)}',
+              '${Str.lastUpdated}: ${calculateDaysDifferenceAndFormat(dateTime: Str.mockDateTimeObject)}',
+              // '${Str.lastUpdated}: ${calculateDaysDifferenceAndFormat(dateInMillis: _profile?.lastEditedTime)}',
               style: Styles.interestDetailsUserTextStyle,
             ),
 
@@ -171,31 +171,34 @@ class _ProfileBodyState extends State<ProfileBody> {
     super.dispose();
   }
 
-  List<Widget> _buildInterestsChips({required List<InterestModel> interests}) {
+  // List<Widget> _buildInterestsChips({required List<InterestModel> interests}) { // Todo remove
+  List<Widget> _buildInterestsChips({required List<String> interests}) {
     final chips = List.generate(interests.length * 3, (index) {
       // final chips = interests.map((interest) {
       return RsChip(
         // Todo remove *3 and % interest.length.
         // Todo implement onTap.
-        onTap:
-            () => showDetailsScreenDialog(
-              context,
-              isOwner: true,
-              interest: interests[index],
-              onTapReach: () {
-              },
-              onTapSave: (InterestModel interest) {
-                _saveProfile(updateProfile, interest);
-              },
-            ),
+        // onTap: // Todo uncomment
+        //     () => showDetailsScreenDialog(
+        //       context,
+        //       isOwner: true,
+        //       interest: interests[index],
+        //       onTapReach: () {
+        //       },
+        //       onTapSave: (InterestModel interest) {
+        //         _saveProfile(updateProfile, interest);
+        //       },
+        //     ),
         chipColor:
-            interests[index % interests.length].interestType ==
-                    InterestType.wish
+            // interests[index % interests.length].interestType ==
+            //         InterestType.wish
+            index % 3 == 0
                 ? Styles.wishChipBackgroundColor
                 : Styles.skillChipBackgroundColor,
         children: [
           Text(
-            interests[index % interests.length].title,
+            // interests[index % interests.length].title,
+            interests[index % interests.length],
             style: Styles.interestChipTextStyle,
           ),
         ],

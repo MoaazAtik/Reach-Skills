@@ -74,8 +74,8 @@ class _InterestDetailsState extends State<InterestDetails> {
                     ),
                   // SizedBox(height: 8),
                   Text(
-                    // '${Str.by} ${Str.mockUserName}',
-                    '${Str.by} ${widget.interest?.userName}',
+                    '${Str.by} ${Str.mockUserName}',
+                    // '${Str.by} ${widget.interest?.userName}',
                     style: Styles.interestDetailsUserTextStyle,
                   ),
                 ],
@@ -96,8 +96,8 @@ class _InterestDetailsState extends State<InterestDetails> {
           SizedBox(height: 24),
           if (!isEditing)
             Text(
-              // Str.mockInterestDescription,
-              widget.interest!.description,
+              Str.mockInterestDescription,
+              // widget.interest!.description,
               style: Styles.interestDetailsDescriptionTextStyle,
             ),
           if (isEditing)

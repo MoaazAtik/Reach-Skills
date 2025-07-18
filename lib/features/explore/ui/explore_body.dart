@@ -27,17 +27,19 @@ class _ExploreBodyState extends State<ExploreBody> {
     final interests = exploreViewModel.interests;
     final interestsStreamError = exploreViewModel.interestsStreamError;
 
-    if (loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
+    List<String> mockList = Str.mockInterestsTitles;
 
-    if (interestsStreamError != null) {
-      return Center(child: Text(interestsStreamError));
-    }
-
-    if (interests == null || interests.isEmpty) {
-      return const Text(Str.noSkillsFound);
-    }
+    // if (loading) {
+    //   return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    // }
+    //
+    // if (interestsStreamError != null) {
+    //   return Center(child: Text(interestsStreamError));
+    // }
+    //
+    // if (interests == null || interests.isEmpty) {
+    //   return const Text(Str.noSkillsFound);
+    // }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Styles.padding12),
@@ -73,46 +75,63 @@ class _ExploreBodyState extends State<ExploreBody> {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
-              children: [
-                for (final interest in interests)
-                  InterestCard(
-                    interestType: interest.interestType,
-                    title: interest.title,
-                    userName: interest.userName,
+              children:
+              // [
+                List.generate(mockList.length, (index) {
+                  return InterestCard(
+                    interestType: index % 4 != 0 ? InterestType.skill : InterestType.wish,
+                    title: mockList[index],
+                    userName: Str.mockUserName,
                     onTap: () {
-                      widget.onInterestTap(interest);
+                      // Todo uncomment
+                      // widget.onInterestTap(InterestModel(
+                      //   interestType: InterestType.skill,
+                      //   title: mockList[index],
+                      //   userName: Str.mockUserName, id: '', description: '', tags: '', userId: '',
+                      // ));
                     },
-                    // onReach: () async {
-                    //   String? errorMessage;
-                    //   errorMessage = await exploreViewModel.updateFields(
-                    //     currentReceiverId: interest.uid,
-                    //     currentReceiverName: interest.userName,
-                    //   );
-                    //
-                    //   if (errorMessage != null) {
-                    //     ScaffoldMessenger.of(
-                    //       context,
-                    //     ).showSnackBar(SnackBar(content: Text(errorMessage)));
-                    //     return;
-                    //   }
+                  );
+                }),
 
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder:
-                    //         (_) => MessagesScreen(
-                    //       currentSenderId: exploreViewModel.currentSenderId,
-                    //       currentSenderName:
-                    //       exploreViewModel.currentSenderName,
-                    //       currentReceiverId:
-                    //       exploreViewModel.currentReceiverId,
-                    //       currentReceiverName:
-                    //       exploreViewModel.currentReceiverName,
-                    //     ),
-                    //   ),
-                    // );
-                    // },
-                  ),
-              ],
+                // for (final interest in interests)
+                //   InterestCard(
+                //     interestType: interest.interestType,
+                //     title: interest.title,
+                //     userName: interest.userName,
+                //     onTap: () {
+                //       widget.onInterestTap(interest);
+                //     },
+                //     // onReach: () async {
+                //     //   String? errorMessage;
+                //     //   errorMessage = await exploreViewModel.updateFields(
+                //     //     currentReceiverId: interest.uid,
+                //     //     currentReceiverName: interest.userName,
+                //     //   );
+                //     //
+                //     //   if (errorMessage != null) {
+                //     //     ScaffoldMessenger.of(
+                //     //       context,
+                //     //     ).showSnackBar(SnackBar(content: Text(errorMessage)));
+                //     //     return;
+                //     //   }
+                //
+                //     // Navigator.of(context).push(
+                //     //   MaterialPageRoute(
+                //     //     builder:
+                //     //         (_) => MessagesScreen(
+                //     //       currentSenderId: exploreViewModel.currentSenderId,
+                //     //       currentSenderName:
+                //     //       exploreViewModel.currentSenderName,
+                //     //       currentReceiverId:
+                //     //       exploreViewModel.currentReceiverId,
+                //     //       currentReceiverName:
+                //     //       exploreViewModel.currentReceiverName,
+                //     //     ),
+                //     //   ),
+                //     // );
+                //     // },
+                //   ),
+              // ],
             ),
           ),
         ],

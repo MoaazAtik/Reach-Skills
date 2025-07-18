@@ -17,10 +17,10 @@ class SkillModel extends InterestModel {
         interestType: InterestType.skill,
         id: map[Str.INTEREST_FIELD_ID],
         title: map[Str.INTEREST_FIELD_TITLE],
-        description: map[Str.INTEREST_FIELD_DESCRIPTION],
-        tags: map[Str.INTEREST_FIELD_TAGS],
-        userId: map[Str.INTEREST_FIELD_USER_ID],
-        userName: map[Str.INTEREST_FIELD_USER_NAME],
+        description: map[Str.INTEREST_FIELD_DESCRIPTION] ?? '',
+        tags: map[Str.INTEREST_FIELD_TAGS] ?? '',
+        userId: map[Str.INTEREST_FIELD_USER_ID] ?? '',
+        userName: map[Str.INTEREST_FIELD_USER_NAME] ?? '',
       );
 
   @override
