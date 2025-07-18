@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/utils/utils.dart';
+import 'package:reach_skills/features/common/data/skill_model.dart';
 import 'package:reach_skills/features/common/widgets/scaffold_app_bar_bodies.dart';
 import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
 import 'package:reach_skills/features/help/ui/help_body.dart';
@@ -75,6 +76,14 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                       detailBody: InterestDetails(
                         isOwner: false,
                         interest: interest as InterestModel,
+                        // Todo implement
+                        onTapReach: () {
+                          // context.goNamed(Str.chatScreenRouteName);
+                        },
+                        // Todo implement
+                        onTapSave: (interest) {
+                          // context.goNamed(Str.chatScreenRouteName);
+                        },
                       ),
                       appBarTitle: Str.exploreScreenTitle,
                     );

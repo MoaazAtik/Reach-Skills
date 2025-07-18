@@ -122,6 +122,13 @@ abstract class Str {
   static const interests = 'interests';
   static const reach = 'Reach';
   static const save = 'Save';
+  static const interestTitle = 'Interest Title';
+  static const interestTitleHint = 'eg, Graphic Design or Painting...';
+  static const interestDescription = 'Description';
+  static const interestDescriptionHint =
+      'Write a short description of the interest...';
+  static const interestTags = 'Tags';
+  static const interestTagsHint = 'eg, Guitar, Music, Art, Programming...';
 
   static const account = 'Account';
   static const name = 'Name';

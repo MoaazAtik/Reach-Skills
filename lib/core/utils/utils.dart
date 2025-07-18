@@ -80,6 +80,8 @@ void showDetailsScreenDialog(
   BuildContext context, {
   required bool isOwner,
   required InterestModel? interest,
+  void Function()? onTapReach,
+  void Function(InterestModel interest)? onTapSave,
 }) {
   showAdaptiveDialog(
     context: context,
@@ -89,7 +91,7 @@ void showDetailsScreenDialog(
           borderRadius: BorderRadius.circular(Styles.borderRadius),
         ),
         backgroundColor: Styles.rsDefaultSurfaceColor,
-        child: InterestDetails(isOwner: isOwner, interest: interest),
+        child: InterestDetails(isOwner: isOwner, interest: interest, onTapReach: onTapReach, onTapSave: onTapSave),
       );
     },
   );

@@ -6,6 +6,8 @@ import 'package:reach_skills/features/profile/ui/profile_viewmodel.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../../core/theme/styles.dart';
+import '../../common/data/skill_model.dart';
+import '../../common/data/wish_model.dart';
 import '../../common/widgets/rs_chip.dart';
 import '../domain/profile_model.dart';
 
@@ -149,7 +151,7 @@ class _ProfileBodyState extends State<ProfileBody> {
             SizedBox(height: 56),
             if (isEditing)
               FilledButton(
-                onPressed: () => _saveProfile(updateProfile),
+                onPressed: () => _saveProfile(updateProfile, null),
                 child: Text(
                   Str.saveProfile,
                   style: Styles.rsFilledButtonTextStyle,
@@ -180,6 +182,11 @@ class _ProfileBodyState extends State<ProfileBody> {
               context,
               isOwner: true,
               interest: interests[index],
+              onTapReach: () {
+              },
+              onTapSave: (InterestModel interest) {
+                _saveProfile(updateProfile, interest);
+              },
             ),
         chipColor:
             interests[index % interests.length].interestType ==
@@ -214,6 +221,7 @@ class _ProfileBodyState extends State<ProfileBody> {
   // Todo implement
   Future<void> _saveProfile(
     Future<String> Function(ProfileModel newProfile) updateProfile,
+    InterestModel? interest,
   ) async {
     String updatingResult;
     final ScaffoldMessengerState scaffoldMessengerState = ScaffoldMessenger.of(
@@ -225,23 +233,23 @@ class _ProfileBodyState extends State<ProfileBody> {
     } else if (_uid == null) {
       updatingResult = Str.unknownErrorSignAgain;
     } else {
-      final newProfile = ProfileModel(
-        uid: _uid!,
+      // final tempList = List<InterestModel>.from(_interests);
+      // final tempList = interest.interestType == InterestType.skill ? _interests.where((element) => element.interestType == InterestType.skill).toList() : _interests.where((element) => element.interestType == InterestType.wish).toList();
+
+      // final tempList = interest.interestType == InterestType.skill ? _profile!.skills : _profile!.wishes;
+      /* Used '.from' instead of 'final tempList = _interests' to avoid losing
+      the updated interest if _interests is accessed outside of this method
+      eg, on another platform. */
+      final tempList = List<InterestModel>.from(_interests);
+      if (interest != null) {
+        tempList.add(interest);
+      }
+
+      final newProfile = _profile!.copyWith(
         name: _nameController.text.trim(),
-        email: _email!,
         bio: _bioController.text.trim(),
-        // skills: // Todo implement
-        //     _skillsController.text
-        //         .trim()
-        //         .split(',')
-        //         .map((s) => s.trim())
-        //         .toList(),
-        // wishes:
-        //     _wishesController.text
-        //         .trim()
-        //         .split(',')
-        //         .map((s) => s.trim())
-        //         .toList(),
+        skills: tempList.where((element) => element.interestType == InterestType.skill) as List<SkillModel>,
+        wishes: tempList.where((element) => element.interestType == InterestType.wish) as List<WishModel>,
         lastEditedTime: DateTime.now().millisecondsSinceEpoch,
       );
 
