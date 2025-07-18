@@ -43,5 +43,5 @@ abstract class InterestModel {
   bool operator ==(Object other);
 
   @override
-  int get hashCode => super.hashCode;
+  int get hashCode;
 }

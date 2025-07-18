@@ -49,6 +49,8 @@ dependencies:
   go_router: ^15.2.4
   # Shared Preferences
   shared_preferences: ^2.5.3
+  # collection
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:

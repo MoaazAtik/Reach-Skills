@@ -67,4 +67,8 @@ class WishModel extends InterestModel {
         userId == typedOther.userId &&
         userName == typedOther.userName;
   }
+
+  @override
+  int get hashCode =>
+      Object.hash(interestType, id, title, description, tags, userId, userName);
 }

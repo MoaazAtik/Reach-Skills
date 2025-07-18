@@ -59,6 +59,8 @@ class SkillModel extends InterestModel {
     if (other is! SkillModel) return false;
 
     final SkillModel typedOther = other;
+    /* Dart smart casts 'other' to ProfileModel after the previous 'is!' check.
+     So, there's no need to reassign 'other' as 'typedOther'. */
     return interestType == typedOther.interestType &&
         id == typedOther.id &&
         title == typedOther.title &&
@@ -67,4 +69,8 @@ class SkillModel extends InterestModel {
         userId == typedOther.userId &&
         userName == typedOther.userName;
   }
+
+  @override
+  int get hashCode =>
+      Object.hash(interestType, id, title, description, tags, userId, userName);
 }

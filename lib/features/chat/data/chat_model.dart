@@ -42,4 +42,54 @@ class ChatModel {
       Str.CHAT_FIELD_UPDATED_AT: updatedAt,
     };
   }
+
+  ChatModel copyWith({
+    String? id,
+    String? person1Id,
+    String? person1Name,
+    String? person2Id,
+    String? person2Name,
+    int? createdAt,
+    int? updatedAt,
+  }) {
+    return ChatModel(
+      id: id ?? this.id,
+      person1Id: person1Id ?? this.person1Id,
+      person1Name: person1Name ?? this.person1Name,
+      person2Id: person2Id ?? this.person2Id,
+      person2Name: person2Name ?? this.person2Name,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'ChatModel {${Str.CHAT_FIELD_ID}: $id, ${Str.CHAT_FIELD_PERSON1_ID}: $person1Id, ${Str.CHAT_FIELD_PERSON1_NAME}: $person1Name, ${Str.CHAT_FIELD_PERSON2_ID}: $person2Id, ${Str.CHAT_FIELD_PERSON2_NAME}: $person2Name, ${Str.CHAT_FIELD_CREATED_AT}: $createdAt, ${Str.CHAT_FIELD_UPDATED_AT}: $updatedAt}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! ChatModel) return false;
+
+    return id == other.id &&
+        person1Id == other.person1Id &&
+        person1Name == other.person1Name &&
+        person2Id == other.person2Id &&
+        person2Name == other.person2Name &&
+        createdAt == other.createdAt &&
+        updatedAt == other.updatedAt;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    person1Id,
+    person1Name,
+    person2Id,
+    person2Name,
+    createdAt,
+    updatedAt,
+  );
 }
