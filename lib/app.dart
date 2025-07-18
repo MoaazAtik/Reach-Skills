@@ -21,9 +21,10 @@ class ReachSkillsApp extends StatelessWidget {
       return viewModel.isFirstInitialization;
     });
 
-    if (isFirstInitialization == null) {
-      return Center(child: const CircularProgressIndicator());
-    }
+    // Todo uncomment and fix infinite loading
+    // if (isFirstInitialization == null) {
+    //   return Center(child: const CircularProgressIndicator());
+    // }
 
     return MaterialApp.router(
       title: Str.appTitle,
@@ -33,7 +34,8 @@ class ReachSkillsApp extends StatelessWidget {
       localizationsDelegates: [FirebaseUILocalizations.delegate],
       supportedLocales: const [Locale('en', 'US'), Locale('tr', 'TR')],
 
-      routerConfig: getRouter(isFirstInitialization),
+      // routerConfig: getRouter(isFirstInitialization),
+      routerConfig: getRouter(true),
     );
   }
 }
