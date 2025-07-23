@@ -7,7 +7,6 @@ import 'package:reach_skills/features/profile/ui/profile_viewmodel.dart';
 import '../../../core/constants/strings.dart';
 import '../../../core/theme/styles.dart';
 import '../../common/data/skill_model.dart';
-import '../../common/data/wish_model.dart';
 import '../../common/widgets/rs_chip.dart';
 import '../domain/profile_model.dart';
 

@@ -4,7 +4,6 @@ import 'package:reach_skills/core/theme/styles.dart';
 import 'package:reach_skills/core/utils/utils.dart';
 import 'package:reach_skills/features/common/data/interest_model.dart';
 import 'package:reach_skills/features/common/widgets/rs_chip.dart';
-import 'package:uuid/uuid.dart';
 
 import '../data/skill_model.dart';
 import '../data/wish_model.dart';

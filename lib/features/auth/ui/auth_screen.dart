@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/strings.dart';
-import '../../common/ui/home_screen.dart';
 import 'auth_viewmodel.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -22,10 +21,6 @@ class AuthScreen extends StatelessWidget {
       return Center(child: Text('${Str.error}: $authError'));
     }
 
-    // if (isLoggedIn) {
-    //   return HomeScreen();
-    // } else {
     return SignInScreen(providers: [EmailAuthProvider()]);
-    // }
   }
 }
