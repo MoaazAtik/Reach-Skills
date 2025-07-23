@@ -10,6 +10,10 @@ abstract class Str {
   static const helpScreenTitle = 'Help';
   static const unknownScreenMessage = 'Unknown Screen';
   static const screenNotFoundMessage = '404\nScreen Not Found';
+  static const _separator = ';;;';
+
+  /// The 'space' after the separator is Very Important
+  static const splitWithSeparator = '$_separator ';
 
   /// Routes start
 

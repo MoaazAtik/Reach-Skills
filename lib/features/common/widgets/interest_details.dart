@@ -76,19 +76,22 @@ class _InterestDetailsState extends State<InterestDetails> {
                       style: Styles.interestDetailsTitleTextStyle,
                     ),
                   if (isEditing)
-                    /* To fix TextFormField's
-                     'Assertion failed: constraints.maxWidth < double.infinity' */
-                    Container(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.sizeOf(context).width * 0.5,
-                      ),
-                      child: TextFormField(
-                        decoration: Styles.rsInputDecoration(
-                          label: Str.interestTitle,
-                          hint: Str.interestTitleHint,
+                    Form(
+                      key: _formKey,
+                      /* Utilized a 'Container' to fix TextFormField's
+                         'Assertion failed: constraints.maxWidth < double.infinity' */
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.sizeOf(context).width * 0.5,
                         ),
-                        controller: _titleController,
-                        validator: textValidator,
+                        child: TextFormField(
+                          decoration: Styles.rsInputDecoration(
+                            label: Str.interestTitle,
+                            hint: Str.interestTitleHint,
+                          ),
+                          controller: _titleController,
+                          validator: textValidator,
+                        ),
                       ),
                     ),
                   Text(
@@ -102,6 +105,7 @@ class _InterestDetailsState extends State<InterestDetails> {
                 IconButton(
                   onPressed: () {
                     if (isEditing) {
+                      if (!_formKey.currentState!.validate()) return;
                       widget.onTapSave!(_assembleInterest());
                     }
                     setState(() => isEditing = !isEditing);
@@ -191,7 +195,9 @@ class _InterestDetailsState extends State<InterestDetails> {
               onPressed: () {
                 if (isEditing) {
                   if (widget.onTapSave != null) {
+                    if (!_formKey.currentState!.validate()) return;
                     widget.onTapSave!(_assembleInterest());
+                    setState(() => isEditing = !isEditing);
                   } else {
                     throw Exception(
                       '${Str.excMessageNullOnTapSave} ${Str.excMessageInterestDetails}',
@@ -219,7 +225,7 @@ class _InterestDetailsState extends State<InterestDetails> {
     /* This '[]' fixes 'tagsList.length = 1' caused by 'tags.split'
      when tags are empty. */
 
-    final List<String> tagsList = tags.isNotEmpty ? tags.split('; ') : [];
+    final List<String> tagsList = tags.isNotEmpty ? tags.split(Str.splitWithSeparator) : [];
 
     final List<Widget> chips = List.generate(tagsList.length, (index) {
       return RsChip(
@@ -269,7 +275,7 @@ class _InterestDetailsState extends State<InterestDetails> {
       return;
     }
 
-    setState(() => _tags.isNotEmpty ? _tags += '; $tag' : _tags += tag);
+    setState(() => _tags.isNotEmpty ? _tags += '${Str.splitWithSeparator}$tag' : _tags += tag);
   }
 
   InterestModel _assembleInterest() {
