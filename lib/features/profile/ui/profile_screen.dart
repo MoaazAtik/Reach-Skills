@@ -38,8 +38,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _email = profileViewModel.email;
     _profile = profileViewModel.profile;
     final bool loading = profileViewModel.loading;
-    final Future<String> Function(ProfileModel newProfile) updateProfile =
-        profileViewModel.updateProfile;
+    // final Future<String> Function(ProfileModel newProfile) updateProfile =
+    //     profileViewModel.updateProfile;
 
     _nameController = TextEditingController(text: _profile?.name);
     _bioController = TextEditingController(text: _profile?.bio);
@@ -106,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () => _saveProfile(updateProfile),
+                onPressed: () {},
                 child: const Text(Str.saveProfile),
               ),
               const SizedBox(height: 24),

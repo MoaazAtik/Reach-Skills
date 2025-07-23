@@ -91,31 +91,57 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   void toggleEdit() {
-    isEditing = !isEditing;
+    isEditing = true;
     notifyListeners();
   }
 
-  Future<String> updateProfile(ProfileModel newProfile) async {
-    bool edited;
-    if (profile == null) {
-      // creating new profile
-      edited = true;
-    } else {
-      edited = validateProfileUpdates(newProfile);
+  Future<String> updateProfile({
+    String? name,
+    String? bio,
+    InterestModel? interest,
+  }) async {
+    /* Utilized `tempList` to avoid duplicating the interest if `interests` got
+      pulled from the server's stream before this method updates it. */
+    final tempList = List<InterestModel>.from(interests);
+    if (interest != null) {
+      tempList.removeWhere((element) => element.id == interest.id);
+      tempList.add(interest);
     }
 
-    if (!edited) return Str.noChanges;
+    final newProfile = profile!.copyWith(
+      name: name ?? profile!.name,
+      bio: bio ?? profile!.bio,
+      interests: tempList,
+      lastEditedTime: DateTime.now().millisecondsSinceEpoch,
+    );
+
+    String? cannotEditMessage = validateProfileUpdates(newProfile);
+    if (cannotEditMessage != null) {
+      return cannotEditMessage;
+    }
 
     await _profileRepository.saveProfile(newProfile);
     loadProfile();
+    isEditing = false;
+
+    // notifyListeners();
 
     return Str.profileSaved;
   }
 
-  bool validateProfileUpdates(ProfileModel newProfile) {
+  String? validateProfileUpdates(ProfileModel newProfile) {
+    // creating new profile
+    if (profile == null) return null;
+
+    // check name exists. Double validation along with UI validation.
+    if (newProfile.name.isEmpty) {
+      return Str.fillRequiredFields;
+    }
+
     bool edited = false;
     final profileMap = profile!.toMap();
 
+    // Check if any field has changed
     for (final entry in newProfile.toMap().entries) {
       // skip uid, email, lastEditedTime
       if (entry.key == Str.PROFILE_FIELD_UID ||
@@ -149,7 +175,9 @@ class ProfileViewModel extends ChangeNotifier {
       }
     }
 
-    return edited;
+    if (!edited) return Str.noChanges;
+
+    return null;
   }
 
   @override
