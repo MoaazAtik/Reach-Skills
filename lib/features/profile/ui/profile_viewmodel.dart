@@ -27,7 +27,6 @@ class ProfileViewModel extends ChangeNotifier {
   String? email;
   ProfileModel? profile;
 
-  // List<InterestModel>? interests;
   List<InterestModel> interests = [];
   StreamSubscription<ProfileModel>? _profileSubscription;
   String? profileStreamError;
@@ -64,7 +63,6 @@ class ProfileViewModel extends ChangeNotifier {
 
     if (_profileSubscription != null) return;
 
-    // _profileSubscription?.cancel();
     _profileRepository.subscribeToProfileStream(uid: uid!);
 
     _profileSubscription = _profileRepository.profileStream!.listen(

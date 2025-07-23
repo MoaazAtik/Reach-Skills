@@ -50,7 +50,6 @@ class _InterestDetailsState extends State<InterestDetails> {
     super.initState();
     isEditing = widget.startEditing;
     _selectedInterestType = widget.interest?.interestType ?? InterestType.skill;
-    // _tags = Str.mockTags.join('; ');
     _tags = widget.interest?.tags ?? '';
     _titleController = TextEditingController(text: widget.interest?.title);
     _descriptionController = TextEditingController(
@@ -77,7 +76,6 @@ class _InterestDetailsState extends State<InterestDetails> {
                 children: [
                   if (!isEditing)
                     Text(
-                      // Str.mockInterestTitle,
                       _titleController.text.isNotEmpty
                           ? _titleController.text
                           : Str.interestTitle,
@@ -100,7 +98,6 @@ class _InterestDetailsState extends State<InterestDetails> {
                       ),
                     ),
                   Text(
-                    // '${Str.by} ${Str.mockUserName}',
                     '${Str.by} ${widget.interest?.userName}',
                     style: Styles.interestDetailsUserTextStyle,
                   ),
@@ -122,7 +119,6 @@ class _InterestDetailsState extends State<InterestDetails> {
           SizedBox(height: 24),
           if (!isEditing)
             Text(
-              // Str.mockInterestDescription,
               _descriptionController.text.isNotEmpty
                   ? _descriptionController.text
                   : '',
