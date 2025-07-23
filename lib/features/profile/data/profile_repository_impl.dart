@@ -23,7 +23,8 @@ class ProfileRepositoryImpl extends ProfileRepository {
   @override
   Stream<List<InterestModel>>? get interestsStream => _interestsStream;
 
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? _profileSubscription;
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
+  _profileSubscription;
   final StreamController<ProfileModel> _profileController =
       StreamController<ProfileModel>(); // Probably no need for 'broadcast()'
   Stream<ProfileModel>? _profileStream;
@@ -117,27 +118,12 @@ class ProfileRepositoryImpl extends ProfileRepository {
   @override
   void subscribeToInterestsStream({
     List<InterestType> interestTypes = InterestType.values,
-    /// Don't pass `uid` to get interests from all profiles
-    /// Pass `uid` to get interests from the profile specified by `uid`
-    // String? uid,
   }) {
     _interestsSubscriptionCount++;
 
     if (_interestsSubscriptionCount <= 1) {
       _interestsStream = _interestsController.stream;
 
-      // dynamic queryOrCollection = _firestore.collection(
-      //   Str.PROFILE_COLLECTION_NAME,
-      // );
-      //
-      // if (uid != null) {
-      //   queryOrCollection = queryOrCollection.where(
-      //     Str.PROFILE_FIELD_UID,
-      //     isEqualTo: uid,
-      //   );
-      // }
-      //
-      // _interestsSubscription = queryOrCollection.snapshots().listen(
       _interestsSubscription = _firestore
           .collection(Str.PROFILE_COLLECTION_NAME)
           .snapshots()
@@ -169,35 +155,6 @@ class ProfileRepositoryImpl extends ProfileRepository {
                     tempInterests.add(WishModel.fromMap(interestInAProfile));
                   }
                 }
-
-                // List<dynamic> profileSkillsList =
-                //     interestTypes.contains(InterestType.skill)
-                //         ? doc.data()[Str.PROFILE_FIELD_SKILLS]
-                //         : [];
-                // List<dynamic> profileWishesList =
-                //     interestTypes.contains(InterestType.wish)
-                //         ? doc.data()[Str.PROFILE_FIELD_WISHES]
-                //         : [];
-                //
-                // for (var skillInAProfile in profileSkillsList) {
-                //   tempInterests.add(
-                //     SkillModel.fromMap(skillInAProfile)
-                //     // SkillModel.fromMap(skillInAProfile).copyWith({ // Todo remove
-                //     //   ProfileModel.FIELD_UID: uid,
-                //     //   ProfileModel.FIELD_NAME: userName,
-                //     // }),
-                //   );
-                // }
-                // for (var wishInAProfile in profileWishesList) {
-                //   tempInterests.add(
-                //     WishModel.fromMap(wishInAProfile)
-                //     // WishModel( // Todo remove
-                //     //   title: wishInAProfile,
-                //     //   userId: uid,
-                //     //   userName: userName,
-                //     // ),
-                //   );
-                // }
               }
               _interestsController.sink.add(tempInterests);
             },

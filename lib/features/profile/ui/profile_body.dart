@@ -31,7 +31,6 @@ class _ProfileBodyState extends State<ProfileBody> {
   late TextEditingController _nameController;
   late TextEditingController _bioController;
 
-  // late TextEditingController _interestsController;
   late final Future<String> Function(ProfileModel newProfile) updateProfile;
 
   @override
@@ -53,7 +52,6 @@ class _ProfileBodyState extends State<ProfileBody> {
     bool isEditing = profileViewModel.isEditing;
     _nameController = TextEditingController(text: _profile?.name);
     _bioController = TextEditingController(text: _profile?.bio);
-    // _interestsController = TextEditingController(text: profileViewModel.profile?.interests);
 
     if (_uid == null) {
       return Column(
@@ -151,6 +149,7 @@ class _ProfileBodyState extends State<ProfileBody> {
             if (isEditing)
               FilledButton(
                 onPressed: () {
+                  // Todo implement
                   // profileViewModel.toggleEdit();
                   // _saveProfile(updateProfile, null);
                 },
@@ -169,19 +168,18 @@ class _ProfileBodyState extends State<ProfileBody> {
   void dispose() {
     _nameController.dispose();
     _bioController.dispose();
-    // _interestsController.dispose();
     super.dispose();
   }
 
   List<Widget> _buildInterestsChips({required List<InterestModel> interests}) {
-    // List<Widget> _buildInterestsChips({required List<String> interests}) { // Todo remove
+    // List<Widget> _buildInterestsChips({required List<String> interests}) { // Todo remove (mocks related)
+    // final chips = List.generate(interests.length * 3, (index) {
     final chips = List.generate(interests.length, (index) {
       // final chips = interests.map((interest) {
       return RsChip(
-        // Todo remove *3 and % interest.length.
+        // Todo remove *3 and % interest.length. (mocks related)
         onTap:
             () => showDetailsScreenDialog(
-              // # InterestDetails
               context,
               isOwner: true,
               // interest: interests[index % interests.length],
@@ -212,7 +210,6 @@ class _ProfileBodyState extends State<ProfileBody> {
       RsChip(
         onTap:
             () => showDetailsScreenDialog(
-              // # InterestDetails
               context,
               isOwner: true,
               // Creating a 'Skill' as the default interest type
@@ -248,11 +245,6 @@ class _ProfileBodyState extends State<ProfileBody> {
     } else if (_uid == null) {
       updatingResult = Str.unknownErrorSignAgain;
     } else {
-      // Todo remove these comments
-      // final tempList = List<InterestModel>.from(_interests);
-      // final tempList = interest.interestType == InterestType.skill ? _interests.where((element) => element.interestType == InterestType.skill).toList() : _interests.where((element) => element.interestType == InterestType.wish).toList();
-
-      // final tempList = interest.interestType == InterestType.skill ? _profile!.skills : _profile!.wishes;
       /* Used '.from' instead of 'final tempList = _interests' to avoid losing
       the updated interest if _interests is accessed outside of this method
       eg, on another platform. */
@@ -265,16 +257,6 @@ class _ProfileBodyState extends State<ProfileBody> {
       final newProfile = _profile!.copyWith(
         name: _nameController.text.trim(),
         bio: _bioController.text.trim(),
-        // skills:
-        //     tempList.where(
-        //           (element) => element.interestType == InterestType.skill,
-        //         )
-        //         as List<SkillModel>,
-        // wishes:
-        //     tempList.where(
-        //           (element) => element.interestType == InterestType.wish,
-        //         )
-        //         as List<WishModel>,
         interests: tempList,
         lastEditedTime: DateTime.now().millisecondsSinceEpoch,
       );

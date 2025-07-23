@@ -62,7 +62,7 @@ class ProfileViewModel extends ChangeNotifier {
   void startProfileSubscription() {
     if (uid == null) return;
 
-    if(_profileSubscription != null) return;
+    if (_profileSubscription != null) return;
 
     // _profileSubscription?.cancel();
     _profileRepository.subscribeToProfileStream(uid: uid!);

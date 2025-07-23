@@ -81,18 +81,6 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                         onTapReach: () {
                           // context.goNamed(Str.chatScreenRouteName);
                         },
-                        // Todo remove (most likely) or implement
-                        // onTapEdit: (interest) {
-                        //   print('path before push : ${GoRouterState.of(context).fullPath}');
-                        //   // context.pushReplacement(Str.profileScreenRoutePath);
-                        //   // print('path after push : ${GoRouterState.of(context).fullPath}');
-                        //   // context.goNamed(
-                        //   //   '${Str.detailsScreenRouteName}',
-                        //   //   pathParameters: {Str.detailsScreenParamId: interest.id},
-                        //   //   extra: interest,
-                        //   // );
-                        //   // print('path after go : ${GoRouterState.of(context).fullPath}');
-                        // },
                         canEdit: false,
                       ),
                       appBarTitle: Str.exploreScreenTitle,

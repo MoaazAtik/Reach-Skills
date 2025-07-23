@@ -78,12 +78,14 @@ class _InterestDetailsState extends State<InterestDetails> {
                   if (!isEditing)
                     Text(
                       // Str.mockInterestTitle,
-                      // widget.interest?.title ?? Str.interestTitle,
-                      _titleController.text.isNotEmpty ? _titleController.text : Str.interestTitle,
+                      _titleController.text.isNotEmpty
+                          ? _titleController.text
+                          : Str.interestTitle,
                       style: Styles.interestDetailsTitleTextStyle,
                     ),
                   if (isEditing)
-                    /* To fix 'Assertion failed: constraints.maxWidth < double.infinity' */
+                    /* To fix TextFormField's
+                     'Assertion failed: constraints.maxWidth < double.infinity' */
                     Container(
                       constraints: BoxConstraints(
                         maxWidth: MediaQuery.sizeOf(context).width * 0.5,
@@ -105,7 +107,6 @@ class _InterestDetailsState extends State<InterestDetails> {
                 ],
               ),
 
-              // if (widget.isOwner)
               if (widget.canEdit)
                 IconButton(
                   onPressed: () {
@@ -122,7 +123,9 @@ class _InterestDetailsState extends State<InterestDetails> {
           if (!isEditing)
             Text(
               // Str.mockInterestDescription,
-              _descriptionController.text.isNotEmpty ? _descriptionController.text : '',
+              _descriptionController.text.isNotEmpty
+                  ? _descriptionController.text
+                  : '',
               style: Styles.interestDetailsDescriptionTextStyle,
             ),
           if (isEditing)
@@ -132,7 +135,6 @@ class _InterestDetailsState extends State<InterestDetails> {
                 hint: Str.interestDescriptionHint,
               ),
               controller: _descriptionController,
-              // validator: textValidator,
             ),
 
           SizedBox(height: 24),
@@ -193,8 +195,6 @@ class _InterestDetailsState extends State<InterestDetails> {
           ),
 
           SizedBox(height: 56),
-          // Todo implement
-          // if (!isOwner || isEditing)
           if (!widget.isOwner || isEditing)
             FilledButton(
               onPressed: () {
@@ -225,9 +225,8 @@ class _InterestDetailsState extends State<InterestDetails> {
   }
 
   List<Widget> _buildTagsChips({required String tags}) {
-    /* This fixes tagsList.length = 1 caused by tags.split when tags is empty. */
-    // if (tags.isEmpty) return [];
-    // if (tags.isEmpty && !isEditing) return [];
+    /* This '[]' fixes 'tagsList.length = 1' caused by 'tags.split'
+     when tags are empty. */
 
     final List<String> tagsList = tags.isNotEmpty ? tags.split('; ') : [];
 
