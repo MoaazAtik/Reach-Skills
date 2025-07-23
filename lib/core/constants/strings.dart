@@ -201,9 +201,26 @@ abstract class Str {
   static const mockDaysAgo = 'x days ago';
   static final mockDateTimeObject = DateTime(2025, 7, 1);
   static const mockInterestTitle = 'Graphic Design';
-  static const mockSkillsTitles = ['Web Development', 'Illustration', 'Graphic Design'];
-  static const mockWishesTitles = ['Piano', 'Content Writing', 'Latte Art', 'Digital Marketing'];
-  static const mockInterestsTitles = ['Web Development', 'Illustration', 'Graphic Design', 'Piano', 'Content Writing', 'Latte Art', 'Digital Marketing'];
+  static const mockSkillsTitles = [
+    'Web Development',
+    'Illustration',
+    'Graphic Design',
+  ];
+  static const mockWishesTitles = [
+    'Piano',
+    'Content Writing',
+    'Latte Art',
+    'Digital Marketing',
+  ];
+  static const mockInterestsTitles = [
+    'Web Development',
+    'Illustration',
+    'Graphic Design',
+    'Piano',
+    'Content Writing',
+    'Latte Art',
+    'Digital Marketing',
+  ];
   static const mockInterestId = 'someMockInterestId';
   static const mockUserId = 'someMockUserId';
   static const mockUserName = 'Ethan Carter';
@@ -235,11 +252,21 @@ abstract class Str {
   static const excMessageNullTitle = 'Passed "null Title".';
   static const excMessageNullUserName = 'Passed "null User Name".';
   static const excMessageNullEmail = 'Passed "null Email".';
+  static const excMessageNullOnTapSave = 'Passed "null onTapSave".';
+  static const excMessageNullOnTapReach = 'Passed "null onTapReach".';
 
-  static const excMessageInterestModelFromMap = 'Check `map` passed to `InterestModel.fromMap` constructor.';
-  static const excMessageProfileModelFromMap = 'Check `map` passed to `ProfileModel.fromMap` constructor.';
-  static const excMessageChatModelFromMapAndId = 'Check data passed to `ChatModel.fromMapAndId` constructor.';
-  static const excMessageMessageModelFromMapAndId = 'Check data passed to `MessageModel.fromMapAndId` constructor.';
+  static const excMessageMin1 = 'Pass at least 1 of them.';
+
+  static const excMessageInterestModelFromMap =
+      'Check `map` passed to `InterestModel.fromMap` constructor.';
+  static const excMessageProfileModelFromMap =
+      'Check `map` passed to `ProfileModel.fromMap` constructor.';
+  static const excMessageChatModelFromMapAndId =
+      'Check data passed to `ChatModel.fromMapAndId` constructor.';
+  static const excMessageMessageModelFromMapAndId =
+      'Check data passed to `MessageModel.fromMapAndId` constructor.';
+  static const excMessageInterestDetails =
+      'Check `InterestDetails` constructor.';
 
   /// Exception messages end
 }

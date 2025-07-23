@@ -78,11 +78,9 @@ String? textValidator(String? value) {
 
 void showDetailsScreenDialog(
   BuildContext context, {
-  required bool isOwner,
   required InterestModel? interest,
   void Function()? onTapReach,
   void Function(InterestModel interest)? onTapSave,
-  bool canEdit = true,
   bool startEditing = false,
 }) {
   showAdaptiveDialog(
@@ -94,11 +92,9 @@ void showDetailsScreenDialog(
         ),
         backgroundColor: Styles.rsDefaultSurfaceColor,
         child: InterestDetails(
-          isOwner: isOwner,
           interest: interest,
           onTapReach: onTapReach,
           onTapSave: onTapSave,
-          canEdit: canEdit,
           startEditing: startEditing,
         ),
       );

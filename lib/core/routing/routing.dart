@@ -74,13 +74,12 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                         },
                       ),
                       detailBody: InterestDetails(
-                        isOwner: false,
-                        interest: interest != null ? interest as InterestModel : null,
+                        interest:
+                            interest != null ? interest as InterestModel : null,
                         // Todo implement
                         onTapReach: () {
                           // context.goNamed(Str.chatScreenRouteName);
                         },
-                        canEdit: false,
                       ),
                       appBarTitle: Str.exploreScreenTitle,
                     );
@@ -186,9 +185,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
 
         return buildScaffoldAppBarBodies(
           context: context,
-          masterBody: ProfileBody(
-            onSignInPressed: () => onTapSignIn(context),
-          ),
+          masterBody: ProfileBody(onSignInPressed: () => onTapSignIn(context)),
           appBarTitle: Str.profileScreenTitle,
           appBarEditAction: true,
           onTapEdit: toggleEdit,
@@ -248,7 +245,10 @@ void goToBranchDestination(int index, StatefulNavigationShell navigationShell) {
   );
 }
 
-void onInterestTap(BuildContext context, InterestModel interest) { // # InterestDetails
+void onInterestTap(BuildContext context, InterestModel interest) {
+  final bool isOwner =
+      interest.userId == context.read<AuthViewModel>().currentUser?.uid;
+
   if (checkLargeScreen(context)) {
     context.goNamed(
       Str.detailsScreenRouteName,
@@ -257,8 +257,23 @@ void onInterestTap(BuildContext context, InterestModel interest) { // # Interest
     );
     print('current path : ${GoRouterState.of(context).fullPath}');
   } else {
-    // Todo: replace isOwner
-    showDetailsScreenDialog(context, isOwner: false, interest: interest, canEdit: false);
+    showDetailsScreenDialog(
+      context,
+      interest: interest,
+      onTapSave:
+          !isOwner
+              ? null
+              : (interest) {
+                /* This lambda is required even if it's empty
+                 because null check of 'onTapSave' is done by InterestDetails.
+                 Maybe implement this later.
+                 // context.read<ProfileViewModel>().saveInterest(interest);
+                 */
+              },
+      onTapReach: () {
+        // Todo implement
+      },
+    );
   }
 }
 

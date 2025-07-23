@@ -11,24 +11,19 @@ import '../data/wish_model.dart';
 class InterestDetails extends StatefulWidget {
   const InterestDetails({
     super.key,
-    required this.isOwner,
     required this.interest,
     this.onTapReach,
     this.onTapSave,
-    this.canEdit = true,
     this.startEditing = false,
   });
 
-  final bool isOwner;
-
-  /// Pass `false` when coming from Explore screen
-  /// and `true` when coming from Profile screen
-  // Todo remove (and isOwner perhaps) and use onTapSave == null check instead
-  final bool canEdit;
   final bool startEditing;
 
   final InterestModel? interest;
   final void Function()? onTapReach;
+
+  /// Don't pass a lambda when coming from Explore screen
+  /// and pass when coming from Profile screen
   final void Function(InterestModel interest)? onTapSave;
 
   @override
@@ -103,7 +98,7 @@ class _InterestDetailsState extends State<InterestDetails> {
                 ],
               ),
 
-              if (widget.canEdit)
+              if (widget.onTapSave != null) // ie, can edit
                 IconButton(
                   onPressed: () {
                     if (isEditing) {
@@ -190,27 +185,28 @@ class _InterestDetailsState extends State<InterestDetails> {
           ),
 
           SizedBox(height: 56),
-          if (!widget.isOwner || isEditing)
+          // if Not owner Or Is editing
+          if ((widget.onTapSave == null) || isEditing)
             FilledButton(
               onPressed: () {
-                if (widget.isOwner) {
+                if (isEditing) {
                   if (widget.onTapSave != null) {
                     widget.onTapSave!(_assembleInterest());
                   } else {
                     throw Exception(
-                      'onTapSave is not provided to InterestDetails widget',
+                      '${Str.excMessageNullOnTapSave} ${Str.excMessageInterestDetails}',
                     );
                   }
                 } else if (widget.onTapReach != null) {
                   widget.onTapReach!();
                 } else {
                   throw Exception(
-                    'onTapReach or onTapSave must be provided to InterestDetails widget',
+                    '${Str.excMessageNullOnTapSave} ${Str.excMessageNullOnTapReach} ${Str.excMessageMin1} ${Str.excMessageInterestDetails}',
                   );
                 }
               },
               child: Text(
-                widget.canEdit ? Str.save : Str.reach,
+                isEditing ? Str.save : Str.reach,
                 style: Styles.rsFilledButtonTextStyle,
               ),
             ),
