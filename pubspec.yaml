@@ -51,6 +51,8 @@ dependencies:
   shared_preferences: ^2.5.3
   # collection
   collection: ^1.19.1
+  # ID generator
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:

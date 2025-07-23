@@ -44,10 +44,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _nameController = TextEditingController(text: _profile?.name);
     _bioController = TextEditingController(text: _profile?.bio);
     _skillsController = TextEditingController(
-      text: _profile?.skills.join(', '),
+      // text: _profile?.skills.join(', '),
     );
     _wishesController = TextEditingController(
-      text: _profile?.wishes.join(', '),
+      // text: _profile?.wishes.join(', '),
     );
 
     if (_uid == null) {
@@ -139,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         name: _nameController.text.trim(),
         email: _email!,
         bio: _bioController.text.trim(),
-        // skills: // Todo implement
+        // skills:
         //     _skillsController.text
         //         .trim()
         //         .split(',')

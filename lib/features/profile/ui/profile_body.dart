@@ -83,8 +83,8 @@ class _ProfileBodyState extends State<ProfileBody> {
               children: [
                 if (!isEditing)
                   Text(
-                    Str.mockUserName,
-                    // _nameController.text,
+                    // Str.mockUserName,
+                    _nameController.text,
                     style: Styles.interestDetailsTitleTextStyle,
                   ),
                 if (isEditing)
@@ -99,8 +99,8 @@ class _ProfileBodyState extends State<ProfileBody> {
                 SizedBox(height: 8),
                 if (!isEditing)
                   Text(
-                    Str.mockInterestDescription,
-                    // _bioController.text,
+                    // Str.mockInterestDescription,
+                    _bioController.text,
                     textAlign: TextAlign.center,
                     style: Styles.interestDetailsUserTextStyle,
                   ),
@@ -126,9 +126,8 @@ class _ProfileBodyState extends State<ProfileBody> {
             Wrap(
               spacing: Styles.spacing12,
               runSpacing: Styles.spacing12,
-              // Todo implement
-              children: _buildInterestsChips(interests: Str.mockTags),
-              // children: _buildInterestsChips(interests: _interests),
+              // children: _buildInterestsChips(interests: Str.mockTags),
+              children: _buildInterestsChips(interests: _interests),
             ),
             SizedBox(height: 28),
             Text(
@@ -137,21 +136,24 @@ class _ProfileBodyState extends State<ProfileBody> {
             ),
             SizedBox(height: 16),
             Text(
-              Str.mockEmail,
-              // _email ?? Str.errorFetchingEmail,
+              // Str.mockEmail,
+              _email ?? Str.errorFetchingEmail,
               style: Styles.interestDetailsDescriptionTextStyle,
             ),
             SizedBox(height: 16),
             Text(
-              '${Str.lastUpdated}: ${calculateDaysDifferenceAndFormat(dateTime: Str.mockDateTimeObject)}',
-              // '${Str.lastUpdated}: ${calculateDaysDifferenceAndFormat(dateInMillis: _profile?.lastEditedTime)}',
+              // '${Str.lastUpdated}: ${calculateDaysDifferenceAndFormat(dateTime: Str.mockDateTimeObject)}',
+              '${Str.lastUpdated}: ${calculateDaysDifferenceAndFormat(dateInMillis: _profile?.lastEditedTime)}',
               style: Styles.interestDetailsUserTextStyle,
             ),
 
             SizedBox(height: 56),
             if (isEditing)
               FilledButton(
-                onPressed: () => _saveProfile(updateProfile, null),
+                onPressed: () {
+                  // profileViewModel.toggleEdit();
+                  // _saveProfile(updateProfile, null);
+                },
                 child: Text(
                   Str.saveProfile,
                   style: Styles.rsFilledButtonTextStyle,
@@ -171,34 +173,33 @@ class _ProfileBodyState extends State<ProfileBody> {
     super.dispose();
   }
 
-  // List<Widget> _buildInterestsChips({required List<InterestModel> interests}) { // Todo remove
-  List<Widget> _buildInterestsChips({required List<String> interests}) {
-    final chips = List.generate(interests.length * 3, (index) {
+  List<Widget> _buildInterestsChips({required List<InterestModel> interests}) {
+    // List<Widget> _buildInterestsChips({required List<String> interests}) { // Todo remove
+    final chips = List.generate(interests.length, (index) {
       // final chips = interests.map((interest) {
       return RsChip(
         // Todo remove *3 and % interest.length.
-        // Todo implement onTap.
-        // onTap: // Todo uncomment
-        //     () => showDetailsScreenDialog(
-        //       context,
-        //       isOwner: true,
-        //       interest: interests[index],
-        //       onTapReach: () {
-        //       },
-        //       onTapSave: (InterestModel interest) {
-        //         _saveProfile(updateProfile, interest);
-        //       },
-        //     ),
-        chipColor:
-            // interests[index % interests.length].interestType ==
-            //         InterestType.wish
-            index % 3 == 0
-                ? Styles.wishChipBackgroundColor
-                : Styles.skillChipBackgroundColor,
+        onTap:
+            () => showDetailsScreenDialog(
+              // # InterestDetails
+              context,
+              isOwner: true,
+              // interest: interests[index % interests.length],
+              interest: interests[index],
+              onTapReach: () {},
+              onTapSave: (InterestModel interest) {
+                _saveProfile(updateProfile, interest);
+              },
+            ),
+        // chipColor: Styles.getChipColor(interests[index % interests.length].interestType),
+        chipColor: Styles.getChipColor(interests[index].interestType),
+        // index % 3 == 0
+        //     ? Styles.wishChipBackgroundColor
+        //     : Styles.skillChipBackgroundColor,
         children: [
           Text(
             // interests[index % interests.length].title,
-            interests[index % interests.length],
+            interests[index].title,
             style: Styles.interestChipTextStyle,
           ),
         ],
@@ -210,8 +211,18 @@ class _ProfileBodyState extends State<ProfileBody> {
       chips.length,
       RsChip(
         onTap:
-            () =>
-                showDetailsScreenDialog(context, isOwner: true, interest: null),
+            () => showDetailsScreenDialog(
+              // # InterestDetails
+              context,
+              isOwner: true,
+              // Creating a 'Skill' as the default interest type
+              /* Interest ID is autogenerated by the model. */
+              interest: SkillModel(userId: _uid!, userName: _profile!.name),
+              onTapSave: (InterestModel interest) {
+                _saveProfile(updateProfile, interest);
+              },
+              startEditing: true,
+            ),
         paddingRight: Styles.paddingSmall,
         paddingLeft: Styles.paddingSmall,
         children: [Icon(Icons.add_rounded, size: 20)],
@@ -221,7 +232,6 @@ class _ProfileBodyState extends State<ProfileBody> {
     return chips;
   }
 
-  // Todo implement
   Future<void> _saveProfile(
     Future<String> Function(ProfileModel newProfile) updateProfile,
     InterestModel? interest,
@@ -231,11 +241,14 @@ class _ProfileBodyState extends State<ProfileBody> {
       context,
     );
 
-    if (!_formKey.currentState!.validate()) {
+    // Todo remove `_formKey.currentState != null &&` and wrap the
+    // widgets with 'Form' to use the form key
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
       updatingResult = Str.fillRequiredFields;
     } else if (_uid == null) {
       updatingResult = Str.unknownErrorSignAgain;
     } else {
+      // Todo remove these comments
       // final tempList = List<InterestModel>.from(_interests);
       // final tempList = interest.interestType == InterestType.skill ? _interests.where((element) => element.interestType == InterestType.skill).toList() : _interests.where((element) => element.interestType == InterestType.wish).toList();
 
@@ -245,20 +258,31 @@ class _ProfileBodyState extends State<ProfileBody> {
       eg, on another platform. */
       final tempList = List<InterestModel>.from(_interests);
       if (interest != null) {
+        tempList.removeWhere((element) => element.id == interest.id);
         tempList.add(interest);
       }
 
       final newProfile = _profile!.copyWith(
         name: _nameController.text.trim(),
         bio: _bioController.text.trim(),
-        skills: tempList.where((element) => element.interestType == InterestType.skill) as List<SkillModel>,
-        wishes: tempList.where((element) => element.interestType == InterestType.wish) as List<WishModel>,
+        // skills:
+        //     tempList.where(
+        //           (element) => element.interestType == InterestType.skill,
+        //         )
+        //         as List<SkillModel>,
+        // wishes:
+        //     tempList.where(
+        //           (element) => element.interestType == InterestType.wish,
+        //         )
+        //         as List<WishModel>,
+        interests: tempList,
         lastEditedTime: DateTime.now().millisecondsSinceEpoch,
       );
 
       updatingResult = await updateProfile(newProfile);
     }
 
+    // Todo replace with the method in utils
     scaffoldMessengerState.showSnackBar(
       SnackBar(content: Text(updatingResult)),
     );

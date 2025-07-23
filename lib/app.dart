@@ -15,13 +15,13 @@ class ReachSkillsApp extends StatelessWidget {
     final brightness = View.of(context).platformDispatcher.platformBrightness;
     final textTheme = Theme.of(context).textTheme;
     MaterialTheme theme = MaterialTheme(textTheme);
-    bool? isFirstInitialization = context.select<ExploreViewModel, bool?>((
-      viewModel,
-    ) {
-      return viewModel.isFirstInitialization;
-    });
-
     // Todo uncomment and fix infinite loading
+    // bool? isFirstInitialization = context.select<ExploreViewModel, bool?>((
+    //   viewModel,
+    // ) {
+    //   return viewModel.isFirstInitialization;
+    // });
+    //
     // if (isFirstInitialization == null) {
     //   return Center(child: const CircularProgressIndicator());
     // }
@@ -35,7 +35,7 @@ class ReachSkillsApp extends StatelessWidget {
       supportedLocales: const [Locale('en', 'US'), Locale('tr', 'TR')],
 
       // routerConfig: getRouter(isFirstInitialization),
-      routerConfig: getRouter(true),
+      routerConfig: getRouter(false),
     );
   }
 }

@@ -53,8 +53,7 @@ abstract class Str {
   static const String PROFILE_FIELD_NAME = 'name';
   static const String PROFILE_FIELD_EMAIL = 'email';
   static const String PROFILE_FIELD_BIO = 'bio';
-  static const String PROFILE_FIELD_SKILLS = 'skills';
-  static const String PROFILE_FIELD_WISHES = 'wishes';
+  static const String PROFILE_FIELD_INTERESTS = 'interests';
   static const String PROFILE_FIELD_LAST_EDITED_TIME = 'lastEditedTime';
 
   /// Chat model fields
@@ -80,6 +79,7 @@ abstract class Str {
   static const String MESSAGE_FIELD_CONTENT = 'content';
 
   /// Interest (Skill / Wish) model fields
+  static const String INTEREST_COLLECTION_NAME = 'interests';
   static const String INTEREST_FIELD_INTEREST_TYPE = 'interestType';
   static const String INTEREST_FIELD_ID = 'id';
   static const String INTEREST_FIELD_TITLE = 'title';
@@ -87,6 +87,10 @@ abstract class Str {
   static const String INTEREST_FIELD_TAGS = 'tags';
   static const String INTEREST_FIELD_USER_ID = 'userId';
   static const String INTEREST_FIELD_USER_NAME = 'userName';
+
+  /// Old model fields (Deprecated)
+  // static const String PROFILE_FIELD_SKILLS = 'skills';
+  // static const String PROFILE_FIELD_WISHES = 'wishes';
 
   /// Model fields end
 
@@ -133,6 +137,7 @@ abstract class Str {
   static const account = 'Account';
   static const name = 'Name';
   static const required = 'Required';
+  static const validatorMax5Tags = 'Reached Maximum of 5 tags';
   static const bio = 'Bio';
   static const nameHint = 'Enter your name...';
   static const bioHint = 'Write a short bio about yourself...';
@@ -151,6 +156,7 @@ abstract class Str {
       'Unknown Error. Try signing out and signing in again.';
   static const noChanges = 'No changes to save';
   static const profileSaved = 'Profile Saved';
+  static const errorSavingProfile = 'Could not save profile';
 
   static const skill = 'Skill';
   static const wish = 'Wish';
@@ -198,6 +204,8 @@ abstract class Str {
   static const mockSkillsTitles = ['Web Development', 'Illustration', 'Graphic Design'];
   static const mockWishesTitles = ['Piano', 'Content Writing', 'Latte Art', 'Digital Marketing'];
   static const mockInterestsTitles = ['Web Development', 'Illustration', 'Graphic Design', 'Piano', 'Content Writing', 'Latte Art', 'Digital Marketing'];
+  static const mockInterestId = 'someMockInterestId';
+  static const mockUserId = 'someMockUserId';
   static const mockUserName = 'Ethan Carter';
   static const mockUserName2 = 'Liam Johannes';
   static const mockInterestDescription =
@@ -214,4 +222,24 @@ abstract class Str {
       'That  sounds  like  a  great  exchange!  I\'m  excited  to  get  started.  When  are  you  available?';
 
   /// Mock data end
+
+  /// Exception messages start
+
+  static const excMessageNullId = 'Passed "null ID".';
+  static const excMessageNullUserId = 'Passed "null User ID".';
+  static const excMessageNullPerson1Id = 'Passed "null Person 1 ID".';
+  static const excMessageNullPerson2Id = 'Passed "null Person 2 ID".';
+  static const excMessageNullChatId = 'Passed "null Chat ID".';
+  static const excMessageNullSenderId = 'Passed "null Sender ID".';
+  static const excMessageNullReceiverId = 'Passed "null Receiver ID".';
+  static const excMessageNullTitle = 'Passed "null Title".';
+  static const excMessageNullUserName = 'Passed "null User Name".';
+  static const excMessageNullEmail = 'Passed "null Email".';
+
+  static const excMessageInterestModelFromMap = 'Check `map` passed to `InterestModel.fromMap` constructor.';
+  static const excMessageProfileModelFromMap = 'Check `map` passed to `ProfileModel.fromMap` constructor.';
+  static const excMessageChatModelFromMapAndId = 'Check data passed to `ChatModel.fromMapAndId` constructor.';
+  static const excMessageMessageModelFromMapAndId = 'Check data passed to `MessageModel.fromMapAndId` constructor.';
+
+  /// Exception messages end
 }

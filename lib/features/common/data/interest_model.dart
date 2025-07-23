@@ -1,6 +1,13 @@
 import '../../../core/constants/strings.dart';
 
-enum InterestType { skill, wish }
+enum InterestType {
+  skill(Str.skill),
+  wish(Str.wish);
+
+  const InterestType(this.asTitle);
+
+  final String asTitle;
+}
 
 abstract class InterestModel {
   InterestModel({
@@ -23,13 +30,30 @@ abstract class InterestModel {
 
   InterestModel.fromMap(Map<String, dynamic> map)
     : this(
-        interestType: map[Str.INTEREST_FIELD_INTEREST_TYPE],
-        id: map[Str.INTEREST_FIELD_ID],
-        title: map[Str.INTEREST_FIELD_TITLE],
-        description: map[Str.INTEREST_FIELD_DESCRIPTION],
-        tags: map[Str.INTEREST_FIELD_TAGS],
-        userId: map[Str.INTEREST_FIELD_USER_ID],
-        userName: map[Str.INTEREST_FIELD_USER_NAME],
+        interestType:
+            map[Str.INTEREST_FIELD_INTEREST_TYPE] ?? InterestType.skill,
+        id:
+            map[Str.INTEREST_FIELD_ID] ??
+            (throw Exception(
+              '${Str.excMessageNullId} ${Str.excMessageInterestModelFromMap}',
+            )),
+        title:
+            map[Str.INTEREST_FIELD_TITLE] ??
+            (throw Exception(
+              '${Str.excMessageNullTitle} ${Str.excMessageInterestModelFromMap}',
+            )),
+        description: map[Str.INTEREST_FIELD_DESCRIPTION] ?? '',
+        tags: map[Str.INTEREST_FIELD_TAGS] ?? '',
+        userId:
+            map[Str.INTEREST_FIELD_USER_ID] ??
+            (throw Exception(
+              '${Str.excMessageNullUserId} ${Str.excMessageInterestModelFromMap}',
+            )),
+        userName:
+            map[Str.INTEREST_FIELD_USER_NAME] ??
+            (throw Exception(
+              '${Str.excMessageNullUserName} ${Str.excMessageInterestModelFromMap}',
+            )),
       );
 
   Map<String, dynamic> toMap();

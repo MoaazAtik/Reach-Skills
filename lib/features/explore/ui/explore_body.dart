@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/theme/styles.dart';
+import 'package:reach_skills/features/common/data/skill_model.dart';
 import 'package:reach_skills/features/explore/ui/search_widget.dart';
 
 import '../../../core/constants/strings.dart';
@@ -76,6 +77,7 @@ class _ExploreBodyState extends State<ExploreBody> {
                 mainAxisSpacing: 16,
               ),
               children:
+              // Todo replace mocks
               // [
                 List.generate(mockList.length, (index) {
                   return InterestCard(
@@ -83,12 +85,12 @@ class _ExploreBodyState extends State<ExploreBody> {
                     title: mockList[index],
                     userName: Str.mockUserName,
                     onTap: () {
-                      // Todo uncomment
-                      // widget.onInterestTap(InterestModel(
-                      //   interestType: InterestType.skill,
-                      //   title: mockList[index],
-                      //   userName: Str.mockUserName, id: '', description: '', tags: '', userId: '',
-                      // ));
+                      widget.onInterestTap(SkillModel(
+                        title: mockList[index],
+                        id: Str.mockInterestId,
+                        userName: Str.mockUserName,
+                        userId: Str.mockUserId,
+                      ));
                     },
                   );
                 }),

@@ -28,14 +28,26 @@ class MessageModel {
   factory MessageModel.fromMapAndId(String id, Map<String, dynamic> map) {
     return MessageModel(
       id: id,
-      chatId: map[Str.MESSAGE_FIELD_CHAT_ID],
-      senderId: map[Str.MESSAGE_FIELD_SENDER_ID],
-      senderName: map[Str.MESSAGE_FIELD_SENDER_NAME],
-      receiverId: map[Str.MESSAGE_FIELD_RECEIVER_ID],
-      receiverName: map[Str.MESSAGE_FIELD_RECEIVER_NAME],
-      createdAt: map[Str.MESSAGE_FIELD_CREATED_AT],
-      updatedAt: map[Str.MESSAGE_FIELD_UPDATED_AT],
-      content: map[Str.MESSAGE_FIELD_CONTENT],
+      chatId:
+          map[Str.MESSAGE_FIELD_CHAT_ID] ??
+          (throw Exception(
+            '${Str.excMessageNullChatId} ${Str.excMessageMessageModelFromMapAndId}',
+          )),
+      senderId:
+          map[Str.MESSAGE_FIELD_SENDER_ID] ??
+          (throw Exception(
+            '${Str.excMessageNullSenderId} ${Str.excMessageMessageModelFromMapAndId}',
+          )),
+      senderName: map[Str.MESSAGE_FIELD_SENDER_NAME] ?? '',
+      receiverId:
+          map[Str.MESSAGE_FIELD_RECEIVER_ID] ??
+          (throw Exception(
+            '${Str.excMessageNullReceiverId} ${Str.excMessageMessageModelFromMapAndId}',
+          )),
+      receiverName: map[Str.MESSAGE_FIELD_RECEIVER_NAME] ?? '',
+      createdAt: map[Str.MESSAGE_FIELD_CREATED_AT] ?? 0,
+      updatedAt: map[Str.MESSAGE_FIELD_UPDATED_AT] ?? 0,
+      content: map[Str.MESSAGE_FIELD_CONTENT] ?? '',
     );
   }
 

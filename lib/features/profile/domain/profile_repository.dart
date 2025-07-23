@@ -3,11 +3,17 @@ import 'profile_model.dart';
 
 abstract class ProfileRepository {
   Stream<List<InterestModel>>? get interestsStream;
+  Stream<ProfileModel>? get profileStream;
 
-  Future<void> saveProfile(ProfileModel profile);
+  Future<String> saveProfile(ProfileModel profile);
 
   Future<ProfileModel?> getProfile(String uid);
 
+  void subscribeToProfileStream({required String uid});
+
+  void unsubscribeFromProfileStream();
+
+  // void subscribeToInterestsStream({List<InterestType> interestTypes, String? uid});
   void subscribeToInterestsStream({List<InterestType> interestTypes});
 
   void unsubscribeFromInterestsStream();

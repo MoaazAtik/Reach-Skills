@@ -23,21 +23,59 @@ class ProfileRepositoryImpl extends ProfileRepository {
   @override
   Stream<List<InterestModel>>? get interestsStream => _interestsStream;
 
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? _profileSubscription;
+  final StreamController<ProfileModel> _profileController =
+      StreamController<ProfileModel>(); // Probably no need for 'broadcast()'
+  Stream<ProfileModel>? _profileStream;
+
   @override
-  Future<void> saveProfile(ProfileModel profile) async {
+  Stream<ProfileModel>? get profileStream => _profileStream;
+
+  @override
+  Future<String> saveProfile(ProfileModel profile) async {
+    String result = '';
+    final doc =
+        await _firestore
+            .collection(Str.PROFILE_COLLECTION_NAME)
+            .doc(profile.uid)
+            .get();
+
+    if (doc.exists) {
+      await _firestore
+          .collection(Str.PROFILE_COLLECTION_NAME)
+          .doc(profile.uid)
+          .update(profile.toMap())
+          .onError((error, stackTrace) {
+            print('error saving profile: $error');
+            result = Str.errorSavingProfile;
+          })
+          .then((value) => result = Str.profileSaved);
+    } else {
+      result = await _createProfile(profile);
+    }
+
+    return result;
+  }
+
+  Future<String> _createProfile(ProfileModel profile) async {
+    String result = '';
     await _firestore
         .collection(Str.PROFILE_COLLECTION_NAME)
         .doc(profile.uid)
-        .set(profile.toMap());
+        .set(profile.toMap())
+        .onError((error, stackTrace) {
+          print('error creating profile: $error');
+          result = Str.errorSavingProfile;
+        })
+        .then((value) => result = Str.profileSaved);
+
+    return result;
   }
 
   @override
   Future<ProfileModel?> getProfile(String uid) async {
     final doc =
-        await _firestore
-            .collection(Str.PROFILE_COLLECTION_NAME)
-            .doc(uid)
-            .get();
+        await _firestore.collection(Str.PROFILE_COLLECTION_NAME).doc(uid).get();
 
     if (doc.exists) {
       return ProfileModel.fromMap(doc.data()!);
@@ -45,15 +83,61 @@ class ProfileRepositoryImpl extends ProfileRepository {
     return null;
   }
 
+  /// Subscribe to stream of the profile of the logged current user
+  @override
+  void subscribeToProfileStream({required String uid}) {
+    _profileSubscription?.cancel();
+    _profileStream = _profileController.stream;
+
+    _profileSubscription = _firestore
+        .collection(Str.PROFILE_COLLECTION_NAME)
+        .doc(uid)
+        .snapshots()
+        .listen(
+          (snapshot) {
+            _profileController.sink.add(ProfileModel.fromMap(snapshot.data()!));
+          },
+          onError: (errorObject, stackTrace) {
+            _profileController.addError(errorObject);
+          },
+        );
+
+    _profileController.onCancel = (() {
+      _profileSubscription?.cancel();
+    });
+  }
+
+  @override
+  void unsubscribeFromProfileStream() {
+    _profileController.close();
+    _profileSubscription?.cancel();
+  }
+
+  /// Get stream of the interests from all profiles
   @override
   void subscribeToInterestsStream({
     List<InterestType> interestTypes = InterestType.values,
+    /// Don't pass `uid` to get interests from all profiles
+    /// Pass `uid` to get interests from the profile specified by `uid`
+    // String? uid,
   }) {
     _interestsSubscriptionCount++;
 
     if (_interestsSubscriptionCount <= 1) {
       _interestsStream = _interestsController.stream;
 
+      // dynamic queryOrCollection = _firestore.collection(
+      //   Str.PROFILE_COLLECTION_NAME,
+      // );
+      //
+      // if (uid != null) {
+      //   queryOrCollection = queryOrCollection.where(
+      //     Str.PROFILE_FIELD_UID,
+      //     isEqualTo: uid,
+      //   );
+      // }
+      //
+      // _interestsSubscription = queryOrCollection.snapshots().listen(
       _interestsSubscription = _firestore
           .collection(Str.PROFILE_COLLECTION_NAME)
           .snapshots()
@@ -62,38 +146,58 @@ class ProfileRepositoryImpl extends ProfileRepository {
               final List<InterestModel> tempInterests = [];
 
               for (var doc in snapshot.docs) {
-                // Todo remove these 2 lines of uid and userName perhaps
-                String uid = doc.data()[Str.PROFILE_FIELD_UID];
-                String userName = doc.data()[Str.PROFILE_FIELD_NAME];
+                // doc.data() is a profile map
 
-                List<dynamic> profileSkillsList =
-                    interestTypes.contains(InterestType.skill)
-                        ? doc.data()[Str.PROFILE_FIELD_SKILLS]
-                        : [];
-                List<dynamic> profileWishesList =
-                    interestTypes.contains(InterestType.wish)
-                        ? doc.data()[Str.PROFILE_FIELD_WISHES]
-                        : [];
+                final List<dynamic>? interestsList =
+                    doc.data()[Str.PROFILE_FIELD_INTERESTS];
 
-                for (var skillInAProfile in profileSkillsList) {
-                  tempInterests.add(
-                    SkillModel.fromMap(skillInAProfile)
-                    // SkillModel.fromMap(skillInAProfile).copyWith({ // Todo remove
-                    //   ProfileModel.FIELD_UID: uid,
-                    //   ProfileModel.FIELD_NAME: userName,
-                    // }),
-                  );
+                if (interestsList == null) {
+                  continue;
                 }
-                for (var wishInAProfile in profileWishesList) {
-                  tempInterests.add(
-                    WishModel.fromMap(wishInAProfile)
-                    // WishModel( // Todo remove
-                    //   title: wishInAProfile,
-                    //   userId: uid,
-                    //   userName: userName,
-                    // ),
-                  );
+
+                for (var interestInAProfile in interestsList) {
+                  if (!interestTypes.contains(
+                    interestInAProfile[Str.INTEREST_FIELD_INTEREST_TYPE],
+                  )) {
+                    continue;
+                  }
+
+                  if (interestInAProfile[Str.INTEREST_FIELD_INTEREST_TYPE] ==
+                      InterestType.skill) {
+                    tempInterests.add(SkillModel.fromMap(interestInAProfile));
+                  } else {
+                    tempInterests.add(WishModel.fromMap(interestInAProfile));
+                  }
                 }
+
+                // List<dynamic> profileSkillsList =
+                //     interestTypes.contains(InterestType.skill)
+                //         ? doc.data()[Str.PROFILE_FIELD_SKILLS]
+                //         : [];
+                // List<dynamic> profileWishesList =
+                //     interestTypes.contains(InterestType.wish)
+                //         ? doc.data()[Str.PROFILE_FIELD_WISHES]
+                //         : [];
+                //
+                // for (var skillInAProfile in profileSkillsList) {
+                //   tempInterests.add(
+                //     SkillModel.fromMap(skillInAProfile)
+                //     // SkillModel.fromMap(skillInAProfile).copyWith({ // Todo remove
+                //     //   ProfileModel.FIELD_UID: uid,
+                //     //   ProfileModel.FIELD_NAME: userName,
+                //     // }),
+                //   );
+                // }
+                // for (var wishInAProfile in profileWishesList) {
+                //   tempInterests.add(
+                //     WishModel.fromMap(wishInAProfile)
+                //     // WishModel( // Todo remove
+                //     //   title: wishInAProfile,
+                //     //   userId: uid,
+                //     //   userName: userName,
+                //     // ),
+                //   );
+                // }
               }
               _interestsController.sink.add(tempInterests);
             },

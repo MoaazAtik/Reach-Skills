@@ -37,16 +37,12 @@ class RsPopupMenuButton extends StatelessWidget {
 
   void _onMenuItemSelected(dynamic value) {
     if (value == _menuItemSignOut.value) {
-      print('Sign out selected');
       onTapSignOut();
     } else if (value == _menuItemEditProfile.value) {
-      print('Edit profile selected');
       onTapEditProfile();
     } else if (value == _menuItemHelp.value) {
-      print('Help selected');
       onTapHelp();
     } else if (value == _menuItemSignIn.value) {
-      print('Sign in selected');
       onTapSignIn();
     }
   }

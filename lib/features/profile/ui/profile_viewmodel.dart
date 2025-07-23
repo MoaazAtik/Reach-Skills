@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -13,7 +14,9 @@ class ProfileViewModel extends ChangeNotifier {
     required AuthRepository authRepository,
     required ProfileRepository profileRepository,
   }) : _authRepository = authRepository,
-       _profileRepository = profileRepository;
+       _profileRepository = profileRepository {
+    init();
+  }
 
   final AuthRepository _authRepository;
   final ProfileRepository _profileRepository;
@@ -23,25 +26,70 @@ class ProfileViewModel extends ChangeNotifier {
   String? uid;
   String? email;
   ProfileModel? profile;
+
+  // List<InterestModel>? interests;
   List<InterestModel> interests = [];
+  StreamSubscription<ProfileModel>? _profileSubscription;
+  String? profileStreamError;
+
+  void init() {
+    // startInterestsSubscription();
+  }
 
   /* When calling this method from the profile screen,
    The passed uid is from the auth repository aka, Firebase auth,
    not the profile repository which is a Firestore collection.
    But, when calling this method within this class pass profile!.ui
    because profile is already loaded.*/
+  // Todo perhaps remove this method because there is already
+  //  `startInterestsSubscription()` instead.
   Future<void> loadProfile() async {
     uid = _authRepository.getUserId();
     email = _authRepository.getUserEmail();
     if (uid != null) {
       profile = await _profileRepository.getProfile(uid!);
-      interests = [];
-      interests.addAll(profile!.skills);
-      interests.addAll(profile!.wishes);
-      interests.shuffle(Random());
+      if (profile != null) {
+        interests = [];
+        interests.addAll(profile!.interests);
+        interests.shuffle(Random());
+      }
+      startProfileSubscription();
       loading = false;
       notifyListeners();
     }
+  }
+
+  void startProfileSubscription() {
+    if (uid == null) return;
+
+    if(_profileSubscription != null) return;
+
+    // _profileSubscription?.cancel();
+    _profileRepository.subscribeToProfileStream(uid: uid!);
+
+    _profileSubscription = _profileRepository.profileStream!.listen(
+      (profile) {
+        this.profile = profile;
+
+        interests = [];
+        interests.addAll(profile.interests);
+        // interests.shuffle(Random());
+
+        profileStreamError = null;
+        loading = false;
+        notifyListeners();
+      },
+      onError: (errorObject, stackTrace) {
+        profileStreamError = Str.serverErrorMessage;
+        loading = false;
+        notifyListeners();
+      },
+    );
+  }
+
+  void stopSubscriptions() {
+    _profileRepository.unsubscribeFromProfileStream();
+    _profileSubscription?.cancel();
   }
 
   void toggleEdit() {
@@ -68,6 +116,7 @@ class ProfileViewModel extends ChangeNotifier {
 
   bool validateProfileUpdates(ProfileModel newProfile) {
     bool edited = false;
+    final profileMap = profile!.toMap();
 
     for (final entry in newProfile.toMap().entries) {
       // skip uid, email, lastEditedTime
@@ -77,31 +126,37 @@ class ProfileViewModel extends ChangeNotifier {
         continue;
       }
 
-      // check skills
-      if (entry.key == Str.PROFILE_FIELD_SKILLS) {
-        if (entry.value.toString() != profile!.toMap()[entry.key].toString()) {
+      // check interests
+      if (entry.key == Str.PROFILE_FIELD_INTERESTS) {
+        if ((profile!.interests.isEmpty && newProfile.interests.isNotEmpty) ||
+            newProfile.interests.length != profile!.interests.length) {
           edited = true;
           break;
         }
-        continue;
-      }
+        for (final newInterest in newProfile.interests) {
+          if (!profile!.interests.contains(newInterest)) {
+            edited = true;
+            break;
+          }
+        }
+        if (edited) break;
 
-      // check wishes
-      if (entry.key == Str.PROFILE_FIELD_WISHES) {
-        if (entry.value.toString() != profile!.toMap()[entry.key].toString()) {
-          edited = true;
-          break;
-        }
         continue;
       }
 
       // check name, bio
-      if (entry.value != profile!.toMap()[entry.key]) {
+      if (entry.value != profileMap[entry.key]) {
         edited = true;
         break;
       }
     }
 
     return edited;
+  }
+
+  @override
+  void dispose() {
+    stopSubscriptions();
+    super.dispose();
   }
 }

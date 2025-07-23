@@ -31,7 +31,8 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
   initialLocation:
       isFirstInitialization
           ? Str.onboardingScreenRoutePath
-          : Str.exploreScreenRoutePath,
+          // : Str.exploreScreenRoutePath,
+          : Str.profileScreenRoutePath,
   // debugLogDiagnostics: true,
   routes: [
     StatefulShellRoute.indexedStack(
@@ -75,15 +76,24 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                       ),
                       detailBody: InterestDetails(
                         isOwner: false,
-                        interest: interest as InterestModel,
+                        interest: interest != null ? interest as InterestModel : null,
                         // Todo implement
                         onTapReach: () {
                           // context.goNamed(Str.chatScreenRouteName);
                         },
-                        // Todo implement
-                        onTapSave: (interest) {
-                          // context.goNamed(Str.chatScreenRouteName);
-                        },
+                        // Todo remove (most likely) or implement
+                        // onTapEdit: (interest) {
+                        //   print('path before push : ${GoRouterState.of(context).fullPath}');
+                        //   // context.pushReplacement(Str.profileScreenRoutePath);
+                        //   // print('path after push : ${GoRouterState.of(context).fullPath}');
+                        //   // context.goNamed(
+                        //   //   '${Str.detailsScreenRouteName}',
+                        //   //   pathParameters: {Str.detailsScreenParamId: interest.id},
+                        //   //   extra: interest,
+                        //   // );
+                        //   // print('path after go : ${GoRouterState.of(context).fullPath}');
+                        // },
+                        canEdit: false,
                       ),
                       appBarTitle: Str.exploreScreenTitle,
                     );
@@ -127,6 +137,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                           onTapChat(context, chatId);
                         },
                       );
+                      // Todo fix messages are not showing on large screen
                       detailBody = MessagesBody(selectedChatId: chatId!);
                     } else {
                       masterBody = MessagesBody(selectedChatId: chatId!);
@@ -231,14 +242,15 @@ Widget buildScaffoldAppBarBodies({
 }) {
   return ScaffoldAppBarBodies(
     masterBody: masterBody,
+    detailBody: detailBody,
     appBarTitle: appBarTitle,
     isLoggedIn: isLoggedIn ?? context.watch<AuthViewModel>().isLoggedIn,
+    appBarEditAction: appBarEditAction,
+    onTapEdit: onTapEdit,
     onTapSignIn: () => onTapSignIn(context),
     onTapSignOut: () => onTapSignOut(context),
     onTapEditProfile: () => onTapEditProfile(context),
     onTapHelp: () => onTapHelp(context),
-    appBarEditAction: appBarEditAction,
-    onTapEdit: onTapEdit,
   );
 }
 
@@ -249,17 +261,17 @@ void goToBranchDestination(int index, StatefulNavigationShell navigationShell) {
   );
 }
 
-void onInterestTap(BuildContext context, InterestModel interest) {
+void onInterestTap(BuildContext context, InterestModel interest) { // # InterestDetails
   if (checkLargeScreen(context)) {
-    // Todo: replace interest.userId with interest.id
     context.goNamed(
       Str.detailsScreenRouteName,
-      pathParameters: {Str.detailsScreenParamId: interest.userId},
+      pathParameters: {Str.detailsScreenParamId: interest.id},
       extra: interest,
     );
+    print('current path : ${GoRouterState.of(context).fullPath}');
   } else {
     // Todo: replace isOwner
-    showDetailsScreenDialog(context, isOwner: false, interest: interest);
+    showDetailsScreenDialog(context, isOwner: false, interest: interest, canEdit: false);
   }
 }
 

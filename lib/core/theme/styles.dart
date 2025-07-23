@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../features/common/data/interest_model.dart';
+
 abstract class Styles {
   // eg, headline text style:
 
@@ -172,6 +174,10 @@ abstract class Styles {
       border: InputBorder.none,
       hintText: hint,
       hintStyle: hintTextStyle,
+      // Todo change background of this and all TextFormField's and TextField's
+      // Todo fix rectangle shape without radius when 'filled: true'
+      // filled: true,
+      // fillColor: skillCardGradientStartColor,
     );
   }
 
@@ -206,6 +212,12 @@ abstract class Styles {
     fontSize: fontSize16,
     color: chatSubtitleColor,
   );
+
+  static Color getChipColor(InterestType interestType) {
+    return interestType == InterestType.wish
+        ? Styles.wishChipBackgroundColor
+        : Styles.skillChipBackgroundColor;
+  }
 
   /// Font Families
 

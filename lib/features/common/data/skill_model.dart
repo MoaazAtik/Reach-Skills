@@ -1,32 +1,50 @@
+import 'package:uuid/uuid.dart';
+
 import 'interest_model.dart';
 import 'package:reach_skills/core/constants/strings.dart';
 
 class SkillModel extends InterestModel {
   SkillModel({
-    super.id = '',
+    String id = '',
     super.title = '',
     super.description = '',
     super.tags = '',
     super.userId = '',
     super.userName = '',
-  }) : super(interestType: InterestType.skill);
+  }) : super(interestType: InterestType.skill, id: id != '' ? id : Uuid().v4());
 
   /* Not necessary. The implementation of InterestModel.fromMap is enough */
   SkillModel.fromMap(Map<String, dynamic> map)
     : super(
         interestType: InterestType.skill,
-        id: map[Str.INTEREST_FIELD_ID],
-        title: map[Str.INTEREST_FIELD_TITLE],
+        id:
+            map[Str.INTEREST_FIELD_ID] ??
+            (throw Exception(
+              '${Str.excMessageNullId} ${Str.excMessageInterestModelFromMap}',
+            )),
+        title:
+            map[Str.INTEREST_FIELD_TITLE] ??
+            (throw Exception(
+              '${Str.excMessageNullTitle} ${Str.excMessageInterestModelFromMap}',
+            )),
         description: map[Str.INTEREST_FIELD_DESCRIPTION] ?? '',
         tags: map[Str.INTEREST_FIELD_TAGS] ?? '',
-        userId: map[Str.INTEREST_FIELD_USER_ID] ?? '',
-        userName: map[Str.INTEREST_FIELD_USER_NAME] ?? '',
+        userId:
+            map[Str.INTEREST_FIELD_USER_ID] ??
+            (throw Exception(
+              '${Str.excMessageNullUserId} ${Str.excMessageInterestModelFromMap}',
+            )),
+        userName:
+            map[Str.INTEREST_FIELD_USER_NAME] ??
+            (throw Exception(
+              '${Str.excMessageNullUserName} ${Str.excMessageInterestModelFromMap}',
+            )),
       );
 
   @override
   Map<String, dynamic> toMap() {
     return {
-      Str.INTEREST_FIELD_INTEREST_TYPE: interestType,
+      Str.INTEREST_FIELD_INTEREST_TYPE: interestType.name,
       Str.INTEREST_FIELD_ID: id,
       Str.INTEREST_FIELD_TITLE: title,
       Str.INTEREST_FIELD_DESCRIPTION: description,

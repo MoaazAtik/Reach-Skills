@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:reach_skills/features/common/data/interest_model.dart';
 import 'package:reach_skills/features/common/data/skill_model.dart';
 import 'package:reach_skills/features/common/data/wish_model.dart';
 
@@ -9,8 +10,7 @@ class ProfileModel {
   final String name;
   final String email;
   final String bio;
-  final List<SkillModel> skills;
-  final List<WishModel> wishes;
+  final List<InterestModel> interests;
   final int lastEditedTime;
 
   ProfileModel({
@@ -18,24 +18,42 @@ class ProfileModel {
     this.name = '',
     this.email = '',
     this.bio = '',
-    this.skills = const <SkillModel>[],
-    this.wishes = const <WishModel>[],
+    this.interests = const <InterestModel>[],
     this.lastEditedTime = 0,
   });
 
   factory ProfileModel.fromMap(Map<String, dynamic> map) {
     return ProfileModel(
-      uid: map[Str.PROFILE_FIELD_UID],
-      name: map[Str.PROFILE_FIELD_NAME],
-      email: map[Str.PROFILE_FIELD_EMAIL],
-      bio: map[Str.PROFILE_FIELD_BIO],
-      skills: List<SkillModel>.from(
-        map[Str.PROFILE_FIELD_SKILLS].map((skill) => SkillModel.fromMap(skill)),
-      ),
-      wishes: List<WishModel>.from(
-        map[Str.PROFILE_FIELD_WISHES].map((wish) => WishModel.fromMap(wish)),
-      ),
-      lastEditedTime: map[Str.PROFILE_FIELD_LAST_EDITED_TIME],
+      uid:
+          map[Str.PROFILE_FIELD_UID] ??
+          (throw Exception(
+            '${Str.excMessageNullUserName} ${Str.excMessageProfileModelFromMap}',
+          )),
+      name:
+          map[Str.PROFILE_FIELD_NAME] ??
+          (throw Exception(
+            '${Str.excMessageNullUserName} ${Str.excMessageProfileModelFromMap}',
+          )),
+      email:
+          map[Str.PROFILE_FIELD_EMAIL] ??
+          (throw Exception(
+            '${Str.excMessageNullEmail} ${Str.excMessageProfileModelFromMap}',
+          )),
+      bio: map[Str.PROFILE_FIELD_BIO] ?? '',
+      interests:
+          map[Str.PROFILE_FIELD_INTERESTS] == null
+              ? List<InterestModel>.empty()
+              : List<InterestModel>.from(
+                map[Str.PROFILE_FIELD_INTERESTS].map((interest) {
+                  if (interest[Str.INTEREST_FIELD_INTEREST_TYPE] ==
+                      InterestType.skill.name) {
+                    return SkillModel.fromMap(interest);
+                  } else {
+                    return WishModel.fromMap(interest);
+                  }
+                }),
+              ),
+      lastEditedTime: map[Str.PROFILE_FIELD_LAST_EDITED_TIME] ?? 0,
     );
   }
 
@@ -45,8 +63,14 @@ class ProfileModel {
       Str.PROFILE_FIELD_NAME: name,
       Str.PROFILE_FIELD_EMAIL: email,
       Str.PROFILE_FIELD_BIO: bio,
-      Str.PROFILE_FIELD_SKILLS: skills.map((skill) => skill.toMap()).toList(),
-      Str.PROFILE_FIELD_WISHES: wishes.map((wish) => wish.toMap()).toList(),
+      Str.PROFILE_FIELD_INTERESTS:
+          interests.map((interest) {
+            if (interest is SkillModel) {
+              return interest.toMap();
+            } else {
+              return (interest as WishModel).toMap();
+            }
+          }).toList(),
       Str.PROFILE_FIELD_LAST_EDITED_TIME: lastEditedTime,
     };
   }
@@ -56,8 +80,7 @@ class ProfileModel {
     String? name,
     String? email,
     String? bio,
-    List<SkillModel>? skills,
-    List<WishModel>? wishes,
+    List<InterestModel>? interests,
     int? lastEditedTime,
   }) {
     return ProfileModel(
@@ -65,15 +88,14 @@ class ProfileModel {
       name: name ?? this.name,
       email: email ?? this.email,
       bio: bio ?? this.bio,
-      skills: skills ?? this.skills,
-      wishes: wishes ?? this.wishes,
+      interests: interests ?? this.interests,
       lastEditedTime: lastEditedTime ?? this.lastEditedTime,
     );
   }
 
   @override
   String toString() {
-    return 'ProfileModel {${Str.PROFILE_FIELD_UID}: $uid, ${Str.PROFILE_FIELD_NAME}: $name, ${Str.PROFILE_FIELD_EMAIL}: $email, ${Str.PROFILE_FIELD_BIO}: $bio, ${Str.PROFILE_FIELD_SKILLS}: $skills, ${Str.PROFILE_FIELD_WISHES}: $wishes, ${Str.PROFILE_FIELD_LAST_EDITED_TIME}: $lastEditedTime}';
+    return 'ProfileModel {${Str.PROFILE_FIELD_UID}: $uid, ${Str.PROFILE_FIELD_NAME}: $name, ${Str.PROFILE_FIELD_EMAIL}: $email, ${Str.PROFILE_FIELD_BIO}: $bio, ${Str.PROFILE_FIELD_INTERESTS}: $interests, ${Str.PROFILE_FIELD_LAST_EDITED_TIME}: $lastEditedTime}';
   }
 
   final _listEquality = const ListEquality();
@@ -87,8 +109,7 @@ class ProfileModel {
         name == other.name &&
         email == other.email &&
         bio == other.bio &&
-        _listEquality.equals(skills, other.skills) &&
-        _listEquality.equals(wishes, other.wishes) &&
+        _listEquality.equals(interests, other.interests) &&
         lastEditedTime == other.lastEditedTime;
   }
 
@@ -98,8 +119,7 @@ class ProfileModel {
     name,
     email,
     bio,
-    _listEquality.hash(skills),
-    _listEquality.hash(wishes),
+    _listEquality.hash(interests),
     lastEditedTime,
   );
 }

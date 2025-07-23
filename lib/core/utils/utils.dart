@@ -82,6 +82,8 @@ void showDetailsScreenDialog(
   required InterestModel? interest,
   void Function()? onTapReach,
   void Function(InterestModel interest)? onTapSave,
+  bool canEdit = true,
+  bool startEditing = false,
 }) {
   showAdaptiveDialog(
     context: context,
@@ -91,8 +93,19 @@ void showDetailsScreenDialog(
           borderRadius: BorderRadius.circular(Styles.borderRadius),
         ),
         backgroundColor: Styles.rsDefaultSurfaceColor,
-        child: InterestDetails(isOwner: isOwner, interest: interest, onTapReach: onTapReach, onTapSave: onTapSave),
+        child: InterestDetails(
+          isOwner: isOwner,
+          interest: interest,
+          onTapReach: onTapReach,
+          onTapSave: onTapSave,
+          canEdit: canEdit,
+          startEditing: startEditing,
+        ),
       );
     },
   );
+}
+
+void showSnackBarMessage(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 }

@@ -133,6 +133,7 @@ class ChatRepositoryImpl extends ChatRepository {
   ) async {
     String? chatId;
 
+    // Todo add id field to ChatModel like the `sendMessage` method does
     await _firestore
         .collection(Str.CHAT_COLLECTION_NAME)
         .add({

@@ -22,12 +22,20 @@ class ChatModel {
   factory ChatModel.fromMapAndId(String id, Map<String, dynamic> map) {
     return ChatModel(
       id: id,
-      person1Id: map[Str.CHAT_FIELD_PERSON1_ID],
-      person1Name: map[Str.CHAT_FIELD_PERSON1_NAME],
-      person2Id: map[Str.CHAT_FIELD_PERSON2_ID],
-      person2Name: map[Str.CHAT_FIELD_PERSON2_NAME],
-      createdAt: map[Str.CHAT_FIELD_CREATED_AT],
-      updatedAt: map[Str.CHAT_FIELD_UPDATED_AT],
+      person1Id:
+          map[Str.CHAT_FIELD_PERSON1_ID] ??
+          (throw Exception(
+            '${Str.excMessageNullPerson1Id} ${Str.excMessageChatModelFromMapAndId}',
+          )),
+      person1Name: map[Str.CHAT_FIELD_PERSON1_NAME] ?? '',
+      person2Id:
+          map[Str.CHAT_FIELD_PERSON2_ID] ??
+          (throw Exception(
+            '${Str.excMessageNullPerson2Id} ${Str.excMessageChatModelFromMapAndId}',
+          )),
+      person2Name: map[Str.CHAT_FIELD_PERSON2_NAME] ?? '',
+      createdAt: map[Str.CHAT_FIELD_CREATED_AT] ?? 0,
+      updatedAt: map[Str.CHAT_FIELD_UPDATED_AT] ?? 0,
     );
   }
 
