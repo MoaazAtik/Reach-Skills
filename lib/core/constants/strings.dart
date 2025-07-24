@@ -198,6 +198,9 @@ abstract class Str {
   static const next = 'Next';
   static const letsGo = 'Let\'s Go';
 
+  static const undo = 'Undo';
+  static const removed = 'Removed';
+
   /// Localizable strings end
 
   /// Mock data start

@@ -26,7 +26,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
   _profileSubscription;
   final StreamController<ProfileModel> _profileController =
-      StreamController<ProfileModel>(); // Probably no need for 'broadcast()'
+      StreamController<ProfileModel>();
   Stream<ProfileModel>? _profileStream;
 
   @override
@@ -82,6 +82,45 @@ class ProfileRepositoryImpl extends ProfileRepository {
       return ProfileModel.fromMap(doc.data()!);
     }
     return null;
+  }
+
+  @override
+  Future<String> removeInterest(InterestModel interest) {
+    // Future<String> removeInterest(InterestModel interest) async {
+    String result = '';
+
+    // await _firestore
+    _firestore
+        .collection(Str.PROFILE_COLLECTION_NAME)
+        .doc(interest.userId)
+        .update({
+      Str.PROFILE_FIELD_INTERESTS: FieldValue.arrayRemove([
+        interest.toMap(),
+      ]),
+    })
+        .onError((error, stackTrace) {
+      print('error saving profile: $error');
+      result = Str.errorSavingProfile;
+    })
+        .then((value) => result = Str.profileSaved);
+
+    return Future.value(result);
+    // return result;
+  }
+
+  @override
+  Future<String> updateProfileTimestamp(String uid) {
+    return _firestore
+        .collection(Str.PROFILE_COLLECTION_NAME)
+        .doc(uid)
+        .update({
+      Str.PROFILE_FIELD_LAST_EDITED_TIME: DateTime.now().millisecondsSinceEpoch,
+    })
+        .then((value) => Str.profileSaved)
+        .onError((error, stackTrace) {
+      print('Error updating profile timestamp: $error');
+      return Str.errorSavingProfile;
+    });
   }
 
   /// Subscribe to stream of the profile of the logged current user

@@ -95,6 +95,25 @@ class ProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<String> removeInterest({required InterestModel interest}) async {
+    // Todo remove comment when done testing
+    // final tempList = List<InterestModel>.from(interests);
+    // tempList.removeWhere((element) => element.id == interest.id);
+    //
+    // final newProfile = profile!.copyWith(interests: tempList);
+    // await _profileRepository.saveProfile(newProfile);
+    // loadProfile();
+    // return Str.profileSaved;
+
+    // OR this. Both are correct. The one below is more efficient.
+
+    String result = await _profileRepository.removeInterest(interest);
+    if (result == Str.errorSavingProfile) return result;
+
+    result = await _profileRepository.updateProfileTimestamp(uid!);;
+    return result;
+  }
+
   Future<String> updateProfile({
     String? name,
     String? bio,

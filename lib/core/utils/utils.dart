@@ -102,6 +102,19 @@ void showDetailsScreenDialog(
   );
 }
 
-void showSnackBarMessage(BuildContext context, String message) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+void showSnackBarMessage(
+  BuildContext context,
+  String message, {
+  String? actionLabel,
+  VoidCallback? onActionPressed,
+}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      action: SnackBarAction(
+        label: actionLabel ?? '',
+        onPressed: onActionPressed ?? () {},
+      ),
+    ),
+  );
 }

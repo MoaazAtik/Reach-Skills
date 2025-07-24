@@ -5,6 +5,7 @@ import '../../../core/theme/styles.dart';
 class RsChip extends StatelessWidget {
   final List<Widget> children;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final Color chipColor;
   final double paddingLeft;
   final double paddingRight;
@@ -15,6 +16,7 @@ class RsChip extends StatelessWidget {
     super.key,
     required this.children,
     this.onTap,
+    this.onLongPress,
     this.chipColor = Styles.skillChipBackgroundColor,
     this.paddingLeft = Styles.paddingMedium,
     this.paddingRight = Styles.paddingMedium,
@@ -26,6 +28,7 @@ class RsChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      onLongPress: onLongPress,
       borderRadius: BorderRadius.circular(Styles.borderRadius),
       child: Ink(
         height: Styles.chipHeight,

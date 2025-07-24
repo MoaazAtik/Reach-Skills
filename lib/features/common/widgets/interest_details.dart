@@ -149,14 +149,12 @@ class _InterestDetailsState extends State<InterestDetails> {
               children: [
                 RsChip(
                   paddingLeft: Styles.paddingSmall,
+                  onTap: () => _setInterestType(InterestType.skill),
                   children: [
                     Radio(
                       value: InterestType.skill,
                       groupValue: _selectedInterestType,
-                      onChanged:
-                          (value) => setState(() {
-                            _selectedInterestType = value;
-                          }),
+                      onChanged: _setInterestType,
                     ),
                     Text(Str.skill, style: Styles.interestChipTextStyle),
                   ],
@@ -165,13 +163,12 @@ class _InterestDetailsState extends State<InterestDetails> {
                 RsChip(
                   paddingLeft: Styles.paddingSmall,
                   chipColor: Styles.wishChipBackgroundColor,
+                  onTap: () => _setInterestType(InterestType.wish),
                   children: [
                     Radio(
                       value: InterestType.wish,
                       groupValue: _selectedInterestType,
-                      onChanged:
-                          (value) =>
-                              setState(() => _selectedInterestType = value),
+                      onChanged: _setInterestType,
                     ),
                     Text(Str.wish, style: Styles.interestChipTextStyle),
                   ],
@@ -225,11 +222,13 @@ class _InterestDetailsState extends State<InterestDetails> {
     /* This '[]' fixes 'tagsList.length = 1' caused by 'tags.split'
      when tags are empty. */
 
-    final List<String> tagsList = tags.isNotEmpty ? tags.split(Str.splitWithSeparator) : [];
+    final List<String> tagsList =
+        tags.isNotEmpty ? tags.split(Str.splitWithSeparator) : [];
 
     final List<Widget> chips = List.generate(tagsList.length, (index) {
       return RsChip(
         chipColor: Styles.getChipColor(_selectedInterestType!),
+        onLongPress: !isEditing ? null : () => _removeTag(tagsList, index),
         children: [Text(tagsList[index], style: Styles.interestChipTextStyle)],
       );
     });
@@ -275,7 +274,17 @@ class _InterestDetailsState extends State<InterestDetails> {
       return;
     }
 
-    setState(() => _tags.isNotEmpty ? _tags += '${Str.splitWithSeparator}$tag' : _tags += tag);
+    setState(
+      () =>
+          _tags.isNotEmpty
+              ? _tags += '${Str.splitWithSeparator}$tag'
+              : _tags += tag,
+    );
+  }
+
+  void _removeTag(List<String> tagsList, int index) {
+    tagsList.removeAt(index);
+    setState(() => _tags = tagsList.join(Str.splitWithSeparator));
   }
 
   InterestModel _assembleInterest() {
@@ -298,5 +307,16 @@ class _InterestDetailsState extends State<InterestDetails> {
         userName: widget.interest!.userName,
       );
     }
+  }
+
+  void _setInterestType(InterestType? value) {
+    setState(() => _selectedInterestType = value);
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 }

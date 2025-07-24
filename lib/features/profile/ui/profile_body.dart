@@ -181,6 +181,18 @@ class _ProfileBodyState extends State<ProfileBody> {
                 _saveProfile(interest);
               },
             ),
+        onLongPress: () {
+          final interest = interests[index];
+          context.read<ProfileViewModel>().removeInterest(interest: interest);
+          showSnackBarMessage(
+            context,
+            '${Str.removed} ${interest.title}',
+            actionLabel: Str.undo,
+            onActionPressed: () {
+              _saveProfile(interest);
+            },
+          );
+        },
         chipColor: Styles.getChipColor(interests[index].interestType),
         children: [
           Text(interests[index].title, style: Styles.interestChipTextStyle),
@@ -218,7 +230,9 @@ class _ProfileBodyState extends State<ProfileBody> {
       context,
     );
 
-    if (!_formKey.currentState!.validate()) return;
+    if (_formKey.currentState != null && !_formKey.currentState!.validate()) {
+      return;
+    }
 
     String updatingResult = await updateProfile(
       name: _nameController.text.trim(),
