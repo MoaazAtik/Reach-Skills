@@ -86,10 +86,8 @@ class ProfileRepositoryImpl extends ProfileRepository {
 
   @override
   Future<String> removeInterest(InterestModel interest) {
-    // Future<String> removeInterest(InterestModel interest) async {
     String result = '';
 
-    // await _firestore
     _firestore
         .collection(Str.PROFILE_COLLECTION_NAME)
         .doc(interest.userId)
@@ -105,7 +103,6 @@ class ProfileRepositoryImpl extends ProfileRepository {
         .then((value) => result = Str.profileSaved);
 
     return Future.value(result);
-    // return result;
   }
 
   @override
