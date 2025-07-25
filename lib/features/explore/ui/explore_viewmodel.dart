@@ -71,9 +71,10 @@ class ExploreViewModel extends ChangeNotifier {
     }
 
     ProfileModel? senderProfile;
-    await _profileRepository.getProfile(currentSenderId!).then((value) {
-      senderProfile = value;
-    });
+    // Commented out because I replaced getProfile with subscribeToProfileStream
+    // await _profileRepository.getProfile(currentSenderId!).then((value) {
+    //   senderProfile = value;
+    // });
     currentSenderName = senderProfile?.name;
 
     this.currentReceiverId = currentReceiverId;

@@ -28,7 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ProfileViewModel>().loadProfile();
+    // context.read<ProfileViewModel>().loadProfile();
   }
 
   @override

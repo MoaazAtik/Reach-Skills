@@ -6,15 +6,13 @@ abstract class ProfileRepository {
 
   Stream<ProfileModel>? get profileStream;
 
-  Future<String> saveProfile(ProfileModel profile);
-
-  Future<ProfileModel?> getProfile(String uid);
+  Future<String> updateProfile(ProfileModel profile);
 
   Future<String> removeInterest(InterestModel interest);
 
   Future<String> updateProfileTimestamp(String uid);
 
-  void subscribeToProfileStream({required String uid});
+  void subscribeToProfileStream({required String uid, required String email});
 
   void unsubscribeFromProfileStream();
 

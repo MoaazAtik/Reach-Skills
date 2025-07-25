@@ -39,7 +39,8 @@ class _ProfileBodyState extends State<ProfileBody> {
   @override
   void initState() {
     super.initState();
-    context.read<ProfileViewModel>().loadProfile();
+    // context.read<ProfileViewModel>().loadProfile();
+    context.read<ProfileViewModel>().init();
   }
 
   @override

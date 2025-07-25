@@ -15,7 +15,8 @@ class ProfileViewModel extends ChangeNotifier {
     required ProfileRepository profileRepository,
   }) : _authRepository = authRepository,
        _profileRepository = profileRepository {
-    init();
+    /* `init` is called by the `ProfileBody` widget */
+    // init();
   }
 
   final AuthRepository _authRepository;
@@ -33,37 +34,21 @@ class ProfileViewModel extends ChangeNotifier {
 
   void init() {
     // startInterestsSubscription();
+    startProfileSubscription();
   }
 
-  /* When calling this method from the profile screen,
-   The passed uid is from the auth repository aka, Firebase auth,
-   not the profile repository which is a Firestore collection.
-   But, when calling this method within this class pass profile!.ui
-   because profile is already loaded.*/
-  // Todo perhaps remove this method because there is already
-  //  `startInterestsSubscription()` instead.
-  Future<void> loadProfile() async {
+  /* This method gets `uid` is from the auth repository aka,
+  `FirebaseAuth.instance`, not the profile repository which is
+   a Firestore collection aka, `FirebaseFirestore.instance`. */
+  void startProfileSubscription() {
     uid = _authRepository.getUserId();
     email = _authRepository.getUserEmail();
-    if (uid != null) {
-      profile = await _profileRepository.getProfile(uid!);
-      if (profile != null) {
-        interests = [];
-        interests.addAll(profile!.interests);
-        interests.shuffle(Random());
-      }
-      startProfileSubscription();
-      loading = false;
-      notifyListeners();
-    }
-  }
 
-  void startProfileSubscription() {
     if (uid == null) return;
 
     if (_profileSubscription != null) return;
 
-    _profileRepository.subscribeToProfileStream(uid: uid!);
+    _profileRepository.subscribeToProfileStream(uid: uid!, email: email!);
 
     _profileSubscription = _profileRepository.profileStream!.listen(
       (profile) {
@@ -99,7 +84,7 @@ class ProfileViewModel extends ChangeNotifier {
     String result = await _profileRepository.removeInterest(interest);
     if (result == Str.errorSavingProfile) return result;
 
-    result = await _profileRepository.updateProfileTimestamp(uid!);;
+    result = await _profileRepository.updateProfileTimestamp(uid!);
     return result;
   }
 
@@ -116,6 +101,13 @@ class ProfileViewModel extends ChangeNotifier {
       tempList.add(interest);
     }
 
+    if (profile == null) {
+      print(
+        'Profile ViewModel - `updateProfile`: `profile` is null. Check `startProfileSubscription`.',
+      );
+      return Str.pleaseSignIn;
+    }
+
     final newProfile = profile!.copyWith(
       name: name ?? profile!.name,
       bio: bio ?? profile!.bio,
@@ -128,8 +120,7 @@ class ProfileViewModel extends ChangeNotifier {
       return cannotEditMessage;
     }
 
-    await _profileRepository.saveProfile(newProfile);
-    loadProfile();
+    await _profileRepository.updateProfile(newProfile);
     isEditing = false;
 
     // notifyListeners();
@@ -138,9 +129,6 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   String? validateProfileUpdates(ProfileModel newProfile) {
-    // creating new profile
-    if (profile == null) return null;
-
     // check name exists. Double validation along with UI validation.
     if (newProfile.name.isEmpty) {
       return Str.fillRequiredFields;

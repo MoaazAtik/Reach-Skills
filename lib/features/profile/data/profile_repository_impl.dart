@@ -32,37 +32,36 @@ class ProfileRepositoryImpl extends ProfileRepository {
   @override
   Stream<ProfileModel>? get profileStream => _profileStream;
 
+  /// Profile always exists thus could be updated
+  /// because of `_createProfileIfNeeded` and `subscribeToProfileStream`
   @override
-  Future<String> saveProfile(ProfileModel profile) async {
+  Future<String> updateProfile(ProfileModel profile) async {
     String result = '';
-    final doc =
-        await _firestore
-            .collection(Str.PROFILE_COLLECTION_NAME)
-            .doc(profile.uid)
-            .get();
 
-    if (doc.exists) {
-      await _firestore
-          .collection(Str.PROFILE_COLLECTION_NAME)
-          .doc(profile.uid)
-          .update(profile.toMap())
-          .onError((error, stackTrace) {
-            print('error saving profile: $error');
-            result = Str.errorSavingProfile;
-          })
-          .then((value) => result = Str.profileSaved);
-    } else {
-      result = await _createProfile(profile);
-    }
+    await _firestore
+        .collection(Str.PROFILE_COLLECTION_NAME)
+        .doc(profile.uid)
+        .update(profile.toMap())
+        .onError((error, stackTrace) {
+          print('error saving profile: $error');
+          result = Str.errorSavingProfile;
+        })
+        .then((value) => result = Str.profileSaved);
 
     return result;
   }
 
-  Future<String> _createProfile(ProfileModel profile) async {
+  Future<String> _createProfileIfNeeded(ProfileModel profile) async {
     String result = '';
-    await _firestore
+
+    final docRef = _firestore
         .collection(Str.PROFILE_COLLECTION_NAME)
-        .doc(profile.uid)
+        .doc(profile.uid);
+    final docSnapshot = await docRef.get();
+
+    if (docSnapshot.exists) return result;
+
+    await docRef
         .set(profile.toMap())
         .onError((error, stackTrace) {
           print('error creating profile: $error');
@@ -74,17 +73,6 @@ class ProfileRepositoryImpl extends ProfileRepository {
   }
 
   @override
-  Future<ProfileModel?> getProfile(String uid) async {
-    final doc =
-        await _firestore.collection(Str.PROFILE_COLLECTION_NAME).doc(uid).get();
-
-    if (doc.exists) {
-      return ProfileModel.fromMap(doc.data()!);
-    }
-    return null;
-  }
-
-  @override
   Future<String> removeInterest(InterestModel interest) {
     String result = '';
 
@@ -92,14 +80,14 @@ class ProfileRepositoryImpl extends ProfileRepository {
         .collection(Str.PROFILE_COLLECTION_NAME)
         .doc(interest.userId)
         .update({
-      Str.PROFILE_FIELD_INTERESTS: FieldValue.arrayRemove([
-        interest.toMap(),
-      ]),
-    })
+          Str.PROFILE_FIELD_INTERESTS: FieldValue.arrayRemove([
+            interest.toMap(),
+          ]),
+        })
         .onError((error, stackTrace) {
-      print('error saving profile: $error');
-      result = Str.errorSavingProfile;
-    })
+          print('error saving profile: $error');
+          result = Str.errorSavingProfile;
+        })
         .then((value) => result = Str.profileSaved);
 
     return Future.value(result);
@@ -111,20 +99,32 @@ class ProfileRepositoryImpl extends ProfileRepository {
         .collection(Str.PROFILE_COLLECTION_NAME)
         .doc(uid)
         .update({
-      Str.PROFILE_FIELD_LAST_EDITED_TIME: DateTime.now().millisecondsSinceEpoch,
-    })
+          Str.PROFILE_FIELD_LAST_EDITED_TIME:
+              DateTime.now().millisecondsSinceEpoch,
+        })
         .then((value) => Str.profileSaved)
         .onError((error, stackTrace) {
-      print('Error updating profile timestamp: $error');
-      return Str.errorSavingProfile;
-    });
+          print('Error updating profile timestamp: $error');
+          return Str.errorSavingProfile;
+        });
   }
 
   /// Subscribe to stream of the profile of the logged current user
   @override
-  void subscribeToProfileStream({required String uid}) {
+  void subscribeToProfileStream({
+    required String uid,
+    required String email,
+  }) async {
     _profileSubscription?.cancel();
     _profileStream = _profileController.stream;
+
+    _createProfileIfNeeded(
+      ProfileModel(
+        uid: uid,
+        email: email,
+        lastEditedTime: DateTime.now().millisecondsSinceEpoch,
+      ),
+    );
 
     _profileSubscription = _firestore
         .collection(Str.PROFILE_COLLECTION_NAME)
@@ -132,6 +132,9 @@ class ProfileRepositoryImpl extends ProfileRepository {
         .snapshots()
         .listen(
           (snapshot) {
+            /* snapshot.data() is always not null because `_createProfileIfNeeded`
+             is called before it unless `_createProfileIfNeeded` throws an error. */
+            if (snapshot.data() == null) return;
             _profileController.sink.add(ProfileModel.fromMap(snapshot.data()!));
           },
           onError: (errorObject, stackTrace) {
