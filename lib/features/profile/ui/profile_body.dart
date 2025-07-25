@@ -94,11 +94,15 @@ class _ProfileBodyState extends State<ProfileBody> {
                       decoration: Styles.rsInputDecoration(
                         label: Str.name,
                         hint: Str.nameHint,
+                        fillColor: Styles.skillChipBackgroundColor,
                       ),
                       validator: textValidator,
                     ),
                   ),
-                SizedBox(height: 8),
+                SizedBox(
+                  height:
+                      isEditing ? Styles.spacingMedium : Styles.spacingSmall,
+                ),
                 if (!isEditing)
                   Text(
                     _bioController.text,
@@ -111,6 +115,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                     decoration: Styles.rsInputDecoration(
                       label: Str.bio,
                       hint: Str.bioHint,
+                      fillColor: Styles.skillChipBackgroundColor,
                     ),
                     maxLines: 5,
                     minLines: 1,

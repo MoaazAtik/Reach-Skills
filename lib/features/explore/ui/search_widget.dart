@@ -44,13 +44,10 @@ class _SearchWidgetState extends State<SearchWidget> {
         children: [
           TextFormField(
             controller: _searchController,
-            decoration: const InputDecoration(
-              hintText: Str.searchHint,
-              border: InputBorder.none,
-              hintStyle: TextStyle(fontSize: Styles.fontSizeChip),
-              constraints: BoxConstraints(maxWidth: 150),
-              isDense: true,
-              isCollapsed: true,
+            decoration: Styles.rsInputDecoration(
+              hint: Str.searchHint,
+              withConstrains: true,
+              maxWidth: 150,
             ),
           ),
           IconButton(

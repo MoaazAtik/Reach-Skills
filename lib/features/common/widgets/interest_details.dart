@@ -82,12 +82,15 @@ class _InterestDetailsState extends State<InterestDetails> {
                          'Assertion failed: constraints.maxWidth < double.infinity' */
                       child: Container(
                         constraints: BoxConstraints(
-                          maxWidth: MediaQuery.sizeOf(context).width * 0.5,
+                          maxWidth: MediaQuery.sizeOf(context).width * 0.4,
                         ),
                         child: TextFormField(
                           decoration: Styles.rsInputDecoration(
                             label: Str.interestTitle,
                             hint: Str.interestTitleHint,
+                            fillColor: Styles.getChipColor(
+                              _selectedInterestType!,
+                            ),
                           ),
                           controller: _titleController,
                           validator: textValidator,
@@ -127,7 +130,13 @@ class _InterestDetailsState extends State<InterestDetails> {
               decoration: Styles.rsInputDecoration(
                 label: Str.interestDescription,
                 hint: Str.interestDescriptionHint,
+                withConstrains: true,
+                maxWidthRatio: 0.6,
+                context: context,
+                fillColor: Styles.getChipColor(_selectedInterestType!),
               ),
+              minLines: 1,
+              maxLines: 3,
               controller: _descriptionController,
             ),
 
@@ -246,15 +255,14 @@ class _InterestDetailsState extends State<InterestDetails> {
         chipColor: Styles.getChipColor(_selectedInterestType!),
         children: [
           if (chips.length < 5)
-            Flexible(
-              child: TextField(
-                controller: tagsController,
-                decoration: Styles.rsInputDecoration(
-                  label: '',
-                  hint: Str.interestTagsHint,
-                ),
-                onSubmitted: (value) => _addTag(value.trim(), tagsList.length),
+            TextField(
+              controller: tagsController,
+              decoration: Styles.rsInputDecoration(
+                hint: Str.interestTagsHint,
+                withConstrains: true,
+                context: context,
               ),
+              onSubmitted: (value) => _addTag(value.trim(), tagsList.length),
             ),
           Icon(Icons.add_rounded, size: 20),
         ],

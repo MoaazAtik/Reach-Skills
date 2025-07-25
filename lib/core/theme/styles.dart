@@ -165,19 +165,43 @@ abstract class Styles {
   );
 
   static InputDecoration rsInputDecoration({
-    required String? label,
-    required String? hint,
+    String? label,
+    String? hint,
+    bool withConstrains = false,
+    double? maxWidth,
+    double maxWidthRatio = 0.5,
+    BuildContext? context,
+    Color? fillColor,
   }) {
+    assert(
+      !withConstrains || (maxWidth != null || context != null),
+      'rsInputDecoration: If the widget is meant to be `withConstrains`,'
+      ' `maxWidth` should be provided,'
+      ' Or you could provide `context` for calculating maxWidth dynamically.',
+    );
+
     return InputDecoration(
       labelText: label,
       labelStyle: Styles.interestDetailsSectionTitleTextStyle,
-      border: InputBorder.none,
       hintText: hint,
       hintStyle: hintTextStyle,
-      // Todo change background of this and all TextFormField's and TextField's
-      // Todo fix rectangle shape without radius when 'filled: true'
-      // filled: true,
-      // fillColor: skillCardGradientStartColor,
+      isDense: true,
+      // isCollapsed: true,
+      constraints:
+          !withConstrains
+              ? null
+              : BoxConstraints(
+                maxWidth:
+                    maxWidth ??
+                    MediaQuery.sizeOf(context!).width * maxWidthRatio,
+              ),
+      filled: fillColor != null ? true : null,
+      fillColor: fillColor,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(Styles.borderRadius),
+        borderSide: BorderSide.none,
+      ),
+      // contentPadding: EdgeInsets.symmetric(vertical: Styles.paddingMedium, horizontal: Styles.paddingMedium),
     );
   }
 

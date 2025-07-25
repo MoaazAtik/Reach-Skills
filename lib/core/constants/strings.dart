@@ -134,7 +134,7 @@ abstract class Str {
   static const interestTitleHint = 'eg, Graphic Design or Painting...';
   static const interestDescription = 'Description';
   static const interestDescriptionHint =
-      'Write a short description of the interest...';
+      'A short description of the interest...';
   static const interestTags = 'Tags';
   static const interestTagsHint = 'eg, Guitar, Music, Art, Programming...';
 
@@ -144,7 +144,7 @@ abstract class Str {
   static const validatorMax5Tags = 'Reached Maximum of 5 tags';
   static const bio = 'Bio';
   static const nameHint = 'Enter your name...';
-  static const bioHint = 'Write a short bio about yourself...';
+  static const bioHint = 'A short bio about yourself...';
   static const skillsInputDescription = 'Skills (comma-separated)';
   static const wishesInputDescription = 'Wishes (comma-separated)';
   static const email = 'Email';
