@@ -30,8 +30,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
   initialLocation:
       isFirstInitialization
           ? Str.onboardingScreenRoutePath
-          // : Str.exploreScreenRoutePath,
-          : Str.profileScreenRoutePath,
+          : Str.exploreScreenRoutePath,
   // debugLogDiagnostics: true,
   routes: [
     StatefulShellRoute.indexedStack(
@@ -63,8 +62,70 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                 GoRoute(
                   name: Str.detailsScreenRouteName,
                   path: Str.detailsScreenRoutePath,
+                  // pageBuilder: (BuildContext context, GoRouterState state) {
+                  //   final interest = state.extra;
+                  //
+                  //   if (checkLargeScreen(context)) {
+                  //     return DialogPage(child: Placeholder());
+                  //   }
+                  //   else {
+                  //     return DialogPage(
+                  //     child:InterestDetails(
+                  //       interest:
+                  //         interest != null ? interest as InterestModel : null,
+                  //       // Todo implement
+                  //       onTapSave: (i){},
+                  //       onTapReach: () {
+                  //         // context.goNamed(Str.chatScreenRouteName);
+                  //       }
+                  //     )
+                  //   );
+                  //   }
+                  // },
                   builder: (BuildContext context, GoRouterState state) {
+                    print('state.location: ${state.matchedLocation}');
                     final interest = state.extra;
+
+                    // checkLargeScreen(context);
+
+                    // if (!checkLargeScreen(context)) {
+                    // // final bool isOwner =
+                    // //     interest.userId == context.read<AuthViewModel>().currentUser?.uid;
+                    //   WidgetsBinding.instance.addPostFrameCallback(
+                    //       (duration) =>
+                    //         showDetailsScreenDialog(
+                    //           context,
+                    //           interest:
+                    //             interest != null ? interest as InterestModel : null,
+                    //           onTapSave:
+                    //           // !isOwner
+                    //           //     ? null
+                    //           //     :
+                    //             (interest) {
+                    //             /* This lambda is required even if it's empty
+                    //              because null check of 'onTapSave' is done by InterestDetails.
+                    //              Maybe implement this later.
+                    //              // context.read<ProfileViewModel>().saveInterest(interest);
+                    //              */
+                    //           },
+                    //           onTapReach: () {
+                    //             // Todo implement
+                    //           },
+                    //         )
+                    //   );
+                    // }
+
+                    // if (!checkLargeScreen(context)) {
+                    //   return buildScaffoldAppBarBodies(
+                    //     context: context,
+                    //     masterBody: ExploreBody(
+                    //       onInterestTap: (interest) {
+                    //         onInterestTap(context, interest);
+                    //       },
+                    //     ),
+                    //     appBarTitle: Str.exploreScreenTitle,
+                    //   );
+                    // }
 
                     return buildScaffoldAppBarBodies(
                       context: context,
@@ -73,6 +134,15 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                           onInterestTap(context, interest);
                         },
                       ),
+                      dialogBody: InterestDetails(
+                        interest: interest != null
+                            ? interest as InterestModel
+                            : null,
+                        // Todo implement
+                        onTapSave: (i) {},
+                        onTapReach: () {}
+                      ),
+
                       detailBody: InterestDetails(
                         interest:
                             interest != null ? interest as InterestModel : null,
@@ -219,6 +289,7 @@ Widget buildScaffoldAppBarBodies({
   required BuildContext context,
   required Widget masterBody,
   Widget? detailBody,
+  Widget? dialogBody,
   required String appBarTitle,
   bool? isLoggedIn,
   bool appBarEditAction = false,
@@ -227,6 +298,7 @@ Widget buildScaffoldAppBarBodies({
   return ScaffoldAppBarBodies(
     masterBody: masterBody,
     detailBody: detailBody,
+    dialogBody: dialogBody,
     appBarTitle: appBarTitle,
     isLoggedIn: isLoggedIn ?? context.watch<AuthViewModel>().isLoggedIn,
     appBarEditAction: appBarEditAction,
@@ -249,32 +321,32 @@ void onInterestTap(BuildContext context, InterestModel interest) {
   final bool isOwner =
       interest.userId == context.read<AuthViewModel>().currentUser?.uid;
 
-  if (checkLargeScreen(context)) {
+   // if (checkLargeScreen(context)) {
     context.goNamed(
       Str.detailsScreenRouteName,
       pathParameters: {Str.detailsScreenParamId: interest.id},
       extra: interest,
     );
     print('current path : ${GoRouterState.of(context).fullPath}');
-  } else {
-    showDetailsScreenDialog(
-      context,
-      interest: interest,
-      onTapSave:
-          !isOwner
-              ? null
-              : (interest) {
-                /* This lambda is required even if it's empty
-                 because null check of 'onTapSave' is done by InterestDetails.
-                 Maybe implement this later.
-                 // context.read<ProfileViewModel>().saveInterest(interest);
-                 */
-              },
-      onTapReach: () {
-        // Todo implement
-      },
-    );
-  }
+  // } else {
+  //   showDetailsScreenDialog(
+  //     context,
+  //     interest: interest,
+  //     onTapSave:
+  //         !isOwner
+  //             ? null
+  //             : (interest) {
+  //               /* This lambda is required even if it's empty
+  //                because null check of 'onTapSave' is done by InterestDetails.
+  //                Maybe implement this later.
+  //                // context.read<ProfileViewModel>().saveInterest(interest);
+  //                */
+  //             },
+  //     onTapReach: () {
+  //       // Todo implement
+  //     },
+  //   );
+  // }
 }
 
 void onTapChat(BuildContext context, String selectedChatId) {
