@@ -33,26 +33,6 @@ class DeclarativeDialogOverlay extends StatelessWidget {
           backgroundColor: Styles.rsDefaultSurfaceColor,
           child: child,
         ),
-
-        // Or manually create a Dialog
-        // Center(
-        //   child: Material(
-        //     elevation: 24,
-        //     // color: Theme.of(context).dialogBackgroundColor,
-        //     color: Theme.of(context).dialogTheme.backgroundColor,
-        //     shape: RoundedRectangleBorder(
-        //       borderRadius: BorderRadius.circular(16),
-        //     ),
-        //     child: ConstrainedBox(
-        //       // constraints: BoxConstraints(maxWidth: 500),
-        //       constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * 0.8),
-        //       child: child,
-        //       // child: IntrinsicHeight(
-        //       //   child: child,
-        //       // ),
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }

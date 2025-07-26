@@ -261,6 +261,8 @@ abstract class Str {
   static const excMessageNullEmail = 'Passed "null Email".';
   static const excMessageNullOnTapSave = 'Passed "null onTapSave".';
   static const excMessageNullOnTapReach = 'Passed "null onTapReach".';
+  static const excMessageNullAppBarActions =
+      '"appBarEditAction" is false but onTapSignIn, onTapSignOut, onTapEditProfile, or onTapHelp is null. They are required for the popup menu button (RsPopupMenuButton).';
 
   static const excMessageMin1 = 'Pass at least 1 of them.';
 
@@ -274,6 +276,7 @@ abstract class Str {
       'Check data passed to `MessageModel.fromMapAndId` constructor.';
   static const excMessageInterestDetails =
       'Check `InterestDetails` constructor.';
+  static const excMessageScaffoldAppBarBodies = 'Check `ScaffoldAppBarBodies`.';
 
   /// Exception messages end
 }
