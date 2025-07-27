@@ -351,7 +351,12 @@ class MaterialTheme {
     canvasColor: colorScheme.surface,
 
     // Custom filled button theme
-    filledButtonTheme: Styles.rsFilledButtonStyle
+    filledButtonTheme: Styles.rsFilledButtonStyle,
+
+    // Dialog Theme
+    dialogTheme: DialogThemeData(
+      barrierColor: Styles.dialogBarrierColor,
+    ),
   );
 
 

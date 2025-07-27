@@ -80,11 +80,13 @@ abstract class Styles {
     colors: [skillCardGradientStartColor, skillCardGradientEndColor],
   );
 
-  static const rsDefaultSurfaceColor = Color(0xfff7fafc); // bluish from Stitch
+  /// bluish from Stitch. Used by `dialogBarrierColor` too.
+  static const rsDefaultSurfaceColor = Color(0xfff7fafc);
 
   static const hintColor = Colors.blueGrey;
-
   static const chatSubtitleColor = Color(0xFF577D8F);
+
+  static final dialogBarrierColor = rsDefaultSurfaceColor.withAlpha(80);
 
   /// Styles
 

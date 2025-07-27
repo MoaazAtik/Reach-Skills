@@ -48,6 +48,8 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
               name: Str.exploreScreenRouteName,
               path: Str.exploreScreenRoutePath,
               builder: (BuildContext context, GoRouterState state) {
+                // Todo fix rebuilding 2-3 times on launch
+                // print('rebuilt screen');
                 return buildScaffoldAppBarBodies(
                   context: context,
                   masterBody: ExploreBody(

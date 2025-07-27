@@ -21,7 +21,12 @@ class DeclarativeDialogOverlay extends StatelessWidget {
           child: GestureDetector(
             onTap: onDismiss,
             child: Container(
-              color: Colors.black54,
+              /* Color is implemented similarly to
+               the `barrierColor` in the dialog.dart */
+              color:
+                  DialogTheme.of(context).barrierColor ??
+                  Theme.of(context).dialogTheme.barrierColor ??
+                  Styles.dialogBarrierColor,
             ),
           ),
         ),
