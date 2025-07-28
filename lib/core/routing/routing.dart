@@ -53,64 +53,17 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                 return buildScaffoldAppBarBodies(
                   context: context,
                   masterBody: ExploreBody(
-                    onInterestTap: (interest) {
-                      onInterestTap(context, interest);
+                    onTapInterest: (interest) {
+                      onTapInterest(
+                        context,
+                        interest,
+                        Str.exploreScreenRoutePath,
+                      );
                     },
                   ),
                   appBarTitle: Str.exploreScreenTitle,
                 );
               },
-              routes: [
-                GoRoute(
-                  name: Str.detailsScreenRouteName,
-                  path: Str.detailsScreenRoutePath,
-                  builder: (BuildContext context, GoRouterState state) {
-                    // Todo fix
-                    // print('state.location: ${state.matchedLocation}');
-                    //  prints: 'state.location: /details/someMockInterestId'
-                    final interest = state.extra;
-                    if (interest == null || interest is! InterestModel) {
-                      // Todo enhance this
-                      return ErrorRoute();
-                    }
-
-                    final bool isOwner =
-                        interest.userId ==
-                        context.read<AuthViewModel>().currentUser?.uid;
-
-                    final Widget interestDetails = InterestDetails(
-                      interest: interest,
-                      // Todo implement
-                      onTapSave:
-                          !isOwner
-                              ? null
-                              : (interest) {
-                                /* This lambda is required even if it's empty
-                                   because null check of 'onTapSave' is done by InterestDetails.
-                                   Maybe implement this later.
-                                   // context.read<ProfileViewModel>().saveInterest(interest);
-                                   */
-                              },
-                      // Todo implement
-                      onTapReach: () {
-                        // context.goNamed(Str.chatScreenRouteName);
-                      },
-                    );
-
-                    return buildScaffoldAppBarBodies(
-                      context: context,
-                      masterBody: ExploreBody(
-                        onInterestTap: (interest) {
-                          onInterestTap(context, interest);
-                        },
-                      ),
-                      dialogBody: interestDetails,
-                      detailBody: interestDetails,
-                      appBarTitle: Str.exploreScreenTitle,
-                    );
-                  },
-                ),
-              ],
             ),
           ],
         ),
@@ -190,6 +143,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
         final bool isLoggedIn = context.watch<AuthViewModel>().isLoggedIn;
         if (isLoggedIn) {
           WidgetsBinding.instance.addPostFrameCallback(
+            // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
             (Duration duration) => context.goNamed(Str.exploreScreenRouteName),
           );
         }
@@ -199,6 +153,17 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
           appBarTitle: Str.authScreenTitle,
           isLoggedIn: isLoggedIn,
         );
+      },
+    ),
+
+    GoRoute(
+      name: Str.detailsScreenRouteName,
+      path: Str.detailsScreenRoutePath,
+      builder: (BuildContext context, GoRouterState state) {
+        // Todo fix
+        // print('state.location: ${state.matchedLocation}');
+        //  prints: 'state.location: /details/someMockInterestId'
+        return buildInterestDetails(context: context, state: state);
       },
     ),
 
@@ -265,6 +230,82 @@ Widget buildScaffoldAppBarBodies({
   );
 }
 
+Widget buildInterestDetails({
+  required BuildContext context,
+  required GoRouterState state,
+}) {
+  final extra = state.extra;
+  if (extra == null || extra is! Map) {
+    // Todo enhance this
+    print(
+      '`extra` is null or not a Map. - ${state.matchedLocation}'
+      ' - Check `buildInterestDetails` function.',
+    );
+    return ErrorRoute();
+  }
+  final interest = extra['interest'];
+  final fromPath = extra['fromPath'];
+  /* Todo fix. if interest is null fetch it using the provided ID. this is needed for back navigation. Or maybe store it in a view model. */
+  if (interest == null ||
+      interest is! InterestModel ||
+      fromPath == null ||
+      fromPath is! String) {
+    print(
+      '`interest` is null or not an InterestModel. Or `fromPath` is null or not a String.'
+      ' - ${state.matchedLocation} - Check `buildInterestDetails` function.',
+    );
+    return ErrorRoute();
+  }
+
+  final bool isOwner =
+      interest.userId == context.read<AuthViewModel>().currentUser?.uid;
+
+  final Widget interestDetails = InterestDetails(
+    interest: interest,
+    // Todo implement
+    onTapSave:
+        !isOwner
+            ? null
+            : (interest) {
+              // _saveProfile(interest);
+              /* This lambda is required even if it's empty
+               because null check of 'onTapSave' is done by InterestDetails.
+               Maybe implement this later.
+               // context.read<ProfileViewModel>().saveInterest(interest);
+               */
+            },
+    // Todo implement
+    onTapReach: () {
+      // context.goNamed(Str.chatScreenRouteName);
+    },
+  );
+
+  final Widget masterBody;
+  final String appBarTitle;
+  switch (fromPath) {
+    case Str.profileScreenRoutePath:
+      masterBody = ProfileBody(onSignInPressed: () => onTapSignIn(context));
+      appBarTitle = Str.profileScreenTitle;
+      break;
+    default: // case Str.exploreScreenRoutePath:
+      masterBody = ExploreBody(
+        onTapInterest: (interest) {
+          onTapInterest(context, interest, Str.exploreScreenRoutePath);
+        },
+      );
+      appBarTitle = Str.exploreScreenTitle;
+      break;
+  }
+
+  return buildScaffoldAppBarBodies(
+    context: context,
+    masterBody: masterBody,
+    dialogBody: interestDetails,
+    detailBody: interestDetails,
+    appBarTitle: appBarTitle,
+  );
+}
+
 void goToBranchDestination(int index, StatefulNavigationShell navigationShell) {
   navigationShell.goBranch(
     index,
@@ -272,16 +313,28 @@ void goToBranchDestination(int index, StatefulNavigationShell navigationShell) {
   );
 }
 
-void onInterestTap(BuildContext context, InterestModel interest) {
-  context.goNamed(
+void onTapInterest(
+  BuildContext context,
+  InterestModel interest,
+  String fromPath,
+) {
+  /*
+   Todo fix. when an interest is open then trying to tap another interest,
+  `goNamed` and `pushReplacementNamed` changes the path (in the browser) but doesn't change the UI state.
+  `pushNamed` doesn't change the path but does change the UI state.
+   */
+  // print('onInterestTap : ${GoRouterState.of(context).fullPath}');
+  // context.goNamed(
+  // context.pushReplacementNamed(
+  context.pushNamed(
     Str.detailsScreenRouteName,
     pathParameters: {Str.detailsScreenParamId: interest.id},
-    extra: interest,
+    extra: {'interest': interest, 'fromPath': fromPath},
   );
-  print('current path : ${GoRouterState.of(context).fullPath}');
 }
 
 void onTapChat(BuildContext context, String selectedChatId) {
+  // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
   context.go('${Str.chatScreenRoutePath}/$selectedChatId');
   // else if (!isLargeScreen) {
   //   // context.push('/chat/$index');
@@ -309,6 +362,7 @@ void onTapSignOut(BuildContext context) {
 }
 
 void onTapEditProfile(BuildContext context) {
+  // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
   context.goNamed(Str.profileScreenRouteName);
 }
 

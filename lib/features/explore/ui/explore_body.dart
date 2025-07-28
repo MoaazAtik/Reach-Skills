@@ -11,9 +11,9 @@ import 'explore_viewmodel.dart';
 import 'interest_card.dart';
 
 class ExploreBody extends StatefulWidget {
-  const ExploreBody({super.key, required this.onInterestTap});
+  const ExploreBody({super.key, required this.onTapInterest});
 
-  final void Function(InterestModel interest) onInterestTap;
+  final void Function(InterestModel interest) onTapInterest;
 
   @override
   State<ExploreBody> createState() => _ExploreBodyState();
@@ -30,6 +30,7 @@ class _ExploreBodyState extends State<ExploreBody> {
 
     List<String> mockList = Str.mockInterestsTitles;
 
+    // Todo uncomment
     // if (loading) {
     //   return const Scaffold(body: Center(child: CircularProgressIndicator()));
     // }
@@ -85,7 +86,7 @@ class _ExploreBodyState extends State<ExploreBody> {
                     title: mockList[index],
                     userName: Str.mockUserName,
                     onTap: () {
-                      widget.onInterestTap(SkillModel(
+                      widget.onTapInterest(SkillModel(
                         title: mockList[index],
                         id: Str.mockInterestId,
                         userName: Str.mockUserName,
