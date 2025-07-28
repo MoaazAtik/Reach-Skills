@@ -159,12 +159,25 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
     GoRoute(
       name: Str.detailsScreenRouteName,
       path: Str.detailsScreenRoutePath,
-      builder: (BuildContext context, GoRouterState state) {
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        // NoTransitionPage fixes the transition animation is played
+        // when Details screen is opened.
+        return NoTransitionPage(
+        // key: state.pageKey,
+        // return MaterialPage(
+        // key: state.pageKey,
+        // fullscreenDialog: true,
+        // canPop: true,
+
         // Todo fix
         // print('state.location: ${state.matchedLocation}');
         //  prints: 'state.location: /details/someMockInterestId'
-        return buildInterestDetails(context: context, state: state);
+        child: buildInterestDetails(context: context, state: state),
+        );
       },
+      // builder: (BuildContext context, GoRouterState state) {
+      //   return buildInterestDetails(context: context, state: state);
+      // },
     ),
 
     GoRoute(
@@ -320,8 +333,8 @@ void onTapInterest(
 ) {
   /*
    Todo fix. when an interest is open then trying to tap another interest,
-  `goNamed` and `pushReplacementNamed` changes the path (in the browser) but doesn't change the UI state.
-  `pushNamed` doesn't change the path but does change the UI state.
+  `goNamed` and `pushReplacementNamed` changes the path (in the browser) but doesn't change the UI state. Tapping on Barrier doesn't 'pop' to the previous path.
+  `pushNamed` doesn't change the path but does change the UI state. Tapping on Barrier does 'pop' to the previous path.
    */
   // print('onInterestTap : ${GoRouterState.of(context).fullPath}');
   // context.goNamed(
