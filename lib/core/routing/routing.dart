@@ -160,24 +160,10 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       name: Str.detailsScreenRouteName,
       path: Str.detailsScreenRoutePath,
       pageBuilder: (BuildContext context, GoRouterState state) {
-        // NoTransitionPage fixes the transition animation is played
-        // when Details screen is opened.
         return NoTransitionPage(
-        // key: state.pageKey,
-        // return MaterialPage(
-        // key: state.pageKey,
-        // fullscreenDialog: true,
-        // canPop: true,
-
-        // Todo fix
-        // print('state.location: ${state.matchedLocation}');
-        //  prints: 'state.location: /details/someMockInterestId'
-        child: buildInterestDetails(context: context, state: state),
+          child: buildInterestDetails(context: context, state: state),
         );
       },
-      // builder: (BuildContext context, GoRouterState state) {
-      //   return buildInterestDetails(context: context, state: state);
-      // },
     ),
 
     GoRoute(
