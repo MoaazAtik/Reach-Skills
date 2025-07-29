@@ -7,6 +7,7 @@ AppBar rsAppBar({
   required BuildContext context,
 }) {
   return AppBar(
+    automaticallyImplyLeading: false,
     title: Text(
       title,
       style: Theme.of(
