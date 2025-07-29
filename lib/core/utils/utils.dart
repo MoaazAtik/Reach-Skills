@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../features/common/data/interest_model.dart';
-import '../../features/common/widgets/interest_details.dart';
 import '../constants/strings.dart';
 import '../theme/styles.dart';
 

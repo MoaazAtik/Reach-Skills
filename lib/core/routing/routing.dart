@@ -34,6 +34,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
   // debugLogDiagnostics: true,
   routes: [
     StatefulShellRoute.indexedStack(
+      // Navigation Shell
       builder: (
         BuildContext context,
         GoRouterState state,
@@ -44,6 +45,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       branches: [
         StatefulShellBranch(
           routes: [
+            // Explore Screen
             GoRoute(
               name: Str.exploreScreenRouteName,
               path: Str.exploreScreenRoutePath,
@@ -70,6 +72,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
         ),
         StatefulShellBranch(
           routes: [
+            // Chat Screen
             GoRoute(
               name: Str.chatScreenRouteName,
               path: Str.chatScreenRoutePath,
@@ -86,6 +89,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                 );
               },
               routes: [
+                // Messages Screen
                 GoRoute(
                   name: Str.messagesScreenRouteName,
                   path: Str.messagesScreenRoutePath,
@@ -123,6 +127,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       ],
     ),
 
+    // Onboarding Screen
     GoRoute(
       name: Str.onboardingScreenRouteName,
       path: Str.onboardingScreenRoutePath,
@@ -137,6 +142,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       },
     ),
 
+    // Auth Screen
     GoRoute(
       name: Str.authScreenRouteName,
       path: Str.authScreenRoutePath,
@@ -157,6 +163,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       },
     ),
 
+    // Details Screen
     GoRoute(
       name: Str.detailsScreenRouteName,
       path: Str.detailsScreenRoutePath,
@@ -167,6 +174,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       },
     ),
 
+    // Profile Screen
     GoRoute(
       name: Str.profileScreenRouteName,
       path: Str.profileScreenRoutePath,
@@ -183,6 +191,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       },
     ),
 
+    // Help Screen
     GoRoute(
       name: Str.helpScreenRouteName,
       path: Str.helpScreenRoutePath,
@@ -200,6 +209,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
     ),
   ],
 
+  // Error Screen
   errorBuilder: (context, state) {
     return ErrorRoute();
   },

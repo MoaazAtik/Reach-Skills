@@ -145,6 +145,7 @@ class _ProfileBodyState extends State<ProfileBody> {
               style: Styles.interestDetailsUserTextStyle,
             ),
 
+            // Save button
             SizedBox(height: 56),
             if (isEditing)
               FilledButton(

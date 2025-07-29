@@ -117,13 +117,15 @@ class ProfileViewModel extends ChangeNotifier {
 
     String? cannotEditMessage = validateProfileUpdates(newProfile);
     if (cannotEditMessage != null) {
+      isEditing = false;
+      notifyListeners();
       return cannotEditMessage;
     }
 
     await _profileRepository.updateProfile(newProfile);
-    isEditing = false;
 
-    // notifyListeners();
+    isEditing = false;
+    notifyListeners();
 
     return Str.profileSaved;
   }
