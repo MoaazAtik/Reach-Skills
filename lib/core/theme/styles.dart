@@ -188,6 +188,7 @@ abstract class Styles {
     return InputDecoration(
       labelText: label,
       labelStyle: Styles.interestDetailsSectionTitleTextStyle,
+      floatingLabelBehavior: FloatingLabelBehavior.never,
       hintText: hint,
       hintStyle: hintTextStyle,
       isDense: true,

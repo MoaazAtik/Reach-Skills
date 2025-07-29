@@ -52,7 +52,6 @@ class _InterestDetailsState extends State<InterestDetails> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(Styles.paddingMedium),
-      // Todo wrap this Column with a Form to validate title and empty tags
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -87,6 +86,10 @@ class _InterestDetailsState extends State<InterestDetails> {
                             hint: Str.interestTitleHint,
                             fillColor: Styles.getChipColor(
                               _selectedInterestType!,
+                            ),
+                          ).copyWith(
+                            contentPadding: const EdgeInsets.all(
+                              Styles.paddingMedium,
                             ),
                           ),
                           controller: _titleController,
