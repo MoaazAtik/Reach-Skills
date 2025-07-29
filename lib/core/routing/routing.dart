@@ -52,7 +52,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
               builder: (BuildContext context, GoRouterState state) {
                 // Todo fix rebuilding 2-3 times on launch
                 // print('rebuilt screen');
-                return buildScaffoldAppBarBodies(
+                return _buildScaffoldAppBarBodies(
                   context: context,
                   masterBody: ExploreBody(
                     onTapInterest: (interest) {
@@ -77,7 +77,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
               name: Str.chatScreenRouteName,
               path: Str.chatScreenRoutePath,
               builder: (BuildContext context, GoRouterState state) {
-                return buildScaffoldAppBarBodies(
+                return _buildScaffoldAppBarBodies(
                   context: context,
                   masterBody: ChatBody(
                     selectedChatId: null,
@@ -112,7 +112,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                       masterBody = MessagesBody(selectedChatId: chatId!);
                     }
 
-                    return buildScaffoldAppBarBodies(
+                    return _buildScaffoldAppBarBodies(
                       context: context,
                       masterBody: masterBody,
                       detailBody: detailBody,
@@ -154,7 +154,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
             (Duration duration) => context.goNamed(Str.exploreScreenRouteName),
           );
         }
-        return buildScaffoldAppBarBodies(
+        return _buildScaffoldAppBarBodies(
           context: context,
           masterBody: AuthScreen(),
           appBarTitle: Str.authScreenTitle,
@@ -169,7 +169,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       path: Str.detailsScreenRoutePath,
       pageBuilder: (BuildContext context, GoRouterState state) {
         return NoTransitionPage(
-          child: buildInterestDetails(context: context, state: state),
+          child: _buildInterestDetails(context: context, state: state),
         );
       },
     ),
@@ -181,7 +181,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         VoidCallback toggleEdit = context.read<ProfileViewModel>().toggleEdit;
 
-        return buildScaffoldAppBarBodies(
+        return _buildScaffoldAppBarBodies(
           context: context,
           masterBody: ProfileBody(onSignInPressed: () => onTapSignIn(context)),
           appBarTitle: Str.profileScreenTitle,
@@ -196,7 +196,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       name: Str.helpScreenRouteName,
       path: Str.helpScreenRoutePath,
       builder: (BuildContext context, GoRouterState state) {
-        return buildScaffoldAppBarBodies(
+        return _buildScaffoldAppBarBodies(
           context: context,
           masterBody: HelpBody(
             onTapOnboardingGuide: () {
@@ -215,7 +215,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
   },
 );
 
-Widget buildScaffoldAppBarBodies({
+Widget _buildScaffoldAppBarBodies({
   required BuildContext context,
   required Widget masterBody,
   Widget? detailBody,
@@ -240,7 +240,7 @@ Widget buildScaffoldAppBarBodies({
   );
 }
 
-Widget buildInterestDetails({
+Widget _buildInterestDetails({
   required BuildContext context,
   required GoRouterState state,
 }) {
@@ -253,9 +253,9 @@ Widget buildInterestDetails({
     );
     return ErrorRoute();
   }
-  final interest = extra['interest'];
-  final fromPath = extra['fromPath'];
-  final startEditing = extra['startEditing'];
+  final interest = extra[Str.detailsScreenParamInterest];
+  final fromPath = extra[Str.detailsScreenParamFromPath];
+  final startEditing = extra[Str.detailsScreenParamStartEditing];
 
   /* Todo fix. if interest is null fetch it using the provided ID. this is needed for back navigation. Or maybe store it in a view model. */
   if (interest == null ||
@@ -306,7 +306,7 @@ Widget buildInterestDetails({
       break;
   }
 
-  return buildScaffoldAppBarBodies(
+  return _buildScaffoldAppBarBodies(
     context: context,
     masterBody: masterBody,
     dialogBody: interestDetails,
@@ -340,9 +340,9 @@ void onTapInterest({
     Str.detailsScreenRouteName,
     pathParameters: {Str.detailsScreenParamId: interest.id},
     extra: {
-      'interest': interest,
-      'fromPath': fromPath,
-      'startEditing': startEditing,
+      Str.detailsScreenParamInterest: interest,
+      Str.detailsScreenParamFromPath: fromPath,
+      Str.detailsScreenParamStartEditing: startEditing,
     },
   );
 }

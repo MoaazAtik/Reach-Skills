@@ -46,6 +46,9 @@ abstract class Str {
 
   static const messagesScreenParamId = 'id';
   static const detailsScreenParamId = 'id'; // only for deep linking
+  static const detailsScreenParamInterest = 'interest';
+  static const detailsScreenParamFromPath = 'fromPath';
+  static const detailsScreenParamStartEditing = 'startEditing';
 
   /// Routes end
 
