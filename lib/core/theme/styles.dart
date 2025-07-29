@@ -50,7 +50,8 @@ abstract class Styles {
   static const fontSize16 = 16.0;
   static const fontSize14 = 16.0;
 
-  static const menuElevation = 8.0;
+  static const elevationMenu = 8.0;
+  static const elevationDialog = 24.0;
 
   static const radiusChatAvatar = 8.0;
   static const radiusMessageAvatar = 4.0;
@@ -86,7 +87,9 @@ abstract class Styles {
   static const hintColor = Colors.blueGrey;
   static const chatSubtitleColor = Color(0xFF577D8F);
 
+  static final dialogBackgroundColor = rsDefaultSurfaceColor;
   static final dialogBarrierColor = rsDefaultSurfaceColor.withAlpha(80);
+  static final dialogShadowColor = Colors.black54;
 
   /// Styles
 
@@ -238,6 +241,12 @@ abstract class Styles {
     fontSize: fontSize16,
     color: chatSubtitleColor,
   );
+
+  static final shapeDialog = RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(Styles.borderRadius),
+  );
+
+  /// Helper Utils Methods
 
   static Color getChipColor(InterestType interestType) {
     return interestType == InterestType.wish

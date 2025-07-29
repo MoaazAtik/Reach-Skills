@@ -31,14 +31,9 @@ class DeclarativeDialogOverlay extends StatelessWidget {
           ),
         ),
 
-        // Todo add elevation to dialog
-        Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Styles.borderRadius),
-          ),
-          backgroundColor: Styles.rsDefaultSurfaceColor,
-          child: child,
-        ),
+        /* Dialog's barrierColor, backgroundColor, shadowColor, elevation, shape
+        properties are implemented by theme.dart. */
+        Dialog(child: child),
       ],
     );
   }

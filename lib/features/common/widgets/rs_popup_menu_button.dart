@@ -29,7 +29,7 @@ class RsPopupMenuButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Styles.borderRadius),
       ),
-      elevation: Styles.menuElevation,
+      elevation: Styles.elevationMenu,
       itemBuilder: (BuildContext context) => _getMenuItems(isLoggedIn),
       onSelected: _onMenuItemSelected,
     );

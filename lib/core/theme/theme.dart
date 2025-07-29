@@ -356,6 +356,10 @@ class MaterialTheme {
     // Dialog Theme
     dialogTheme: DialogThemeData(
       barrierColor: Styles.dialogBarrierColor,
+      backgroundColor: Styles.dialogBackgroundColor,
+      shadowColor: Styles.dialogShadowColor,
+      elevation: Styles.elevationDialog,
+      shape: Styles.shapeDialog,
     ),
   );
 
