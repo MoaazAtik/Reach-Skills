@@ -55,9 +55,10 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                   masterBody: ExploreBody(
                     onTapInterest: (interest) {
                       onTapInterest(
-                        context,
-                        interest,
-                        Str.exploreScreenRoutePath,
+                        context: context,
+                        interest: interest,
+                        fromPath: Str.exploreScreenRoutePath,
+                        startEditing: false,
                       );
                     },
                   ),
@@ -244,11 +245,15 @@ Widget buildInterestDetails({
   }
   final interest = extra['interest'];
   final fromPath = extra['fromPath'];
+  final startEditing = extra['startEditing'];
+
   /* Todo fix. if interest is null fetch it using the provided ID. this is needed for back navigation. Or maybe store it in a view model. */
   if (interest == null ||
       interest is! InterestModel ||
       fromPath == null ||
-      fromPath is! String) {
+      fromPath is! String ||
+      startEditing == null ||
+      startEditing is! bool) {
     print(
       '`interest` is null or not an InterestModel. Or `fromPath` is null or not a String.'
       ' - ${state.matchedLocation} - Check `buildInterestDetails` function.',
@@ -261,18 +266,8 @@ Widget buildInterestDetails({
 
   final Widget interestDetails = InterestDetails(
     interest: interest,
-    // Todo implement
-    onTapSave:
-        !isOwner
-            ? null
-            : (interest) {
-              // _saveProfile(interest);
-              /* This lambda is required even if it's empty
-               because null check of 'onTapSave' is done by InterestDetails.
-               Maybe implement this later.
-               // context.read<ProfileViewModel>().saveInterest(interest);
-               */
-            },
+    isOwner: isOwner,
+    startEditing: startEditing,
     // Todo implement
     onTapReach: () {
       // context.goNamed(Str.chatScreenRouteName);
@@ -289,7 +284,12 @@ Widget buildInterestDetails({
     default: // case Str.exploreScreenRoutePath:
       masterBody = ExploreBody(
         onTapInterest: (interest) {
-          onTapInterest(context, interest, Str.exploreScreenRoutePath);
+          onTapInterest(
+            context: context,
+            interest: interest,
+            fromPath: Str.exploreScreenRoutePath,
+            startEditing: startEditing,
+          );
         },
       );
       appBarTitle = Str.exploreScreenTitle;
@@ -312,11 +312,12 @@ void goToBranchDestination(int index, StatefulNavigationShell navigationShell) {
   );
 }
 
-void onTapInterest(
-  BuildContext context,
-  InterestModel interest,
-  String fromPath,
-) {
+void onTapInterest({
+  required BuildContext context,
+  required InterestModel interest,
+  required String fromPath,
+  bool startEditing = false,
+}) {
   /*
    Todo fix. when an interest is open then trying to tap another interest,
   `goNamed` and `pushReplacementNamed` changes the path (in the browser) but doesn't change the UI state. Tapping on Barrier doesn't 'pop' to the previous path.
@@ -328,7 +329,11 @@ void onTapInterest(
   context.pushNamed(
     Str.detailsScreenRouteName,
     pathParameters: {Str.detailsScreenParamId: interest.id},
-    extra: {'interest': interest, 'fromPath': fromPath},
+    extra: {
+      'interest': interest,
+      'fromPath': fromPath,
+      'startEditing': startEditing,
+    },
   );
 }
 

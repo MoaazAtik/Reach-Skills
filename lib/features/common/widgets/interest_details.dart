@@ -5,6 +5,7 @@ import 'package:reach_skills/core/utils/utils.dart';
 import 'package:reach_skills/features/common/data/interest_model.dart';
 import 'package:reach_skills/features/common/widgets/rs_chip.dart';
 
+import '../../profile/ui/profile_body.dart';
 import '../data/skill_model.dart';
 import '../data/wish_model.dart';
 
@@ -12,19 +13,15 @@ class InterestDetails extends StatefulWidget {
   const InterestDetails({
     super.key,
     required this.interest,
-    this.onTapReach,
-    this.onTapSave,
+    this.isOwner = false,
     this.startEditing = false,
+    this.onTapReach,
   });
 
-  final bool startEditing;
-
   final InterestModel? interest;
+  final bool isOwner;
+  final bool startEditing;
   final void Function()? onTapReach;
-
-  /// Don't pass a lambda when coming from Explore screen
-  /// and pass when coming from Profile screen
-  final void Function(InterestModel interest)? onTapSave;
 
   @override
   State<InterestDetails> createState() => _InterestDetailsState();
@@ -104,12 +101,16 @@ class _InterestDetailsState extends State<InterestDetails> {
                 ],
               ),
 
-              if (widget.onTapSave != null) // ie, can edit
+              // Edit button
+              if (widget.isOwner) // ie, can edit
                 IconButton(
                   onPressed: () {
                     if (isEditing) {
-                      if (!_formKey.currentState!.validate()) return;
-                      widget.onTapSave!(_assembleInterest());
+                      saveProfile(
+                        context: context,
+                        formKey: _formKey,
+                        interest: _assembleInterest(),
+                      );
                     }
                     setState(() => isEditing = !isEditing);
                   },
@@ -195,14 +196,18 @@ class _InterestDetailsState extends State<InterestDetails> {
           ),
 
           SizedBox(height: 56),
+          // Save / Reach button
           // if Not owner Or Is editing
-          if ((widget.onTapSave == null) || isEditing)
+          if ((!widget.isOwner) || isEditing)
             FilledButton(
               onPressed: () {
                 if (isEditing) {
-                  if (widget.onTapSave != null) {
-                    if (!_formKey.currentState!.validate()) return;
-                    widget.onTapSave!(_assembleInterest());
+                  if (widget.isOwner) {
+                    saveProfile(
+                      context: context,
+                      formKey: _formKey,
+                      interest: _assembleInterest(),
+                    );
                     setState(() => isEditing = !isEditing);
                   } else {
                     throw Exception(

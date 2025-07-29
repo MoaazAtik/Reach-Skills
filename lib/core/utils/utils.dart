@@ -76,32 +76,6 @@ String? textValidator(String? value) {
   return value == null || value.isEmpty ? Str.required : null;
 }
 
-void showDetailsScreenDialog(
-  BuildContext context, {
-  required InterestModel? interest,
-  void Function()? onTapReach,
-  void Function(InterestModel interest)? onTapSave,
-  bool startEditing = false,
-}) {
-  showAdaptiveDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Styles.borderRadius),
-        ),
-        backgroundColor: Styles.rsDefaultSurfaceColor,
-        child: InterestDetails(
-          interest: interest,
-          onTapReach: onTapReach,
-          onTapSave: onTapSave,
-          startEditing: startEditing,
-        ),
-      );
-    },
-  );
-}
-
 void showSnackBarMessage(
   BuildContext context,
   String message, {
