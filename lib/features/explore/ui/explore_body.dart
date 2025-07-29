@@ -28,8 +28,6 @@ class _ExploreBodyState extends State<ExploreBody> {
     final interests = exploreViewModel.interests;
     final interestsStreamError = exploreViewModel.interestsStreamError;
 
-    List<String> mockList = Str.mockInterestsTitles;
-
     // Todo uncomment
     // if (loading) {
     //   return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -51,7 +49,9 @@ class _ExploreBodyState extends State<ExploreBody> {
           Row(
             spacing: Styles.spacing12,
             children: [
-              RsChip( // Todo implement
+
+              // Filter widget // Todo implement
+              RsChip(
                 onTap: () {},
                 paddingRight: Styles.paddingSmall,
                 children: [
@@ -65,10 +65,14 @@ class _ExploreBodyState extends State<ExploreBody> {
                   Icon(Icons.keyboard_arrow_down_rounded, size: 24),
                 ],
               ),
-              SearchWidget(onSearch: () {}), // Todo implement
+
+              // Search widget // Todo implement
+              SearchWidget(onSearch: () {}),
             ],
           ),
           const SizedBox(height: Styles.spacing12),
+
+          // Interest Cards
           Expanded(
             child: GridView(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -77,24 +81,16 @@ class _ExploreBodyState extends State<ExploreBody> {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
-              children:
-              // Todo replace mocks
-              // [
-                List.generate(mockList.length, (index) {
-                  return InterestCard(
-                    interestType: index % 4 != 0 ? InterestType.skill : InterestType.wish,
-                    title: mockList[index],
-                    userName: Str.mockUserName,
-                    onTap: () {
-                      widget.onTapInterest(SkillModel(
-                        title: mockList[index],
-                        id: Str.mockInterestId,
-                        userName: Str.mockUserName,
-                        userId: Str.mockUserId,
-                      ));
-                    },
-                  );
-                }),
+              children: List.generate(interests.length, (index) {
+                return InterestCard(
+                  interestType: interests[index].interestType,
+                  title: interests[index].title,
+                  userName: interests[index].userName,
+                  onTap: () {
+                    widget.onTapInterest(interests[index]);
+                  },
+                );
+              }),
 
                 // for (final interest in interests)
                 //   InterestCard(

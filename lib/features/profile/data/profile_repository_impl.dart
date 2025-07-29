@@ -180,15 +180,21 @@ class ProfileRepositoryImpl extends ProfileRepository {
                   continue;
                 }
 
-                for (var interestInAProfile in interestsList) {
-                  if (!interestTypes.contains(
-                    interestInAProfile[Str.INTEREST_FIELD_INTEREST_TYPE],
-                  )) {
-                    continue;
+                for (final Map<String, dynamic> interestInAProfile in interestsList) {
+                  // Check if the interest type that is stored as
+                  // `InterestType.name` (* not InterestType) is in the wanted
+                  // filter list of `interest types`
+                  bool passesFilter = false;
+                  for (final InterestType interestType in interestTypes) {
+                    if (interestType.name == interestInAProfile[Str.INTEREST_FIELD_INTEREST_TYPE]) {
+                      passesFilter = true;
+                      break;
+                    }
                   }
+                  if (!passesFilter)  continue;
 
                   if (interestInAProfile[Str.INTEREST_FIELD_INTEREST_TYPE] ==
-                      InterestType.skill) {
+                      InterestType.skill.name) {
                     tempInterests.add(SkillModel.fromMap(interestInAProfile));
                   } else {
                     tempInterests.add(WishModel.fromMap(interestInAProfile));

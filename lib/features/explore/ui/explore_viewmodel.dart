@@ -25,7 +25,7 @@ class ExploreViewModel extends ChangeNotifier {
   final ProfileRepository _profileRepository;
 
   StreamSubscription<List<InterestModel>>? _interestsSubscription;
-  List<InterestModel>? interests;
+  List<InterestModel> interests = [];
   // Todo replace '= InterestType.values' with values from UI
   List<InterestType> interestTypes = InterestType.values;
   String? interestsStreamError;
@@ -55,6 +55,7 @@ class ExploreViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
+  // Todo perhaps remove. Was used by ExploreScreen but, No longer used.
   Future<String?> updateFields({ // Todo remove
     required String currentReceiverId,
     required String currentReceiverName,
@@ -95,7 +96,9 @@ class ExploreViewModel extends ChangeNotifier {
         this.interests = interests;
         interestsStreamError = null;
         loading = false;
-        // notifyListeners();
+
+        // Todo test. Probably needed when another user updates his interests
+        notifyListeners();
       },
       onError: (errorObject, stackTrace) {
         interestsStreamError = Str.serverErrorMessage;
