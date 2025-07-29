@@ -93,19 +93,36 @@ class ProfileViewModel extends ChangeNotifier {
     String? bio,
     InterestModel? interest,
   }) async {
+    /* This is needed because `startProfileSubscription` is called only on
+   `ProfileBody`s initialization. Therefore, `profile` would be null when
+    calling `updateProfile` to update an interest from the `ExploreScreen`. */
+    if (profile == null && _profileSubscription == null) {
+      uid = _authRepository.getUserId();
+      if (uid == null) {
+        print(
+          'Profile ViewModel - `updateProfile`: "null uid".'
+          ' Check `_authRepository.getUserId()`.',
+        );
+        return Str.pleaseSignIn;
+      }
+      profile = await _profileRepository.getProfile(uid!);
+      interests = profile?.interests ?? interests;
+    }
+
+    if (profile == null) {
+      print(
+        'Profile ViewModel - `updateProfile`: `profile` is null.'
+        ' Check `startProfileSubscription`.',
+      );
+      return Str.pleaseSignIn;
+    }
+
     /* Utilized `tempList` to avoid duplicating the interest if `interests` got
       pulled from the server's stream before this method updates it. */
     final tempList = List<InterestModel>.from(interests);
     if (interest != null) {
       tempList.removeWhere((element) => element.id == interest.id);
       tempList.add(interest);
-    }
-
-    if (profile == null) {
-      print(
-        'Profile ViewModel - `updateProfile`: `profile` is null. Check `startProfileSubscription`.',
-      );
-      return Str.pleaseSignIn;
     }
 
     final newProfile = profile!.copyWith(

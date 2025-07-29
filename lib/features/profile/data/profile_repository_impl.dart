@@ -118,7 +118,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
     _profileSubscription?.cancel();
     _profileStream = _profileController.stream;
 
-    _createProfileIfNeeded(
+    await _createProfileIfNeeded(
       ProfileModel(
         uid: uid,
         email: email,
@@ -151,6 +151,23 @@ class ProfileRepositoryImpl extends ProfileRepository {
   void unsubscribeFromProfileStream() {
     _profileController.close();
     _profileSubscription?.cancel();
+  }
+
+  /// Get profile of the logged current user.
+  /// Note: Needed to update interests from `Explore Screen`.
+  /// Check `ProfileViewModel.updateProfile`.
+  @override
+  Future<ProfileModel?> getProfile(String uid) async {
+    final doc =
+    await _firestore
+        .collection(Str.PROFILE_COLLECTION_NAME)
+        .doc(uid)
+        .get();
+
+    if (doc.exists) {
+      return ProfileModel.fromMap(doc.data()!);
+    }
+    return null;
   }
 
   /// Get stream of the interests from all profiles
