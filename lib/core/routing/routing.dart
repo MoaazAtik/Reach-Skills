@@ -61,49 +61,13 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
             GoRoute(
               name: Str.chatScreenRouteName,
               path: Str.chatScreenRoutePath,
-              builder: (BuildContext context, GoRouterState state) {
-                return _buildScaffoldAppBarBodies(
-                  context: context,
-                  masterBody: ChatBody(
-                    selectedChatId: null,
-                    onTapChat: (String chatId) {
-                      onTapChat(context, chatId);
-                    },
-                  ),
-                  appBarTitle: Str.chatScreenTitle,
-                );
-              },
+              builder: _chatScreenBuilder,
               routes: [
                 // Messages Screen
                 GoRoute(
                   name: Str.messagesScreenRouteName,
                   path: Str.messagesScreenRoutePath,
-                  builder: (BuildContext context, GoRouterState state) {
-                    final chatId =
-                        state.pathParameters[Str.messagesScreenParamId];
-                    final isLargeScreen = checkLargeScreen(context);
-                    Widget masterBody;
-                    Widget? detailBody;
-                    if (isLargeScreen) {
-                      masterBody = ChatBody(
-                        selectedChatId: chatId,
-                        onTapChat: (String chatId) {
-                          onTapChat(context, chatId);
-                        },
-                      );
-                      // Todo fix messages are not showing on large screen
-                      detailBody = MessagesBody(selectedChatId: chatId!);
-                    } else {
-                      masterBody = MessagesBody(selectedChatId: chatId!);
-                    }
-
-                    return _buildScaffoldAppBarBodies(
-                      context: context,
-                      masterBody: masterBody,
-                      detailBody: detailBody,
-                      appBarTitle: Str.messagesScreenTitle,
-                    );
-                  },
+                  builder: _messagesScreenBuilder,
                 ),
               ],
             ),
@@ -116,83 +80,35 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
     GoRoute(
       name: Str.onboardingScreenRouteName,
       path: Str.onboardingScreenRoutePath,
-      builder: (BuildContext context, GoRouterState state) {
-        return Scaffold(
-          body: Onboarding(
-            endOnboarding: () {
-              endOnboarding(context);
-            },
-          ),
-        );
-      },
+      builder: _onboardingScreenBuilder,
     ),
 
     // Auth Screen
     GoRoute(
       name: Str.authScreenRouteName,
       path: Str.authScreenRoutePath,
-      builder: (BuildContext context, GoRouterState state) {
-        // Todo uncomment after scoping 'AuthViewModel' only to this route.
-        // final bool isLoggedIn = context.watch<AuthViewModel>().isLoggedIn;
-        final bool isLoggedIn = true;
-        if (isLoggedIn) {
-          WidgetsBinding.instance.addPostFrameCallback(
-            // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
-            (Duration duration) => context.goNamed(Str.exploreScreenRouteName),
-          );
-        }
-        return _buildScaffoldAppBarBodies(
-          context: context,
-          masterBody: AuthScreen(),
-          appBarTitle: Str.authScreenTitle,
-          isLoggedIn: isLoggedIn,
-        );
-      },
+      builder: _authScreenBuilder,
     ),
 
     // Details Screen
     GoRoute(
       name: Str.detailsScreenRouteName,
       path: Str.detailsScreenRoutePath,
-      pageBuilder: (BuildContext context, GoRouterState state) {
-        return NoTransitionPage(
-          child: _buildInterestDetails(context: context, state: state),
-        );
-      },
+      pageBuilder: _detailsScreenBuilder,
     ),
 
     // Profile Screen
     GoRoute(
       name: Str.profileScreenRouteName,
       path: Str.profileScreenRoutePath,
-      builder: (BuildContext context, GoRouterState state) {
-        VoidCallback toggleEdit = context.read<ProfileViewModel>().toggleEdit;
-
-        return _buildScaffoldAppBarBodies(
-          context: context,
-          masterBody: ProfileBody(onSignInPressed: () => onTapSignIn(context)),
-          appBarTitle: Str.profileScreenTitle,
-          appBarEditAction: true,
-          onTapEdit: toggleEdit,
-        );
-      },
+      builder: _profileScreenBuilder,
     ),
 
     // Help Screen
     GoRoute(
       name: Str.helpScreenRouteName,
       path: Str.helpScreenRoutePath,
-      builder: (BuildContext context, GoRouterState state) {
-        return _buildScaffoldAppBarBodies(
-          context: context,
-          masterBody: HelpBody(
-            onTapOnboardingGuide: () {
-              onTapOnboardingGuide(context);
-            },
-          ),
-          appBarTitle: Str.helpScreenTitle,
-        );
-      },
+      builder: _helpScreenBuilder,
     ),
   ],
 
@@ -201,6 +117,8 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
     return ErrorRoute();
   },
 );
+
+/// Screen builders
 
 Widget _exploreScreenBuilder(BuildContext context, GoRouterState state) {
   return ChangeNotifierProvider(
@@ -231,30 +149,76 @@ Widget _exploreScreenBuilder(BuildContext context, GoRouterState state) {
   );
 }
 
-Widget _buildScaffoldAppBarBodies({
-  required BuildContext context,
-  required Widget masterBody,
-  Widget? detailBody,
-  Widget? dialogBody,
-  required String appBarTitle,
-  bool? isLoggedIn,
-  bool appBarEditAction = false,
-  VoidCallback? onTapEdit,
-}) {
-  return ScaffoldAppBarBodies(
+Widget _chatScreenBuilder(BuildContext context, GoRouterState state) {
+  return _buildScaffoldAppBarBodies(
+    context: context,
+    masterBody: ChatBody(
+      selectedChatId: null,
+      onTapChat: (String chatId) {
+        onTapChat(context, chatId);
+      },
+    ),
+    appBarTitle: Str.chatScreenTitle,
+  );
+}
+
+Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
+  final chatId = state.pathParameters[Str.messagesScreenParamId];
+  final isLargeScreen = checkLargeScreen(context);
+  Widget masterBody;
+  Widget? detailBody;
+  if (isLargeScreen) {
+    masterBody = ChatBody(
+      selectedChatId: chatId,
+      onTapChat: (String chatId) {
+        onTapChat(context, chatId);
+      },
+    );
+    // Todo fix messages are not showing on large screen
+    detailBody = MessagesBody(selectedChatId: chatId!);
+  } else {
+    masterBody = MessagesBody(selectedChatId: chatId!);
+  }
+
+  return _buildScaffoldAppBarBodies(
+    context: context,
     masterBody: masterBody,
     detailBody: detailBody,
-    dialogBody: dialogBody,
-    appBarTitle: appBarTitle,
-    // Todo uncomment after refactoring scoping of 'AuthViewModel' only to Auth route.
-    // isLoggedIn: isLoggedIn ?? context.watch<AuthViewModel>().isLoggedIn,
-    isLoggedIn: isLoggedIn ?? true,
-    appBarEditAction: appBarEditAction,
-    onTapEdit: onTapEdit,
-    onTapSignIn: () => onTapSignIn(context),
-    onTapSignOut: () => onTapSignOut(context),
-    onTapEditProfile: () => onTapEditProfile(context),
-    onTapHelp: () => onTapHelp(context),
+    appBarTitle: Str.messagesScreenTitle,
+  );
+}
+
+Widget _onboardingScreenBuilder(BuildContext context, GoRouterState state) {
+  return Scaffold(
+    body: Onboarding(
+      endOnboarding: () {
+        endOnboarding(context);
+      },
+    ),
+  );
+}
+
+Widget _authScreenBuilder(BuildContext context, GoRouterState state) {
+  // Todo uncomment after scoping 'AuthViewModel' only to this route.
+  // final bool isLoggedIn = context.watch<AuthViewModel>().isLoggedIn;
+  final bool isLoggedIn = true;
+  if (isLoggedIn) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
+      (Duration duration) => context.goNamed(Str.exploreScreenRouteName),
+    );
+  }
+  return _buildScaffoldAppBarBodies(
+    context: context,
+    masterBody: AuthScreen(),
+    appBarTitle: Str.authScreenTitle,
+    isLoggedIn: isLoggedIn,
+  );
+}
+
+Page<dynamic> _detailsScreenBuilder(BuildContext context, GoRouterState state) {
+  return NoTransitionPage(
+    child: _buildInterestDetails(context: context, state: state),
   );
 }
 
@@ -332,6 +296,59 @@ Widget _buildInterestDetails({
     appBarTitle: appBarTitle,
   );
 }
+
+Widget _profileScreenBuilder(BuildContext context, GoRouterState state) {
+  VoidCallback toggleEdit = context.read<ProfileViewModel>().toggleEdit;
+
+  return _buildScaffoldAppBarBodies(
+    context: context,
+    masterBody: ProfileBody(onSignInPressed: () => onTapSignIn(context)),
+    appBarTitle: Str.profileScreenTitle,
+    appBarEditAction: true,
+    onTapEdit: toggleEdit,
+  );
+}
+
+Widget _helpScreenBuilder(BuildContext context, GoRouterState state) {
+  return _buildScaffoldAppBarBodies(
+    context: context,
+    masterBody: HelpBody(
+      onTapOnboardingGuide: () {
+        onTapOnboardingGuide(context);
+      },
+    ),
+    appBarTitle: Str.helpScreenTitle,
+  );
+}
+
+Widget _buildScaffoldAppBarBodies({
+  required BuildContext context,
+  required Widget masterBody,
+  Widget? detailBody,
+  Widget? dialogBody,
+  required String appBarTitle,
+  bool? isLoggedIn,
+  bool appBarEditAction = false,
+  VoidCallback? onTapEdit,
+}) {
+  return ScaffoldAppBarBodies(
+    masterBody: masterBody,
+    detailBody: detailBody,
+    dialogBody: dialogBody,
+    appBarTitle: appBarTitle,
+    // Todo uncomment after refactoring scoping of 'AuthViewModel' only to Auth route.
+    // isLoggedIn: isLoggedIn ?? context.watch<AuthViewModel>().isLoggedIn,
+    isLoggedIn: isLoggedIn ?? true,
+    appBarEditAction: appBarEditAction,
+    onTapEdit: onTapEdit,
+    onTapSignIn: () => onTapSignIn(context),
+    onTapSignOut: () => onTapSignOut(context),
+    onTapEditProfile: () => onTapEditProfile(context),
+    onTapHelp: () => onTapHelp(context),
+  );
+}
+
+/// Helper functions
 
 void goToBranchDestination(int index, StatefulNavigationShell navigationShell) {
   navigationShell.goBranch(
