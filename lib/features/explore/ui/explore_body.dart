@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/theme/styles.dart';
+import 'package:reach_skills/features/common/data/wish_model.dart';
 import 'package:reach_skills/features/explore/ui/search_widget.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../common/data/interest_model.dart';
+import '../../common/data/skill_model.dart';
 import '../../common/widgets/rs_chip.dart';
 import 'explore_viewmodel.dart';
 import 'interest_card.dart';
 
 class ExploreBody extends StatefulWidget {
-  const ExploreBody({super.key, required this.onTapInterest});
+  const ExploreBody({super.key, required this.onTapInterest, this.interests = const []});
 
   final void Function(InterestModel interest) onTapInterest;
+  final List<InterestModel> interests;
 
   @override
   State<ExploreBody> createState() => _ExploreBodyState();
@@ -21,11 +24,18 @@ class ExploreBody extends StatefulWidget {
 class _ExploreBodyState extends State<ExploreBody> {
   @override
   Widget build(BuildContext context) {
-    final exploreViewModel = context.watch<ExploreViewModel>();
-    final loading = exploreViewModel.loading;
+    // final exploreViewModel = context.watch<ExploreViewModel>();
+    // final loading = exploreViewModel.loading;
 
-    final interests = exploreViewModel.interests;
-    final interestsStreamError = exploreViewModel.interestsStreamError;
+    // final interests = exploreViewModel.interests;
+    // final interestsStreamError = exploreViewModel.interestsStreamError;
+
+
+    final interests = context.select<ExploreViewModel, List<InterestModel>>(
+      (exploreViewModel) => exploreViewModel.interests,
+    );
+    // final interests = <InterestModel>[SkillModel(title: 'Flutter'), WishModel(title: 'Dart')];
+    // final interests = widget.interests;
 
     // Todo uncomment
     // if (loading) {

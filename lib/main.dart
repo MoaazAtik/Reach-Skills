@@ -26,14 +26,19 @@ void main() async {
         Provider(create: (context) => AuthRepositoryImpl()),
         Provider(create: (context) => ProfileRepositoryImpl()),
         Provider(create: (context) => ChatRepositoryImpl()),
-        ChangeNotifierProvider(
-          create:
-              (context) => ExploreViewModel(
-                preferencesRepository: context.read<PreferencesRepositoryImpl>(),
-                authRepository: context.read<AuthRepositoryImpl>(),
-                profileRepository: context.read<ProfileRepositoryImpl>(),
-              ),
-        ),
+
+        // Todo scope all these ChangeNotifierProviders to their respective routes.
+        // ie, move them to `routing.dart` file.
+
+        // ChangeNotifierProvider(
+        //   create:
+        //       (context) => ExploreViewModel(
+        //         preferencesRepository: context.read<PreferencesRepositoryImpl>(),
+        //         authRepository: context.read<AuthRepositoryImpl>(),
+        //         profileRepository: context.read<ProfileRepositoryImpl>(),
+        //       ),
+        // ),
+
         ChangeNotifierProvider(
           create:
               (context) => AuthViewModel(
@@ -62,7 +67,7 @@ void main() async {
               ),
         ),
       ],
-      child: ReachSkillsApp(),
+      child: const ReachSkillsApp(),
     ),
   );
 }

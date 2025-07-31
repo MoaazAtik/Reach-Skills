@@ -7,6 +7,7 @@ import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
 import 'package:reach_skills/features/help/ui/help_body.dart';
 import 'package:reach_skills/features/help/ui/onboarding.dart';
 
+import '../../features/auth/data/auth_repository_impl.dart';
 import '../../features/auth/ui/auth_screen.dart';
 import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/ui/chat_body.dart';
@@ -16,9 +17,11 @@ import '../../features/common/widgets/error_route.dart';
 import '../../features/common/widgets/interest_details.dart';
 import '../../features/common/widgets/navigation_shell_scaffold.dart';
 import '../../features/explore/ui/explore_body.dart';
+import '../../features/profile/data/profile_repository_impl.dart';
 import '../../features/profile/ui/profile_body.dart';
 import '../../features/profile/ui/profile_viewmodel.dart';
 import '../constants/strings.dart';
+import '../preferences_repository/data/preferences_repository_impl.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
@@ -50,21 +53,33 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
               name: Str.exploreScreenRouteName,
               path: Str.exploreScreenRoutePath,
               builder: (BuildContext context, GoRouterState state) {
-                // Todo fix rebuilding 2-3 times on launch
-                // print('rebuilt screen');
-                return _buildScaffoldAppBarBodies(
-                  context: context,
-                  masterBody: ExploreBody(
-                    onTapInterest: (interest) {
-                      onTapInterest(
-                        context: context,
-                        interest: interest,
-                        fromPath: Str.exploreScreenRoutePath,
-                        startEditing: false,
-                      );
-                    },
+                return ChangeNotifierProvider(
+                  // create: (context) => ExploreViewModel(
+                  create: (_) => ExploreViewModel(
+                    preferencesRepository: context.read<PreferencesRepositoryImpl>(),
+                    authRepository: context.read<AuthRepositoryImpl>(),
+                    profileRepository: context.read<ProfileRepositoryImpl>(),
                   ),
-                  appBarTitle: Str.exploreScreenTitle,
+                  // child: _buildScaffoldAppBarBodies(
+                  builder: (context, child) => _buildScaffoldAppBarBodies(
+                  // builder: (_, child) =>  _buildScaffoldAppBarBodies(
+                    context: context,
+                    masterBody: ExploreBody(
+                      // interests: context.select<ExploreViewModel, List<InterestModel>>(
+                      //   (exploreViewModel) => exploreViewModel.interests,
+                      // ),
+                      // interests: context.watch<ExploreViewModel>().interests,
+                      onTapInterest: (interest) {
+                        onTapInterest(
+                          context: context,
+                          interest: interest,
+                          fromPath: Str.exploreScreenRoutePath,
+                          startEditing: false,
+                        );
+                      },
+                    ),
+                    appBarTitle: Str.exploreScreenTitle,
+                  ),
                 );
               },
             ),
@@ -147,7 +162,9 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       name: Str.authScreenRouteName,
       path: Str.authScreenRoutePath,
       builder: (BuildContext context, GoRouterState state) {
-        final bool isLoggedIn = context.watch<AuthViewModel>().isLoggedIn;
+        // Todo uncomment after scoping 'AuthViewModel' only to this route.
+        // final bool isLoggedIn = context.watch<AuthViewModel>().isLoggedIn;
+        final bool isLoggedIn = true;
         if (isLoggedIn) {
           WidgetsBinding.instance.addPostFrameCallback(
             // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
@@ -230,7 +247,9 @@ Widget _buildScaffoldAppBarBodies({
     detailBody: detailBody,
     dialogBody: dialogBody,
     appBarTitle: appBarTitle,
-    isLoggedIn: isLoggedIn ?? context.watch<AuthViewModel>().isLoggedIn,
+    // Todo uncomment after refactoring scoping of 'AuthViewModel' only to Auth route.
+    // isLoggedIn: isLoggedIn ?? context.watch<AuthViewModel>().isLoggedIn,
+    isLoggedIn: isLoggedIn ?? true,
     appBarEditAction: appBarEditAction,
     onTapEdit: onTapEdit,
     onTapSignIn: () => onTapSignIn(context),

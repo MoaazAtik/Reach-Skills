@@ -115,6 +115,7 @@ class ExploreViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    print('explore view model - dispose');
     stopSubscriptions();
     super.dispose();
   }
