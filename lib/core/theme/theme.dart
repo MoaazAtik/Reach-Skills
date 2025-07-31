@@ -342,13 +342,17 @@ class MaterialTheme {
     useMaterial3: true,
     brightness: colorScheme.brightness,
     colorScheme: colorScheme,
+
+    // Custom colors
+    scaffoldBackgroundColor: colorScheme.surface,
+    canvasColor: colorScheme.surface,
+
+    // Text theme
     textTheme: textTheme.apply(
       fontFamily: Styles.fontFamilyPlusJakartaSans,
       bodyColor: colorScheme.onSurface,
       displayColor: colorScheme.onSurface,
     ),
-    scaffoldBackgroundColor: colorScheme.surface,
-    canvasColor: colorScheme.surface,
 
     // Custom filled button theme
     filledButtonTheme: Styles.rsFilledButtonStyle,

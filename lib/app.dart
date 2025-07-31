@@ -8,17 +8,6 @@ import 'core/constants/strings.dart';
 import 'core/routing/routing.dart';
 import 'core/theme/theme.dart';
 
-/*
-- Memoizing 'late final GoRouter _router;' either in or out of _ReachSkillsAppState is what reduced statefulShellRoute and NavigationShellScaffold rebuilds.
-It also removed the unwanted screen blinking when rebuilding:
- */
-
-/* Todo
-1. Avoid unnecessary logic inside build()
-2. Memoize GoRouter, themes, and expensive objects
-3. Use StatefulWidget for app root
- */
-
 class ReachSkillsApp extends StatefulWidget {
   const ReachSkillsApp({super.key});
 
@@ -33,14 +22,31 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
     _router = getRouter(false);
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    /*
+     No need to call `setState` because changes in `MediaQuery` and `Theme`
+     will trigger `build` automatically after calling `didChangeDependencies`.
+     */
+    _brightness = MediaQuery.of(context).platformBrightness;
+    _textTheme = Theme.of(context).textTheme;
+    _theme = MaterialTheme(_textTheme);
+  }
+
+  /*
+   Memoizing 'GoRouter' reduced statefulShellRoute and NavigationShellScaffold
+   rebuilds (especially in Dev mode).
+   It also removed the unwanted screen blinking when rebuilding.
+   */
   late final GoRouter _router;
+  late Brightness _brightness;
+  late TextTheme _textTheme;
+  late MaterialTheme _theme;
 
   @override
   Widget build(BuildContext context) {
-    final brightness = View.of(context).platformDispatcher.platformBrightness;
-    final textTheme = Theme.of(context).textTheme;
-    MaterialTheme theme = MaterialTheme(textTheme);
-    // Todo uncomment and fix infinite loading
+    // Todo uncomment and fix infinite loading. maybe initialize it in `initState`.
     // bool? isFirstInitialization = context.select<ExploreViewModel, bool?>((
     //   viewModel,
     // ) {
@@ -51,16 +57,18 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
     //   return Center(child: const CircularProgressIndicator());
     // }
     print(
-      'Key: ${widget.key} | Type: $runtimeType | Hash: ${identityHashCode(this)} ie, $hashCode',
+      'app - build: Key: ${widget.key} | '
+      'Type: $runtimeType | Hash: ${identityHashCode(this)} ie, $hashCode',
     );
 
     return MaterialApp.router(
       title: Str.appTitle,
-      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
+      theme: _brightness == Brightness.light ? _theme.light() : _theme.dark(),
 
       // debugShowMaterialGrid: true,
       // showSemanticsDebugger: true,
       debugShowCheckedModeBanner: false,
+
       localizationsDelegates: [FirebaseUILocalizations.delegate],
       supportedLocales: const [Locale('en', 'US'), Locale('tr', 'TR')],
 
