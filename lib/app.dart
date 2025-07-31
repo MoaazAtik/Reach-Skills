@@ -57,7 +57,7 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
     //   return Center(child: const CircularProgressIndicator());
     // }
     print(
-      'app - build: Key: ${widget.key} | '
+      'build - Key: ${widget.key} | '
       'Type: $runtimeType | Hash: ${identityHashCode(this)} ie, $hashCode',
     );
 

@@ -52,36 +52,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
             GoRoute(
               name: Str.exploreScreenRouteName,
               path: Str.exploreScreenRoutePath,
-              builder: (BuildContext context, GoRouterState state) {
-                return ChangeNotifierProvider(
-                  // create: (context) => ExploreViewModel(
-                  create: (_) => ExploreViewModel(
-                    preferencesRepository: context.read<PreferencesRepositoryImpl>(),
-                    authRepository: context.read<AuthRepositoryImpl>(),
-                    profileRepository: context.read<ProfileRepositoryImpl>(),
-                  ),
-                  // child: _buildScaffoldAppBarBodies(
-                  builder: (context, child) => _buildScaffoldAppBarBodies(
-                  // builder: (_, child) =>  _buildScaffoldAppBarBodies(
-                    context: context,
-                    masterBody: ExploreBody(
-                      // interests: context.select<ExploreViewModel, List<InterestModel>>(
-                      //   (exploreViewModel) => exploreViewModel.interests,
-                      // ),
-                      // interests: context.watch<ExploreViewModel>().interests,
-                      onTapInterest: (interest) {
-                        onTapInterest(
-                          context: context,
-                          interest: interest,
-                          fromPath: Str.exploreScreenRoutePath,
-                          startEditing: false,
-                        );
-                      },
-                    ),
-                    appBarTitle: Str.exploreScreenTitle,
-                  ),
-                );
-              },
+              builder: _exploreScreenBuilder,
             ),
           ],
         ),
@@ -231,6 +202,37 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
     return ErrorRoute();
   },
 );
+
+Widget _exploreScreenBuilder(BuildContext context, GoRouterState state) {
+  return ChangeNotifierProvider(
+    create:
+        (_) => ExploreViewModel(
+          preferencesRepository: context.read<PreferencesRepositoryImpl>(),
+          authRepository: context.read<AuthRepositoryImpl>(),
+          profileRepository: context.read<ProfileRepositoryImpl>(),
+        ),
+    // child: _buildScaffoldAppBarBodies(
+    builder:
+        (context, child) => _buildScaffoldAppBarBodies(
+          context: context,
+          masterBody: ExploreBody(
+            // interests: context.select<ExploreViewModel, List<InterestModel>>(
+            //   (exploreViewModel) => exploreViewModel.interests,
+            // ),
+            // interests: context.watch<ExploreViewModel>().interests,
+            onTapInterest: (interest) {
+              onTapInterest(
+                context: context,
+                interest: interest,
+                fromPath: Str.exploreScreenRoutePath,
+                startEditing: false,
+              );
+            },
+          ),
+          appBarTitle: Str.exploreScreenTitle,
+        ),
+  );
+}
 
 Widget _buildScaffoldAppBarBodies({
   required BuildContext context,
