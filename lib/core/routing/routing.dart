@@ -7,7 +7,6 @@ import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
 import 'package:reach_skills/features/help/ui/help_body.dart';
 import 'package:reach_skills/features/help/ui/onboarding.dart';
 
-import '../../features/auth/data/auth_repository_impl.dart';
 import '../../features/auth/ui/auth_screen.dart';
 import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/ui/chat_body.dart';
@@ -207,8 +206,6 @@ Widget _exploreScreenBuilder(BuildContext context, GoRouterState state) {
   return ChangeNotifierProvider(
     create:
         (_) => ExploreViewModel(
-          preferencesRepository: context.read<PreferencesRepositoryImpl>(),
-          authRepository: context.read<AuthRepositoryImpl>(),
           profileRepository: context.read<ProfileRepositoryImpl>(),
         ),
     // child: _buildScaffoldAppBarBodies(
@@ -379,12 +376,13 @@ void onTapChat(BuildContext context, String selectedChatId) {
 
 void onTapOnboardingGuide(BuildContext context) {
   context.goNamed(Str.onboardingScreenRouteName);
-  // context.read<ExploreViewModel>().setIsFirstInitialization(true);
+  // context.read<PreferencesRepositoryImpl>().setIsFirstInitialization(true);
 }
 
 void endOnboarding(BuildContext context) {
   context.goNamed(Str.exploreScreenRouteName);
-  context.read<ExploreViewModel>().setIsFirstInitialization(false);
+  // Todo maybe add 'await' before the line below
+  context.read<PreferencesRepositoryImpl>().setIsFirstInitialization(false);
 }
 
 void onTapSignIn(BuildContext context) {
