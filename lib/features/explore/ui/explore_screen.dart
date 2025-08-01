@@ -56,10 +56,10 @@ class ExploreScreen extends StatelessWidget {
                     final ScaffoldMessengerState scaffoldMessengerState = ScaffoldMessenger.of(context);
                     final NavigatorState navigatorState = Navigator.of(context);
 
-                    errorMessage = await exploreViewModel.updateFields(
-                      currentReceiverId: interest.userId,
-                      currentReceiverName: interest.userName,
-                    );
+                    // errorMessage = await exploreViewModel.updateFields(
+                    //   currentReceiverId: interest.userId,
+                    //   currentReceiverName: interest.userName,
+                    // );
 
                     if (errorMessage != null) {
                       scaffoldMessengerState.showSnackBar(SnackBar(content: Text(errorMessage)));

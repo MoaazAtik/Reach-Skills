@@ -32,12 +32,6 @@ class _ProfileBodyState extends State<ProfileBody> {
   late TextEditingController _bioController;
 
   @override
-  void initState() {
-    super.initState();
-    context.read<ProfileViewModel>().init();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final ProfileViewModel profileViewModel = context.watch<ProfileViewModel>();
     _uid = profileViewModel.uid;

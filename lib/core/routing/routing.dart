@@ -7,6 +7,7 @@ import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
 import 'package:reach_skills/features/help/ui/help_body.dart';
 import 'package:reach_skills/features/help/ui/onboarding.dart';
 
+import '../../features/auth/data/auth_repository_impl.dart';
 import '../../features/auth/ui/auth_screen.dart';
 import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/ui/chat_body.dart';
@@ -199,9 +200,7 @@ Widget _onboardingScreenBuilder(BuildContext context, GoRouterState state) {
 }
 
 Widget _authScreenBuilder(BuildContext context, GoRouterState state) {
-  // Todo uncomment after scoping 'AuthViewModel' only to this route.
-  // final bool isLoggedIn = context.watch<AuthViewModel>().isLoggedIn;
-  final bool isLoggedIn = true;
+  final bool isLoggedIn = context.watch<AuthViewModel>().isLoggedIn;
   if (isLoggedIn) {
     WidgetsBinding.instance.addPostFrameCallback(
       // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
@@ -298,14 +297,23 @@ Widget _buildInterestDetails({
 }
 
 Widget _profileScreenBuilder(BuildContext context, GoRouterState state) {
-  VoidCallback toggleEdit = context.read<ProfileViewModel>().toggleEdit;
+  return ChangeNotifierProvider(
+    create:
+        (_) => ProfileViewModel(
+          authRepository: context.read<AuthRepositoryImpl>(),
+          profileRepository: context.read<ProfileRepositoryImpl>(),
+        ),
+    builder: (context, child) {
+      VoidCallback toggleEdit = context.read<ProfileViewModel>().toggleEdit;
 
-  return _buildScaffoldAppBarBodies(
-    context: context,
-    masterBody: ProfileBody(onSignInPressed: () => onTapSignIn(context)),
-    appBarTitle: Str.profileScreenTitle,
-    appBarEditAction: true,
-    onTapEdit: toggleEdit,
+      return _buildScaffoldAppBarBodies(
+        context: context,
+        masterBody: ProfileBody(onSignInPressed: () => onTapSignIn(context)),
+        appBarTitle: Str.profileScreenTitle,
+        appBarEditAction: true,
+        onTapEdit: toggleEdit,
+      );
+    },
   );
 }
 
@@ -336,9 +344,7 @@ Widget _buildScaffoldAppBarBodies({
     detailBody: detailBody,
     dialogBody: dialogBody,
     appBarTitle: appBarTitle,
-    // Todo uncomment after refactoring scoping of 'AuthViewModel' only to Auth route.
-    // isLoggedIn: isLoggedIn ?? context.watch<AuthViewModel>().isLoggedIn,
-    isLoggedIn: isLoggedIn ?? true,
+    isLoggedIn: isLoggedIn ?? context.watch<AuthViewModel>().isLoggedIn,
     appBarEditAction: appBarEditAction,
     onTapEdit: onTapEdit,
     onTapSignIn: () => onTapSignIn(context),

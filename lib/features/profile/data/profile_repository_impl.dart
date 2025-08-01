@@ -25,7 +25,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
   _profileSubscription;
-  final StreamController<ProfileModel> _profileController =
+  StreamController<ProfileModel> _profileController =
       StreamController<ProfileModel>();
   Stream<ProfileModel>? _profileStream;
 
@@ -115,7 +115,17 @@ class ProfileRepositoryImpl extends ProfileRepository {
     required String uid,
     required String email,
   }) async {
-    _profileSubscription?.cancel();
+    /*
+     - Re-creating `_profileController` is needed for `ProfileViewModel`.
+     Otherwise, navigating back then renavigating to the `ProfileScreen`
+     will throw an error because `_profileController` is closed and its Stream
+     has been listened to.
+     - No need to call `unsubscribeFromProfileStream()` here because it is called
+     when `ProfileViewModel` is disposed.
+     */
+    if (_profileController.isClosed) {
+      _profileController = StreamController<ProfileModel>();
+    }
     _profileStream = _profileController.stream;
 
     await _createProfileIfNeeded(
@@ -148,9 +158,9 @@ class ProfileRepositoryImpl extends ProfileRepository {
   }
 
   @override
-  void unsubscribeFromProfileStream() {
-    _profileController.close();
-    _profileSubscription?.cancel();
+  Future<void> unsubscribeFromProfileStream() async {
+    await _profileController.close();
+    await _profileSubscription?.cancel();
   }
 
   /// Get profile of the logged current user.
@@ -159,10 +169,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
   @override
   Future<ProfileModel?> getProfile(String uid) async {
     final doc =
-    await _firestore
-        .collection(Str.PROFILE_COLLECTION_NAME)
-        .doc(uid)
-        .get();
+        await _firestore.collection(Str.PROFILE_COLLECTION_NAME).doc(uid).get();
 
     if (doc.exists) {
       return ProfileModel.fromMap(doc.data()!);
@@ -197,18 +204,20 @@ class ProfileRepositoryImpl extends ProfileRepository {
                   continue;
                 }
 
-                for (final Map<String, dynamic> interestInAProfile in interestsList) {
+                for (final Map<String, dynamic> interestInAProfile
+                    in interestsList) {
                   // Check if the interest type that is stored as
                   // `InterestType.name` (* not InterestType) is in the wanted
                   // filter list of `interest types`
                   bool passesFilter = false;
                   for (final InterestType interestType in interestTypes) {
-                    if (interestType.name == interestInAProfile[Str.INTEREST_FIELD_INTEREST_TYPE]) {
+                    if (interestType.name ==
+                        interestInAProfile[Str.INTEREST_FIELD_INTEREST_TYPE]) {
                       passesFilter = true;
                       break;
                     }
                   }
-                  if (!passesFilter)  continue;
+                  if (!passesFilter) continue;
 
                   if (interestInAProfile[Str.INTEREST_FIELD_INTEREST_TYPE] ==
                       InterestType.skill.name) {

@@ -27,9 +27,6 @@ void main() async {
         Provider(create: (context) => ProfileRepositoryImpl()),
         Provider(create: (context) => ChatRepositoryImpl()),
 
-        // Todo scope all these ChangeNotifierProviders to their respective routes.
-        // ie, move them to `routing.dart` file.
-
         // ChangeNotifierProvider(
         //   create:
         //       (context) => ExploreViewModel(
@@ -45,13 +42,13 @@ void main() async {
                 authRepository: context.read<AuthRepositoryImpl>(),
               ),
         ),
-        ChangeNotifierProvider(
-          create:
-              (context) => ProfileViewModel(
-                authRepository: context.read<AuthRepositoryImpl>(),
-                profileRepository: context.read<ProfileRepositoryImpl>(),
-              ),
-        ),
+        // ChangeNotifierProvider(
+        //   create:
+        //       (context) => ProfileViewModel(
+        //         authRepository: context.read<AuthRepositoryImpl>(),
+        //         profileRepository: context.read<ProfileRepositoryImpl>(),
+        //       ),
+        // ),
         ChangeNotifierProvider(
           create:
               (context) => ChatViewModel(

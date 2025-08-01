@@ -15,8 +15,7 @@ class ProfileViewModel extends ChangeNotifier {
     required ProfileRepository profileRepository,
   }) : _authRepository = authRepository,
        _profileRepository = profileRepository {
-    /* `init` is called by the `ProfileBody` widget */
-    // init();
+    init();
   }
 
   final AuthRepository _authRepository;
@@ -70,9 +69,9 @@ class ProfileViewModel extends ChangeNotifier {
     );
   }
 
-  void stopSubscriptions() {
-    _profileRepository.unsubscribeFromProfileStream();
-    _profileSubscription?.cancel();
+  Future<void> stopSubscriptions() async {
+    await _profileRepository.unsubscribeFromProfileStream();
+    await _profileSubscription?.cancel();
   }
 
   void toggleEdit() {

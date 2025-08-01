@@ -14,7 +14,7 @@ abstract class ProfileRepository {
 
   void subscribeToProfileStream({required String uid, required String email});
 
-  void unsubscribeFromProfileStream();
+  Future<void> unsubscribeFromProfileStream();
 
   Future<ProfileModel?> getProfile(String uid);
 
