@@ -37,6 +37,14 @@ class ChatRepositoryImpl extends ChatRepository {
     _chatsSubscriptionCount++;
 
     if (_chatsSubscriptionCount <= 1) {
+      /*
+      This might be needed like 'Profile Repo' to fix 'closed stream' error:
+
+      if (_chatsController.isClosed) {
+        _chatsController = StreamController<List<ChatModel>>.broadcast();
+      }
+       */
+
       _chatsStream = _chatsController.stream;
 
       _chatsSubscription = _firestore

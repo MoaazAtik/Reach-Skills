@@ -10,8 +10,11 @@ import 'package:reach_skills/features/help/ui/onboarding.dart';
 import '../../features/auth/data/auth_repository_impl.dart';
 import '../../features/auth/ui/auth_screen.dart';
 import '../../features/auth/ui/auth_viewmodel.dart';
+import '../../features/chat/data/chat_repository_impl.dart';
 import '../../features/chat/ui/chat_body.dart';
+import '../../features/chat/ui/chat_viewmodel.dart';
 import '../../features/chat/ui/messages_body.dart';
+import '../../features/chat/ui/messages_viewmodel.dart';
 import '../../features/common/data/interest_model.dart';
 import '../../features/common/widgets/error_route.dart';
 import '../../features/common/widgets/interest_details.dart';
@@ -124,7 +127,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
 Widget _exploreScreenBuilder(BuildContext context, GoRouterState state) {
   return ChangeNotifierProvider(
     create:
-        (_) => ExploreViewModel(
+        (BuildContext _) => ExploreViewModel(
           profileRepository: context.read<ProfileRepositoryImpl>(),
         ),
     // child: _buildScaffoldAppBarBodies(
@@ -151,15 +154,23 @@ Widget _exploreScreenBuilder(BuildContext context, GoRouterState state) {
 }
 
 Widget _chatScreenBuilder(BuildContext context, GoRouterState state) {
-  return _buildScaffoldAppBarBodies(
-    context: context,
-    masterBody: ChatBody(
-      selectedChatId: null,
-      onTapChat: (String chatId) {
-        onTapChat(context, chatId);
-      },
-    ),
-    appBarTitle: Str.chatScreenTitle,
+  return ChangeNotifierProvider(
+    create:
+        (BuildContext _) => ChatViewModel(
+          authRepository: context.read<AuthRepositoryImpl>(),
+          chatRepository: context.read<ChatRepositoryImpl>(),
+        ),
+    builder:
+        (context, child) => _buildScaffoldAppBarBodies(
+          context: context,
+          masterBody: ChatBody(
+            selectedChatId: null,
+            onTapChat: (String chatId) {
+              onTapChat(context, chatId);
+            },
+          ),
+          appBarTitle: Str.chatScreenTitle,
+        ),
   );
 }
 
@@ -181,11 +192,19 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
     masterBody = MessagesBody(selectedChatId: chatId!);
   }
 
-  return _buildScaffoldAppBarBodies(
-    context: context,
-    masterBody: masterBody,
-    detailBody: detailBody,
-    appBarTitle: Str.messagesScreenTitle,
+  return ChangeNotifierProvider(
+    create:
+        (BuildContext _) => MessagesViewModel(
+          authRepository: context.read<AuthRepositoryImpl>(),
+          chatRepository: context.read<ChatRepositoryImpl>(),
+        ),
+    builder:
+        (context, child) => _buildScaffoldAppBarBodies(
+          context: context,
+          masterBody: masterBody,
+          detailBody: detailBody,
+          appBarTitle: Str.messagesScreenTitle,
+        ),
   );
 }
 
