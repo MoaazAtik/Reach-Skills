@@ -15,13 +15,14 @@ class ProfileRepositoryImpl extends ProfileRepository {
   int _interestsSubscriptionCount = 0;
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>?
   _interestsSubscription;
-  final StreamController<List<InterestModel>> _interestsController =
+  StreamController<List<InterestModel>> _interestsController =
       StreamController<List<InterestModel>>.broadcast();
   Stream<List<InterestModel>>? _interestsStream;
 
   /// Get stream of the interests from all profiles
   @override
   Stream<List<InterestModel>>? get interestsStream => _interestsStream;
+  List<InterestModel>? _lastInterests;
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
   _profileSubscription;
@@ -185,6 +186,10 @@ class ProfileRepositoryImpl extends ProfileRepository {
     _interestsSubscriptionCount++;
 
     if (_interestsSubscriptionCount <= 1) {
+      if (_interestsController.isClosed) {
+        _interestsController =
+            StreamController<List<InterestModel>>.broadcast();
+      }
       _interestsStream = _interestsController.stream;
 
       _interestsSubscription = _firestore
@@ -241,11 +246,26 @@ class ProfileRepositoryImpl extends ProfileRepository {
   }
 
   @override
-  void unsubscribeFromInterestsStream() {
+  Future<void> unsubscribeFromInterestsStream() async {
     _interestsSubscriptionCount--;
     if (_interestsSubscriptionCount < 1) {
-      _interestsController.close();
-      _interestsSubscription?.cancel();
+      await _interestsController.close();
+      await _interestsSubscription?.cancel();
     }
+  }
+
+  /// *Currently not needed*
+  ///
+  /// Custom method to allow new listeners to get latest emitted value from the
+  /// Stream when they were not listening to the Stream before.
+  /// Multiple listeners can listen to its return value like this
+  /// `_interestsSubscription = _profileRepository
+  /// .getInterestsStreamWithInitialValue().listen(...`
+  @override
+  Stream<List<InterestModel>> getInterestsStreamWithInitialValue() async* {
+    if (_lastInterests != null) {
+      yield _lastInterests!;
+    }
+    yield* _interestsStream ?? _interestsController.stream ?? Stream.empty();
   }
 }
