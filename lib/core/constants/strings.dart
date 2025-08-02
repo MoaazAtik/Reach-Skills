@@ -31,11 +31,14 @@ abstract class Str {
   static const profileScreenRoutePath = '/profile';
 
   // static const interestScreenRouteName = 'interest';
-  static const detailsScreenRouteName = 'details';
+  static const detailsExploreScreenRouteName = 'detailsExplore';
+  static const detailsProfileScreenRouteName = 'detailsProfile';
 
   // static const interestScreenRoutePath = '/interest';
   // static const detailsScreenRoutePath = '/:id';
   // static const detailsScreenRouteFullPath = '/details/:id';
+  static const detailsExploreScreenRouteFullPath = '${exploreScreenRoutePath}details/:id';
+  static const detailsProfileScreenRouteFullPath = '$profileScreenRoutePath/details/:id';
   static const detailsScreenRoutePath = '/details/:id';
   static const authScreenRouteName = 'auth';
   static const authScreenRoutePath = '/auth';

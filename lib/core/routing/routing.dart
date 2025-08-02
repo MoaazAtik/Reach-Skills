@@ -51,11 +51,33 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       branches: [
         StatefulShellBranch(
           routes: [
-            // Explore Screen
-            GoRoute(
-              name: Str.exploreScreenRouteName,
-              path: Str.exploreScreenRoutePath,
-              builder: _exploreScreenBuilder,
+            ShellRoute(
+              builder: (context, state, child) {
+                return ChangeNotifierProvider(
+                  create:
+                      (BuildContext _) => ExploreViewModel(
+                        profileRepository:
+                            context.read<ProfileRepositoryImpl>(),
+                      ),
+                  child: child,
+                );
+              },
+              routes: [
+                // Explore Screen
+                GoRoute(
+                  name: Str.exploreScreenRouteName,
+                  path: Str.exploreScreenRoutePath,
+                  builder: _exploreScreenBuilder,
+                  routes: [
+                    // Explore's Details Screen
+                    GoRoute(
+                      name: Str.detailsExploreScreenRouteName,
+                      path: Str.detailsScreenRoutePath,
+                      pageBuilder: _detailsScreenBuilder,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
@@ -94,18 +116,33 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
       builder: _authScreenBuilder,
     ),
 
-    // Details Screen
-    GoRoute(
-      name: Str.detailsScreenRouteName,
-      path: Str.detailsScreenRoutePath,
-      pageBuilder: _detailsScreenBuilder,
-    ),
-
-    // Profile Screen
-    GoRoute(
-      name: Str.profileScreenRouteName,
-      path: Str.profileScreenRoutePath,
-      builder: _profileScreenBuilder,
+    ShellRoute(
+      builder: (context, state, child) {
+        return ChangeNotifierProvider(
+          create:
+              (BuildContext _) => ProfileViewModel(
+                authRepository: context.read<AuthRepositoryImpl>(),
+                profileRepository: context.read<ProfileRepositoryImpl>(),
+              ),
+          child: child,
+        );
+      },
+      routes: [
+        // Profile Screen
+        GoRoute(
+          name: Str.profileScreenRouteName,
+          path: Str.profileScreenRoutePath,
+          builder: _profileScreenBuilder,
+          routes: [
+            // Profile's Details Screen
+            GoRoute(
+              name: Str.detailsProfileScreenRouteName,
+              path: Str.detailsScreenRoutePath,
+              pageBuilder: _detailsScreenBuilder,
+            ),
+          ],
+        ),
+      ],
     ),
 
     // Help Screen
@@ -125,31 +162,23 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
 /// Screen builders
 
 Widget _exploreScreenBuilder(BuildContext context, GoRouterState state) {
-  return ChangeNotifierProvider(
-    create:
-        (BuildContext _) => ExploreViewModel(
-          profileRepository: context.read<ProfileRepositoryImpl>(),
-        ),
-    // child: _buildScaffoldAppBarBodies(
-    builder:
-        (context, child) => _buildScaffoldAppBarBodies(
+  return _buildScaffoldAppBarBodies(
+    context: context,
+    masterBody: ExploreBody(
+      // interests: context.select<ExploreViewModel, List<InterestModel>>(
+      //   (exploreViewModel) => exploreViewModel.interests,
+      // ),
+      // interests: context.watch<ExploreViewModel>().interests,
+      onTapInterest: (interest) {
+        onTapInterest(
           context: context,
-          masterBody: ExploreBody(
-            // interests: context.select<ExploreViewModel, List<InterestModel>>(
-            //   (exploreViewModel) => exploreViewModel.interests,
-            // ),
-            // interests: context.watch<ExploreViewModel>().interests,
-            onTapInterest: (interest) {
-              onTapInterest(
-                context: context,
-                interest: interest,
-                fromPath: Str.exploreScreenRoutePath,
-                startEditing: false,
-              );
-            },
-          ),
-          appBarTitle: Str.exploreScreenTitle,
-        ),
+          interest: interest,
+          fromPath: Str.exploreScreenRoutePath,
+          startEditing: false,
+        );
+      },
+    ),
+    appBarTitle: Str.exploreScreenTitle,
   );
 }
 
@@ -240,6 +269,268 @@ Page<dynamic> _detailsScreenBuilder(BuildContext context, GoRouterState state) {
   );
 }
 
+// Todo remove these comments
+// Attempts of fixing Details screen 'ChangeNotifierProvider' problem.
+// how to handle sub route's view models re-creation
+// or using an existing one in master-detail ui pattern. Would using 'key's
+// or 'child' in the 'ChangeNotifierProvider' help get rid of unnecessary
+// disposal and recreation of view models and their widgets and routes?
+//
+// 'Details path' needs 'profile view model' and 'explore view model'.
+// I attempted to use 'ChangeNotifierProvider.value' to obtain the created 'explore view model'
+// because 'interest list' looks empty when 'details screen' is opened. maybe the 'interests
+// stream' in 'profile repo' is created but when i joined later i missed the last
+// emitted value. maybe try the 'currently not needed' method in Chat's repo.
+//
+// When i go to Profile screen then click on an interest i get 'stream listened to' error.
+//
+
+// Widget _buildInterestDetails({
+//   required BuildContext context,
+//   required GoRouterState state,
+// }) {
+//   final extra = state.extra;
+//   if (extra == null || extra is! Map) {
+//     // Todo enhance this
+//     print(
+//       '`extra` is null or not a Map. - ${state.matchedLocation}'
+//           ' - Check `buildInterestDetails` function.',
+//     );
+//     return ErrorRoute();
+//   }
+//   final interest = extra[Str.detailsScreenParamInterest];
+//   final fromPath = extra[Str.detailsScreenParamFromPath];
+//   final startEditing = extra[Str.detailsScreenParamStartEditing];
+//
+//   /* Todo fix. if interest is null fetch it using the provided ID. this is needed for back navigation. Or maybe store it in a view model. */
+//   if (interest == null ||
+//       interest is! InterestModel ||
+//       fromPath == null ||
+//       fromPath is! String ||
+//       startEditing == null ||
+//       startEditing is! bool) {
+//     print(
+//       '`interest` is null or not an InterestModel. Or `fromPath` is null or not a String.'
+//           ' - ${state.matchedLocation} - Check `buildInterestDetails` function.',
+//     );
+//     return ErrorRoute();
+//   }
+//
+//   final bool isOwner =
+//       interest.userId == context.read<AuthViewModel>().currentUser?.uid;
+//
+//   final Widget interestDetails = InterestDetails(
+//     interest: interest,
+//     isOwner: isOwner,
+//     startEditing: startEditing,
+//     // Todo implement
+//     onTapReach: () {
+//       // context.goNamed(Str.chatScreenRouteName);
+//     },
+//   );
+//
+//   final Widget masterBody;
+//   final String appBarTitle;
+//
+//   // Attempt 1
+//
+//   switch (fromPath) {
+//     case Str.profileScreenRoutePath:
+//       masterBody =
+//           ChangeNotifierProvider(
+//               create:
+//                   (_) => ProfileViewModel(
+//                 authRepository: context.read<AuthRepositoryImpl>(),
+//                 profileRepository: context.read<ProfileRepositoryImpl>(),
+//               ),
+//               builder: (context, child) => ProfileBody(onSignInPressed: () => onTapSignIn(context))
+//           );
+//
+//       appBarTitle = Str.profileScreenTitle;
+//       break;
+//     default: // case Str.exploreScreenRoutePath:
+//       masterBody =
+//           ChangeNotifierProvider(
+//               create:
+//                   (BuildContext _) => ExploreViewModel(
+//                 profileRepository: context.read<ProfileRepositoryImpl>(),
+//               ),
+//               // child: _buildScaffoldAppBarBodies(
+//               builder:
+//                   (context, child) => ExploreBody(
+//                 onTapInterest: (interest) {
+//                   onTapInterest(
+//                     context: context,
+//                     interest: interest,
+//                     fromPath: Str.exploreScreenRoutePath,
+//                     startEditing: startEditing,
+//                   );
+//                 },
+//               )
+//           );
+//       appBarTitle = Str.exploreScreenTitle;
+//       break;
+//   }
+//
+//   return _buildScaffoldAppBarBodies(
+//     context: context,
+//     masterBody: masterBody,
+//     dialogBody: interestDetails,
+//     detailBody: interestDetails,
+//     appBarTitle: appBarTitle,
+//   );
+//
+//   // Attempt 2
+//
+//   // switch (fromPath) {
+//   //   case Str.profileScreenRoutePath:
+//   //     masterBody = ProfileBody(onSignInPressed: () => onTapSignIn(context));
+//   //     appBarTitle = Str.profileScreenTitle;
+//   //     break;
+//   //   default: // case Str.exploreScreenRoutePath:
+//   //     masterBody = ExploreBody(
+//   //       onTapInterest: (interest) {
+//   //         onTapInterest(
+//   //           context: context,
+//   //           interest: interest,
+//   //           fromPath: Str.exploreScreenRoutePath,
+//   //           startEditing: startEditing,
+//   //         );
+//   //       },
+//   //     );
+//   //     appBarTitle = Str.exploreScreenTitle;
+//   //     break;
+//   // }
+//   //
+//   // return MultiProvider(
+//   //   providers: [
+//   //     ChangeNotifierProvider(
+//   //       create:
+//   //         (_) => ProfileViewModel(
+//   //           authRepository: context.read<AuthRepositoryImpl>(),
+//   //           profileRepository: context.read<ProfileRepositoryImpl>(),
+//   //         ),
+//   //       // builder: (context, child) => ProfileBody(onSignInPressed: () => onTapSignIn(context))
+//   //     ),
+//   //     ChangeNotifierProvider(
+//   //         create:
+//   //           (BuildContext _) => ExploreViewModel(
+//   //             profileRepository: context.read<ProfileRepositoryImpl>(),
+//   //           ),
+//   //         // builder:
+//   //         //     (context, child) => ExploreBody(
+//   //         //   onTapInterest: (interest) {
+//   //         //     onTapInterest(
+//   //         //       context: context,
+//   //         //       interest: interest,
+//   //         //       fromPath: Str.exploreScreenRoutePath,
+//   //         //       startEditing: startEditing,
+//   //         //     );
+//   //         //   },
+//   //         // ),
+//   //     )
+//   //   ],
+//   //   builder: (context, child) =>
+//   //     _buildScaffoldAppBarBodies(
+//   //       context: context,
+//   //       masterBody: masterBody,
+//   //       dialogBody: interestDetails,
+//   //       detailBody: interestDetails,
+//   //       appBarTitle: appBarTitle,
+//   //     )
+//   // );
+//
+//   // Attempt 3
+//
+//   // switch (fromPath) {
+//   //   case Str.profileScreenRoutePath:
+//   //     masterBody = ProfileBody(onSignInPressed: () => onTapSignIn(context));
+//   //     appBarTitle = Str.profileScreenTitle;
+//   //     break;
+//   //   default: // case Str.exploreScreenRoutePath:
+//   //     masterBody = ExploreBody(
+//   //       onTapInterest: (interest) {
+//   //         onTapInterest(
+//   //           context: context,
+//   //           interest: interest,
+//   //           fromPath: Str.exploreScreenRoutePath,
+//   //           startEditing: startEditing,
+//   //         );
+//   //       },
+//   //     );
+//   //     appBarTitle = Str.exploreScreenTitle;
+//   //     break;
+//   // }
+//   //
+//   // return MultiProvider(
+//   //     providers: [
+//   //       ChangeNotifierProvider.value(
+//   //         value: context.read<ProfileViewModel>(),
+//   //       ),
+//   //       ChangeNotifierProvider.value(
+//   //         value: context.read<ExploreViewModel>(),
+//   //       ),
+//   //     ],
+//   //     builder: (context, child) =>
+//   //         _buildScaffoldAppBarBodies(
+//   //           context: context,
+//   //           masterBody: masterBody,
+//   //           dialogBody: interestDetails,
+//   //           detailBody: interestDetails,
+//   //           appBarTitle: appBarTitle,
+//   //         )
+//   // );
+//
+//
+//   // Attempt 4
+//
+//   // switch (fromPath) {
+//   //   case Str.profileScreenRoutePath:
+//   //     masterBody =
+//   //         ChangeNotifierProvider.value(
+//   //           // value: context.read<ProfileViewModel>(),
+//   //           value: ProfileViewModel(
+//   //             authRepository: context.read<AuthRepositoryImpl>(),
+//   //             profileRepository: context.read<ProfileRepositoryImpl>(),
+//   //           ),
+//   //           // builder: (context, child) => ProfileBody(onSignInPressed: () => onTapSignIn(context))
+//   //           child: ProfileBody(onSignInPressed: () => onTapSignIn(context))
+//   //         );
+//   //
+//   //     appBarTitle = Str.profileScreenTitle;
+//   //     break;
+//   //   default: // case Str.exploreScreenRoutePath:
+//   //     masterBody =
+//   //         ChangeNotifierProvider.value(
+//   //           // value: context.read<ExploreViewModel>(),
+//   //           value: ExploreViewModel(
+//   //             profileRepository: context.read<ProfileRepositoryImpl>(),
+//   //           ),
+//   //           // builder: (context, child) => ExploreBody(
+//   //           child: ExploreBody(
+//   //       onTapInterest: (interest) {
+//   //         onTapInterest(
+//   //           context: context,
+//   //           interest: interest,
+//   //           fromPath: Str.exploreScreenRoutePath,
+//   //           startEditing: startEditing,
+//   //         );
+//   //       },
+//   //     )
+//   //         );
+//   //     appBarTitle = Str.exploreScreenTitle;
+//   //     break;
+//   // }
+//   //
+//   // return _buildScaffoldAppBarBodies(
+//   //   context: context,
+//   //   masterBody: masterBody,
+//   //   dialogBody: interestDetails,
+//   //   detailBody: interestDetails,
+//   //   appBarTitle: appBarTitle,
+//   // );
+// }
+
 Widget _buildInterestDetails({
   required BuildContext context,
   required GoRouterState state,
@@ -316,23 +607,14 @@ Widget _buildInterestDetails({
 }
 
 Widget _profileScreenBuilder(BuildContext context, GoRouterState state) {
-  return ChangeNotifierProvider(
-    create:
-        (_) => ProfileViewModel(
-          authRepository: context.read<AuthRepositoryImpl>(),
-          profileRepository: context.read<ProfileRepositoryImpl>(),
-        ),
-    builder: (context, child) {
-      VoidCallback toggleEdit = context.read<ProfileViewModel>().toggleEdit;
+  VoidCallback toggleEdit = context.read<ProfileViewModel>().toggleEdit;
 
-      return _buildScaffoldAppBarBodies(
-        context: context,
-        masterBody: ProfileBody(onSignInPressed: () => onTapSignIn(context)),
-        appBarTitle: Str.profileScreenTitle,
-        appBarEditAction: true,
-        onTapEdit: toggleEdit,
-      );
-    },
+  return _buildScaffoldAppBarBodies(
+    context: context,
+    masterBody: ProfileBody(onSignInPressed: () => onTapSignIn(context)),
+    appBarTitle: Str.profileScreenTitle,
+    appBarEditAction: true,
+    onTapEdit: toggleEdit,
   );
 }
 
@@ -388,16 +670,19 @@ void onTapInterest({
   required String fromPath,
   bool startEditing = false,
 }) {
+  // Todo remove 'Tapping on Barrier ...' parts, and 'update'
   /*
    Todo fix. when an interest is open then trying to tap another interest,
   `goNamed` and `pushReplacementNamed` changes the path (in the browser) but doesn't change the UI state. Tapping on Barrier doesn't 'pop' to the previous path.
   `pushNamed` doesn't change the path but does change the UI state. Tapping on Barrier does 'pop' to the previous path.
+   update:
+     'go', 'push', and 'pushReplacement' work.
+     After last changes of 'ShellRoute' all of them pops back when tapping on dialog barrier.
    */
-  // print('onInterestTap : ${GoRouterState.of(context).fullPath}');
-  // context.goNamed(
-  // context.pushReplacementNamed(
-  context.pushNamed(
-    Str.detailsScreenRouteName,
+  context.goNamed(
+    fromPath == Str.profileScreenRoutePath
+        ? Str.detailsProfileScreenRouteName
+        : Str.detailsExploreScreenRouteName,
     pathParameters: {Str.detailsScreenParamId: interest.id},
     extra: {
       Str.detailsScreenParamInterest: interest,
