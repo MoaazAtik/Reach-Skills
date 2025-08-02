@@ -6,6 +6,8 @@ abstract class ProfileRepository {
 
   Stream<ProfileModel>? get profileStream;
 
+  List<InterestModel?>? get interestsHistory;
+
   Future<String> updateProfile(ProfileModel profile);
 
   Future<String> removeInterest(InterestModel interest);
@@ -23,4 +25,6 @@ abstract class ProfileRepository {
   void unsubscribeFromInterestsStream();
 
   Stream<List<InterestModel>> getInterestsStreamWithInitialValue();
+
+  void updateInterestsHistory(InterestModel? interest);
 }

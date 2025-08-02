@@ -33,6 +33,11 @@ class ProfileRepositoryImpl extends ProfileRepository {
   @override
   Stream<ProfileModel>? get profileStream => _profileStream;
 
+  List<InterestModel?>? _interestsHistory;
+
+  @override
+  List<InterestModel?>? get interestsHistory => _interestsHistory;
+
   /// Profile always exists thus could be updated
   /// because of `_createProfileIfNeeded` and `subscribeToProfileStream`
   @override
@@ -275,5 +280,19 @@ class ProfileRepositoryImpl extends ProfileRepository {
       yield _lastInterests!;
     }
     yield* _interestsStream ?? _interestsController.stream ?? Stream.empty();
+  }
+
+  @override
+  void updateInterestsHistory(InterestModel? interest) {
+    _interestsHistory ??= [];
+    if (_interestsHistory!.isEmpty) {
+      _interestsHistory!.add(interest);
+      return;
+    }
+    if (_interestsHistory!.last == interest) {
+      _interestsHistory!.removeLast();
+    } else {
+      _interestsHistory!.add(interest);
+    }
   }
 }

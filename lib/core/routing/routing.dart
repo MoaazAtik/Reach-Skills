@@ -273,18 +273,29 @@ Widget _buildInterestDetails({
   required BuildContext context,
   required GoRouterState state,
 }) {
-  final extra = state.extra;
-  if (extra == null || extra is! Map) {
-    // Todo enhance this
+  final extra = state.extra ?? const <String, dynamic>{};
+  if (extra is! Map) {
     print(
-      '`extra` is null or not a Map. - ${state.matchedLocation}'
+      '`extra` is not a Map. - ${state.matchedLocation}'
       ' - Check `buildInterestDetails` function.',
     );
     return ErrorRoute();
   }
-  final interest = extra[Str.detailsScreenParamInterest];
-  final fromPath = extra[Str.detailsScreenParamFromPath];
-  final startEditing = extra[Str.detailsScreenParamStartEditing];
+  final interest =
+      extra[Str.detailsScreenParamInterest] ??
+      context.read<ProfileRepositoryImpl>().interestsHistory?.last;
+  if (extra[Str.detailsScreenParamInterest] == null) {
+    /*
+    Remove the last selected interest from the list of interests history
+    because it is going to be used now for back navigation and not needed anymore.
+     */
+    context.read<ProfileRepositoryImpl>().updateInterestsHistory(interest);
+  }
+
+  final fromPath =
+      extra[Str.detailsScreenParamFromPath] ??
+      GoRouterState.of(context).matchedLocation;
+  final startEditing = extra[Str.detailsScreenParamStartEditing] ?? false;
 
   /* Todo fix. if interest is null fetch it using the provided ID. this is needed for back navigation. Or maybe store it in a view model. */
   if (interest == null ||
@@ -408,6 +419,8 @@ void onTapInterest({
   required String fromPath,
   bool startEditing = false,
 }) {
+  context.read<ProfileRepositoryImpl>().updateInterestsHistory(interest);
+
   /*
    Todo fix. when an interest is open then trying to tap another interest,
   `goNamed` and `pushReplacementNamed` changes the path (in the browser)

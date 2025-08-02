@@ -56,10 +56,10 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
     // if (isFirstInitialization == null) {
     //   return Center(child: const CircularProgressIndicator());
     // }
-    print(
-      'build - Key: ${widget.key} | '
-      'Type: $runtimeType | Hash: ${identityHashCode(this)} ie, $hashCode',
-    );
+    // print(
+    //   'build - Key: ${widget.key} | '
+    //   'Type: $runtimeType | Hash: ${identityHashCode(this)} ie, $hashCode',
+    // );
 
     return MaterialApp.router(
       title: Str.appTitle,

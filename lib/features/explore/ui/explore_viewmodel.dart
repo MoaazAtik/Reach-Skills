@@ -25,6 +25,8 @@ class ExploreViewModel extends ChangeNotifier {
   String? interestsStreamError;
   bool loading = true;
 
+  List<InterestModel?>? interestsHistory;
+
   String? currentSenderId;
   String? currentSenderName;
   String? currentReceiverId;
@@ -32,6 +34,7 @@ class ExploreViewModel extends ChangeNotifier {
 
   void init() {
     startInterestsSubscription(interestTypes);
+    interestsHistory = _profileRepository.interestsHistory;
     notifyListeners(); /* Investigate why app works fine even without this line. */
   }
 
