@@ -20,7 +20,7 @@ abstract class ProfileRepository {
 
   void subscribeToInterestsStream({List<InterestType> interestTypes});
 
-  Future<void> unsubscribeFromInterestsStream();
+  void unsubscribeFromInterestsStream();
 
   Stream<List<InterestModel>> getInterestsStreamWithInitialValue();
 }

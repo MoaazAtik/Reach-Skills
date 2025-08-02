@@ -245,13 +245,21 @@ class ProfileRepositoryImpl extends ProfileRepository {
     });
   }
 
+  /// - Delayed subscription canceling is only for Optimization purposes.
+  ///
+  /// - Tracking `_interestsSubscriptionCount` is *Currently not needed*.
+  /// - `_interestsSubscriptionCount < 1` can be replaced with
+  /// `_interestsController.hasListener`.
   @override
-  Future<void> unsubscribeFromInterestsStream() async {
+  void unsubscribeFromInterestsStream() {
     _interestsSubscriptionCount--;
-    if (_interestsSubscriptionCount < 1) {
-      await _interestsController.close();
-      await _interestsSubscription?.cancel();
-    }
+
+    Future.delayed(Duration(seconds: 5), () {
+      if (_interestsSubscriptionCount < 1) {
+        _interestsController.close();
+        _interestsSubscription?.cancel();
+      }
+    });
   }
 
   /// *Currently not needed*
