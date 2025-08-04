@@ -30,7 +30,7 @@ class ChatBody extends StatelessWidget {
       return Column(
         children: [
           const SizedBox(height: 40),
-          Text(Str.noUserInfoMessage),
+          const Text(Str.noUserInfoMessage),
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: onSignInPressed,
