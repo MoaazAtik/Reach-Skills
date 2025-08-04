@@ -7,6 +7,22 @@ extension WidgetFullWidth on Widget {
   Widget withFullWidth() => SizedBox(width: double.infinity, child: this);
 }
 
+extension WidgetFullSize on Widget {
+  Widget withFullSize() => SizedBox.expand(child: this);
+  /*
+  OR
+  Widget withFullSize() => Positioned.fill(child: this);
+  */
+}
+
+extension WidgetCenter on Widget {
+  Widget alignCenter() => Align(alignment: Alignment.center, child: this);
+  /*
+  OR
+  Widget alignCenter() => Center(child: this);
+  */
+}
+
 bool checkLargeScreen(BuildContext context) {
   final isLargeScreen =
       MediaQuery.sizeOf(context).width > Styles.smallScreenWidthThreshold;

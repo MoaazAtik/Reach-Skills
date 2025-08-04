@@ -49,13 +49,13 @@ class ScaffoldAppBarBodies extends StatelessWidget {
                   ],
                 ),
               )
-              :
-              // Todo wrap Stack or master and detail body in Expanded widget
-              // and test it with 'chat body' when not logged in.
-              Stack(
+              : Stack(
                 children: [
-                  masterBody,
-                  if (detailBody != null && dialogBody == null) detailBody!,
+                  masterBody.withFullSize(),
+
+                  if (detailBody != null && dialogBody == null)
+                    detailBody!.withFullSize(),
+
                   if (dialogBody != null)
                     DeclarativeDialogOverlay(
                       onDismiss: () {
