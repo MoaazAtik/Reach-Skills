@@ -11,8 +11,11 @@ import 'message_model.dart';
 class ChatRepositoryImpl extends ChatRepository {
   final _firestore = FirebaseFirestore.instance;
 
+  /*
+  Stream controllers of chats and messages can be normal ie, without 'broadcast'.
+   */
   int _chatsSubscriptionCount = 0;
-  final StreamController<List<ChatModel>> _chatsController =
+  StreamController<List<ChatModel>> _chatsController =
       StreamController<List<ChatModel>>.broadcast();
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _chatsSubscription;
   Stream<List<ChatModel>>? _chatsStream;
@@ -33,22 +36,24 @@ class ChatRepositoryImpl extends ChatRepository {
   }
 
   @override
-  void subscribeToChatsStream() {
+  void subscribeToChatsStream(String userId) {
     _chatsSubscriptionCount++;
 
     if (_chatsSubscriptionCount <= 1) {
-      /*
-      This might be needed like 'Profile Repo' to fix 'closed stream' error:
-
       if (_chatsController.isClosed) {
         _chatsController = StreamController<List<ChatModel>>.broadcast();
       }
-       */
 
       _chatsStream = _chatsController.stream;
 
       _chatsSubscription = _firestore
           .collection(Str.CHAT_COLLECTION_NAME)
+          .where(
+            Filter.or(
+              Filter(Str.CHAT_FIELD_PERSON1_ID, isEqualTo: userId),
+              Filter(Str.CHAT_FIELD_PERSON2_ID, isEqualTo: userId),
+            ),
+          )
           .orderBy(Str.CHAT_FIELD_UPDATED_AT, descending: true)
           .limit(50)
           .snapshots()
@@ -76,13 +81,21 @@ class ChatRepositoryImpl extends ChatRepository {
     });
   }
 
+  /// - Delayed subscription canceling is only for Optimization purposes.
+  ///
+  /// - Tracking `_chatsSubscriptionCount` is *Currently not needed*.
+  /// - `_chatsSubscriptionCount < 1` can be replaced with
+  /// `_chatsController.hasListener`.
   @override
   void unsubscribeFromChatsStream() {
     _chatsSubscriptionCount--;
-    if (_chatsSubscriptionCount < 1) {
-      _chatsController.close();
-      _chatsSubscription?.cancel();
-    }
+
+    Future.delayed(Duration(seconds: 5), () {
+      if (_chatsSubscriptionCount < 1) {
+        _chatsController.close();
+        _chatsSubscription?.cancel();
+      }
+    });
   }
 
   // from explore screen

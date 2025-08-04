@@ -6,7 +6,7 @@ abstract class ChatRepository {
 
   Stream<List<MessageModel>>? get messagesStream;
 
-  void subscribeToChatsStream();
+  void subscribeToChatsStream(String userId);
 
   void unsubscribeFromChatsStream();
 

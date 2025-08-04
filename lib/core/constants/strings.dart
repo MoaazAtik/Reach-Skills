@@ -37,8 +37,10 @@ abstract class Str {
   // static const interestScreenRoutePath = '/interest';
   // static const detailsScreenRoutePath = '/:id';
   // static const detailsScreenRouteFullPath = '/details/:id';
-  static const detailsExploreScreenRouteFullPath = '${exploreScreenRoutePath}details/:id';
-  static const detailsProfileScreenRouteFullPath = '$profileScreenRoutePath/details/:id';
+  static const detailsExploreScreenRouteFullPath =
+      '${exploreScreenRoutePath}details/:id';
+  static const detailsProfileScreenRouteFullPath =
+      '$profileScreenRoutePath/details/:id';
   static const detailsScreenRoutePath = '/details/:id';
   static const authScreenRouteName = 'auth';
   static const authScreenRoutePath = '/auth';
@@ -269,6 +271,7 @@ abstract class Str {
   static const excMessageNullOnTapReach = 'Passed "null onTapReach".';
   static const excMessageNullAppBarActions =
       '"appBarEditAction" is false but onTapSignIn, onTapSignOut, onTapEditProfile, or onTapHelp is null. They are required for the popup menu button (RsPopupMenuButton).';
+  static const excMessageNullUser = 'Passed "null user".';
 
   static const excMessageMin1 = 'Pass at least 1 of them.';
 
@@ -283,6 +286,7 @@ abstract class Str {
   static const excMessageInterestDetails =
       'Check `InterestDetails` constructor.';
   static const excMessageScaffoldAppBarBodies = 'Check `ScaffoldAppBarBodies`.';
+  static const excMessageChatVM = 'Check `startAllChatsSubscription`';
 
   /// Exception messages end
 }

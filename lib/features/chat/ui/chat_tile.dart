@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../../core/theme/styles.dart';
+import '../../../core/utils/utils.dart';
 
 class ChatTile extends StatelessWidget {
   const ChatTile({
     super.key,
     required this.name,
     required this.lastMessage,
+    required this.timestamp,
     required this.onTap,
-    // required this.timestamp,
   });
 
   final String name;
   final String lastMessage;
-
-  // final String timestamp;
+  final int timestamp;
   final void Function() onTap;
 
   @override
@@ -35,11 +35,10 @@ class ChatTile extends StatelessWidget {
         style: Styles.chatSubtitleTextStyle,
         maxLines: 2,
       ),
-      // trailing: Text('${calculateDaysDifferenceAndFormat(timestamp)}'),
-      trailing: Text(Str.mockDaysAgo),
-      onTap: () {
-        onTap();
-      },
+      trailing: Text(calculateDaysDifferenceAndFormat(dateInMillis: timestamp)),
+      // Todo remove Mock comments
+      // trailing: Text(Str.mockDaysAgo),
+      onTap: onTap,
     );
   }
 }

@@ -197,6 +197,7 @@ Widget _chatScreenBuilder(BuildContext context, GoRouterState state) {
             onTapChat: (String chatId) {
               onTapChat(context, chatId);
             },
+            onSignInPressed: () => onTapSignIn(context),
           ),
           appBarTitle: Str.chatScreenTitle,
         ),
@@ -206,14 +207,17 @@ Widget _chatScreenBuilder(BuildContext context, GoRouterState state) {
 Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
   final chatId = state.pathParameters[Str.messagesScreenParamId];
   final isLargeScreen = checkLargeScreen(context);
+
   Widget masterBody;
   Widget? detailBody;
+
   if (isLargeScreen) {
     masterBody = ChatBody(
       selectedChatId: chatId,
       onTapChat: (String chatId) {
         onTapChat(context, chatId);
       },
+      onSignInPressed: () => onTapSignIn(context),
     );
     // Todo fix messages are not showing on large screen
     detailBody = MessagesBody(selectedChatId: chatId!);
@@ -442,7 +446,12 @@ void onTapInterest({
 
 void onTapChat(BuildContext context, String selectedChatId) {
   // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
-  context.go('${Str.chatScreenRoutePath}/$selectedChatId');
+  // context.go('${Str.chatScreenRoutePath}/$selectedChatId');
+  context.goNamed(
+    Str.messagesScreenRouteName,
+    pathParameters: {Str.messagesScreenParamId: selectedChatId},
+  );
+
   // else if (!isLargeScreen) {
   //   // context.push('/chat/$index');
   //   context.go('/chat/$index');

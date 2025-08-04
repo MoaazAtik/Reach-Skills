@@ -43,6 +43,7 @@ class ChatViewModel extends ChangeNotifier {
   StreamSubscription<List<ChatModel>>? _allChatsSubscription;
 
   void init() {
+    print('init - Chat View Model');
     startAuthStateSubscription();
     startAllChatsSubscription();
   }
@@ -64,6 +65,7 @@ class ChatViewModel extends ChangeNotifier {
     _authRepository.currentUserNotifier.addListener(() {
       _currentUser = _authRepository.currentUserNotifier.value;
       _authError = null;
+      startAllChatsSubscription();
       notifyListeners();
     });
 
@@ -74,7 +76,12 @@ class ChatViewModel extends ChangeNotifier {
   }
 
   void startAllChatsSubscription() {
-    _chatRepository.subscribeToChatsStream();
+    if (_currentUser == null) {
+      print('${Str.excMessageNullUser} ${Str.excMessageChatVM} - $runtimeType');
+      return;
+    }
+
+    _chatRepository.subscribeToChatsStream(_currentUser!.uid);
 
     if (_chatRepository.chatsStream != null) {
       _allChatsSubscription = _chatRepository.chatsStream!.listen(
@@ -114,8 +121,51 @@ class ChatViewModel extends ChangeNotifier {
     }
   }
 
+  String determineChatterProperty({
+    required ChatModel chat,
+    required String property,
+    bool mine = true,
+  }) {
+    if (property == 'id') {
+      final person1Id = chat.person1Id;
+      final person2Id = chat.person2Id;
+
+      if (person1Id == _currentUser?.uid) {
+        if (mine) {
+          return person1Id;
+        } else {
+          return person2Id;
+        }
+      } else {
+        if (mine) {
+          return person2Id;
+        } else {
+          return person1Id;
+        }
+      }
+    } else {
+      // (property == 'name')
+      final person1Name = chat.person1Name;
+      final person2Name = chat.person2Name;
+      if (person1Name == _currentUser?.displayName) {
+        if (mine) {
+          return person1Name;
+        } else {
+          return person2Name;
+        }
+      } else {
+        if (mine) {
+          return person2Name;
+        } else {
+          return person1Name;
+        }
+      }
+    }
+  }
+
   @override
   void dispose() {
+    print('dispose - Chat ViewModel');
     stopSubscriptions();
     super.dispose();
   }
