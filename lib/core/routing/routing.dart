@@ -83,17 +83,31 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
         ),
         StatefulShellBranch(
           routes: [
-            // Chat Screen
-            GoRoute(
-              name: Str.chatScreenRouteName,
-              path: Str.chatScreenRoutePath,
-              builder: _chatScreenBuilder,
+            ShellRoute(
+              builder: (context, state, child) {
+                return ChangeNotifierProvider(
+                  create:
+                      (BuildContext _) => ChatViewModel(
+                        authRepository: context.read<AuthRepositoryImpl>(),
+                        chatRepository: context.read<ChatRepositoryImpl>(),
+                      ),
+                  child: child,
+                );
+              },
               routes: [
-                // Messages Screen
+                // Chat Screen
                 GoRoute(
-                  name: Str.messagesScreenRouteName,
-                  path: Str.messagesScreenRoutePath,
-                  builder: _messagesScreenBuilder,
+                  name: Str.chatScreenRouteName,
+                  path: Str.chatScreenRoutePath,
+                  builder: _chatScreenBuilder,
+                  routes: [
+                    // Messages Screen
+                    GoRoute(
+                      name: Str.messagesScreenRouteName,
+                      path: Str.messagesScreenRoutePath,
+                      builder: _messagesScreenBuilder,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -183,24 +197,16 @@ Widget _exploreScreenBuilder(BuildContext context, GoRouterState state) {
 }
 
 Widget _chatScreenBuilder(BuildContext context, GoRouterState state) {
-  return ChangeNotifierProvider(
-    create:
-        (BuildContext _) => ChatViewModel(
-          authRepository: context.read<AuthRepositoryImpl>(),
-          chatRepository: context.read<ChatRepositoryImpl>(),
-        ),
-    builder:
-        (context, child) => _buildScaffoldAppBarBodies(
-          context: context,
-          masterBody: ChatBody(
-            selectedChatId: null,
-            onTapChat: (String chatId) {
-              onTapChat(context, chatId);
-            },
-            onSignInPressed: () => onTapSignIn(context),
-          ),
-          appBarTitle: Str.chatScreenTitle,
-        ),
+  return _buildScaffoldAppBarBodies(
+    context: context,
+    masterBody: ChatBody(
+      selectedChatId: null,
+      onTapChat: (String chatId) {
+        onTapChat(context, chatId);
+      },
+      onSignInPressed: () => onTapSignIn(context),
+    ),
+    appBarTitle: Str.chatScreenTitle,
   );
 }
 
@@ -211,6 +217,15 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
   Widget masterBody;
   Widget? detailBody;
 
+  Widget messagesBody = ChangeNotifierProvider(
+    create:
+        (BuildContext _) => MessagesViewModel(
+          authRepository: context.read<AuthRepositoryImpl>(),
+          chatRepository: context.read<ChatRepositoryImpl>(),
+        ),
+    builder: (context, child) => MessagesBody(selectedChatId: chatId!),
+  );
+
   if (isLargeScreen) {
     masterBody = ChatBody(
       selectedChatId: chatId,
@@ -220,9 +235,9 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
       onSignInPressed: () => onTapSignIn(context),
     );
     // Todo fix messages are not showing on large screen
-    detailBody = MessagesBody(selectedChatId: chatId!);
+    detailBody = messagesBody;
   } else {
-    masterBody = MessagesBody(selectedChatId: chatId!);
+    masterBody = messagesBody;
   }
 
   return ChangeNotifierProvider(
