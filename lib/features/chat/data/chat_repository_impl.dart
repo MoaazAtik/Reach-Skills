@@ -186,7 +186,7 @@ class ChatRepositoryImpl extends ChatRepository {
   }
 
   @override
-  void subscribeToMessagesStream(String chatId) {
+  void subscribeToMessagesStream(String chatId, String userId) {
     _messagesSubscriptionCount++;
 
     if (_messagesSubscriptionCount <= 1) {
@@ -194,7 +194,15 @@ class ChatRepositoryImpl extends ChatRepository {
 
       _messagesSubscription = _firestore
           .collection(Str.MESSAGE_COLLECTION_NAME)
-          .where(Str.MESSAGE_FIELD_CHAT_ID, isEqualTo: chatId)
+          .where(
+            Filter.and(
+              Filter(Str.MESSAGE_FIELD_CHAT_ID, isEqualTo: chatId),
+              Filter.or(
+                Filter(Str.MESSAGE_FIELD_SENDER_ID, isEqualTo: userId),
+                Filter(Str.MESSAGE_FIELD_RECEIVER_ID, isEqualTo: userId),
+              ),
+            ),
+          )
           .orderBy(Str.MESSAGE_FIELD_UPDATED_AT, descending: true)
           .limit(50)
           .snapshots()

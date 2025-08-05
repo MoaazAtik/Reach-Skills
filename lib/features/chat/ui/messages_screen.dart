@@ -39,13 +39,13 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   @override
   void initState() {
-    context.read<MessagesViewModel>().updateFields(
-      chatId: widget.chatId,
-      currentSenderId: widget.currentSenderId,
-      currentSenderName: widget.currentSenderName,
-      currentReceiverId: widget.currentReceiverId,
-      currentReceiverName: widget.currentReceiverName,
-    );
+    // context.read<MessagesViewModel>().updateFields(
+    //   chatId: widget.chatId,
+    //   currentSenderId: widget.currentSenderId,
+    //   currentSenderName: widget.currentSenderName,
+    //   currentReceiverId: widget.currentReceiverId,
+    //   currentReceiverName: widget.currentReceiverName,
+    // );
 
     super.initState();
   }

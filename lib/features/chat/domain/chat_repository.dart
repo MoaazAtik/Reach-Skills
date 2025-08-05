@@ -18,7 +18,7 @@ abstract class ChatRepository {
     required String personBName, // to create a chat
   });
 
-  void subscribeToMessagesStream(String chatId);
+  void subscribeToMessagesStream(String chatId, String userId);
 
   void unsubscribeFromMessagesStream();
 

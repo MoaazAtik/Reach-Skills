@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reach_skills/features/chat/ui/message_tile.dart';
 
 import '../../../core/constants/strings.dart';
+import 'messages_viewmodel.dart';
 
 class MessagesBody extends StatelessWidget {
-  const MessagesBody({super.key, required this.selectedChatId});
-
-  final String selectedChatId;
+  const MessagesBody({super.key});
 
   @override
   Widget build(BuildContext context) {
+    print('build - messages body');
+    print(context.watch<MessagesViewModel>().messages);
+
     return ListView.builder(
       itemCount: 10,
       itemBuilder:

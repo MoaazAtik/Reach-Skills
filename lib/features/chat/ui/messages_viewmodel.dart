@@ -35,23 +35,38 @@ class MessagesViewModel extends ChangeNotifier {
   StreamSubscription<List<MessageModel>>? _messagesSubscription;
 
   void init() {
+    print('init - Messages ViewModel');
     startAuthStateSubscription();
-    if (chatId != null) {
-      startMessagesSubscription(chatId!);
-    }
   }
 
-  void updateFields({
-    String? chatId,
-    String? currentSenderId,
-    String? currentSenderName,
-    String? currentReceiverId,
-    String? currentReceiverName,
-  }) {
-    this.currentSenderId = currentSenderId;
-    this.currentSenderName = currentSenderName;
-    this.currentReceiverId = currentReceiverId;
-    this.currentReceiverName = currentReceiverName;
+  void updateFields(Map<String, String> chatPropertiesPack) {
+    /*
+     chatPropertiesPack[Str.messagesScreenParamChatId] will be null when coming
+     form Explore Screen aka, when 'Reach' is tapped.
+    */
+    if (chatPropertiesPack[Str.messagesScreenParamCurrentSenderId] == null ||
+        chatPropertiesPack[Str.messagesScreenParamCurrentSenderName] == null ||
+        chatPropertiesPack[Str.messagesScreenParamCurrentReceiverId] == null ||
+        chatPropertiesPack[Str.messagesScreenParamCurrentReceiverName] ==
+            null) {
+      print(
+        '${Str.excMessageMissingChatPropertiesPack}'
+        ' ${Str.excMessageUpdateFields} - $runtimeType'
+        '\n  chatPropertiesPack: $chatPropertiesPack',
+      );
+      return;
+    }
+
+    currentSenderId =
+        chatPropertiesPack[Str.messagesScreenParamCurrentSenderId]!;
+    currentSenderName =
+        chatPropertiesPack[Str.messagesScreenParamCurrentSenderName]!;
+    currentReceiverId =
+        chatPropertiesPack[Str.messagesScreenParamCurrentReceiverId]!;
+    currentReceiverName =
+        chatPropertiesPack[Str.messagesScreenParamCurrentReceiverName]!;
+
+    final chatId = chatPropertiesPack[Str.messagesScreenParamChatId];
 
     /* notifyListeners is called via setChatId by startMessagesSubscription */
 
@@ -75,9 +90,18 @@ class MessagesViewModel extends ChangeNotifier {
   }
 
   void startMessagesSubscription(String chatId) {
-    _chatRepository.subscribeToMessagesStream(chatId);
+    if (currentSenderId == null) {
+      print(
+        '${Str.excMessageNullCurrentSenderId}'
+        ' ${Str.excMessageStartMessagesSubscription} - $runtimeType',
+      );
+      return;
+    }
+
+    _chatRepository.subscribeToMessagesStream(chatId, currentSenderId!);
 
     if (_chatRepository.messagesStream == null) {
+      // Todo check this logic
       loading = true;
     } else {
       _messagesSubscription = _chatRepository.messagesStream!.listen(
@@ -128,6 +152,7 @@ class MessagesViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    print('dispose - Messages ViewModel');
     stopSubscriptions();
     super.dispose();
   }

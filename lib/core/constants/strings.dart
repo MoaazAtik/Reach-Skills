@@ -49,7 +49,11 @@ abstract class Str {
   static const onboardingScreenRouteName = 'onboarding';
   static const onboardingScreenRoutePath = '/onboarding';
 
-  static const messagesScreenParamId = 'id';
+  static const messagesScreenParamChatId = 'id'; // only for deep linking
+  static const messagesScreenParamCurrentSenderId = 'currentSenderId';
+  static const messagesScreenParamCurrentSenderName = 'currentSenderName';
+  static const messagesScreenParamCurrentReceiverId = 'currentReceiverId';
+  static const messagesScreenParamCurrentReceiverName = 'currentReceiverName';
   static const detailsScreenParamId = 'id'; // only for deep linking
   static const detailsScreenParamInterest = 'interest';
   static const detailsScreenParamFromPath = 'fromPath';
@@ -263,6 +267,8 @@ abstract class Str {
   static const excMessageNullPerson2Id = 'Passed "null Person 2 ID".';
   static const excMessageNullChatId = 'Passed "null Chat ID".';
   static const excMessageNullSenderId = 'Passed "null Sender ID".';
+  static const excMessageNullCurrentSenderId =
+      'Passed "null Current Sender ID".';
   static const excMessageNullReceiverId = 'Passed "null Receiver ID".';
   static const excMessageNullTitle = 'Passed "null Title".';
   static const excMessageNullUserName = 'Passed "null User Name".';
@@ -270,10 +276,14 @@ abstract class Str {
   static const excMessageNullOnTapSave = 'Passed "null onTapSave".';
   static const excMessageNullOnTapReach = 'Passed "null onTapReach".';
   static const excMessageNullAppBarActions =
-      '"appBarEditAction" is false but onTapSignIn, onTapSignOut, onTapEditProfile, or onTapHelp is null. They are required for the popup menu button (RsPopupMenuButton).';
+      '"appBarEditAction" is false but onTapSignIn, onTapSignOut,'
+      ' onTapEditProfile, or onTapHelp is null.'
+      ' They are required for the popup menu button (RsPopupMenuButton).';
   static const excMessageNullUser = 'Passed "null user".';
 
   static const excMessageMin1 = 'Pass at least 1 of them.';
+  static const excMessageMissingChatPropertiesPack =
+      'Missing "chat properties pack" fields.';
 
   static const excMessageInterestModelFromMap =
       'Check `map` passed to `InterestModel.fromMap` constructor.';
@@ -286,7 +296,18 @@ abstract class Str {
   static const excMessageInterestDetails =
       'Check `InterestDetails` constructor.';
   static const excMessageScaffoldAppBarBodies = 'Check `ScaffoldAppBarBodies`.';
-  static const excMessageChatVM = 'Check `startAllChatsSubscription`';
+  static const excMessageStartAllChatsSubscription =
+      'Check `startAllChatsSubscription`';
+  static const excMessagePackChattersProperties =
+      'Check `packChattersProperties`';
+  static const excMessageOnTapChat = 'Check `onTapChat`';
+  static const excMessageUpdateFields = 'Check `updateFields`';
+  static const excMessage_messagesScreenBuilder =
+      'Check `_messagesScreenBuilder`';
+  static const excMessageStartMessagesSubscription =
+      'Check `startMessagesSubscription`';
+
+  static const excMessageFileRouting = 'routing.dart';
 
   /// Exception messages end
 }

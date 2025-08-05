@@ -7,7 +7,7 @@ import 'chat_viewmodel.dart';
 
 class ChatBody extends StatelessWidget {
   final String? selectedChatId;
-  final void Function(String selectedChatId) onTapChat;
+  final void Function(Map<String, String> chatPropertiesPack) onTapChat;
   final VoidCallback onSignInPressed;
 
   const ChatBody({
@@ -20,6 +20,7 @@ class ChatBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final chatViewModel = context.watch<ChatViewModel>();
+    final packChattersProperties = chatViewModel.packChattersProperties;
     final isLoggedIn = chatViewModel.isLoggedIn;
     final loading = chatViewModel.loading;
     final allChats = chatViewModel.allChats;
@@ -64,7 +65,7 @@ class ChatBody extends StatelessWidget {
         // Todo update user name in Firebase auth when user changes name in profile because it's needed for the view model here '_currentUser?.displayName'
         final hisName = context.read<ChatViewModel>().determineChatterProperty(
           chat: allChats[index],
-          property: 'name',
+          property: ChatterProperty.name,
           mine: false,
         );
         return ChatTile(
@@ -73,7 +74,14 @@ class ChatBody extends StatelessWidget {
           // Todo replace mock message
           lastMessage: '${Str.mockMessage1} ${Str.mockMessage2}',
           timestamp: allChats[index].updatedAt,
-          onTap: () => onTapChat(allChats[index].id),
+          onTap: () {
+            final Map<String, String>? chatPropertiesPack =
+                packChattersProperties(chat: allChats[index]);
+
+            if (chatPropertiesPack == null) return;
+
+            onTapChat(chatPropertiesPack);
+          },
           // onTap: () => onTapChat(index.toString()),
         );
       },

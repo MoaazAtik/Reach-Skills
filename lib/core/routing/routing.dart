@@ -201,8 +201,8 @@ Widget _chatScreenBuilder(BuildContext context, GoRouterState state) {
     context: context,
     masterBody: ChatBody(
       selectedChatId: null,
-      onTapChat: (String chatId) {
-        onTapChat(context, chatId);
+      onTapChat: (Map<String, String> chatPropertiesPack) {
+        onTapChat(context, chatPropertiesPack);
       },
       onSignInPressed: () => onTapSignIn(context),
     ),
@@ -211,7 +211,16 @@ Widget _chatScreenBuilder(BuildContext context, GoRouterState state) {
 }
 
 Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
-  final chatId = state.pathParameters[Str.messagesScreenParamId];
+  final chatPropertiesPack = state.extra;
+  if (chatPropertiesPack == null || chatPropertiesPack is! Map) {
+    print(
+      '${Str.excMessageMissingChatPropertiesPack}'
+      ' ${Str.excMessage_messagesScreenBuilder} - ${Str.excMessageFileRouting}'
+      '\n  chatPropertiesPack: $chatPropertiesPack \n',
+    );
+    return ErrorRoute();
+  }
+
   final isLargeScreen = checkLargeScreen(context);
 
   Widget masterBody;
@@ -223,36 +232,34 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
           authRepository: context.read<AuthRepositoryImpl>(),
           chatRepository: context.read<ChatRepositoryImpl>(),
         ),
-    builder: (context, child) => MessagesBody(selectedChatId: chatId!),
+    builder: (context, child) {
+      context.read<MessagesViewModel>().updateFields(
+        chatPropertiesPack as Map<String, String>,
+      );
+
+      return MessagesBody();
+    },
   );
 
   if (isLargeScreen) {
     masterBody = ChatBody(
-      selectedChatId: chatId,
-      onTapChat: (String chatId) {
-        onTapChat(context, chatId);
+      // Todo maybe pass 'selectedChatId'
+      // selectedChatId: chatId,
+      onTapChat: (Map<String, String> chatPropertiesPack) {
+        onTapChat(context, chatPropertiesPack);
       },
       onSignInPressed: () => onTapSignIn(context),
     );
-    // Todo fix messages are not showing on large screen
     detailBody = messagesBody;
   } else {
     masterBody = messagesBody;
   }
 
-  return ChangeNotifierProvider(
-    create:
-        (BuildContext _) => MessagesViewModel(
-          authRepository: context.read<AuthRepositoryImpl>(),
-          chatRepository: context.read<ChatRepositoryImpl>(),
-        ),
-    builder:
-        (context, child) => _buildScaffoldAppBarBodies(
-          context: context,
-          masterBody: masterBody,
-          detailBody: detailBody,
-          appBarTitle: Str.messagesScreenTitle,
-        ),
+  return _buildScaffoldAppBarBodies(
+    context: context,
+    masterBody: masterBody,
+    detailBody: detailBody,
+    appBarTitle: Str.messagesScreenTitle,
   );
 }
 
@@ -339,7 +346,7 @@ Widget _buildInterestDetails({
     startEditing: startEditing,
     // Todo implement
     onTapReach: () {
-      // context.goNamed(Str.chatScreenRouteName);
+      onTapReach(context);
     },
   );
 
@@ -459,18 +466,34 @@ void onTapInterest({
   );
 }
 
-void onTapChat(BuildContext context, String selectedChatId) {
+void onTapChat(BuildContext context, Map<String, String> chatPropertiesPack) {
+  if (chatPropertiesPack[Str.messagesScreenParamChatId] == null) {
+    print(
+      '${Str.excMessageNullChatId}'
+      ' ${Str.excMessageOnTapChat} - ${Str.excMessageFileRouting}'
+      '\n  chatPropertiesPack: $chatPropertiesPack \n',
+    );
+    return;
+  }
+
+  final chatId = chatPropertiesPack[Str.messagesScreenParamChatId]!;
+
   // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
   // context.go('${Str.chatScreenRoutePath}/$selectedChatId');
   context.goNamed(
     Str.messagesScreenRouteName,
-    pathParameters: {Str.messagesScreenParamId: selectedChatId},
+    pathParameters: {Str.messagesScreenParamChatId: chatId},
+    extra: chatPropertiesPack,
   );
 
   // else if (!isLargeScreen) {
   //   // context.push('/chat/$index');
   //   context.go('/chat/$index');
   // }
+}
+
+void onTapReach(BuildContext context) {
+  // context.goNamed(Str.chatScreenRouteName);
 }
 
 void onTapOnboardingGuide(BuildContext context) {
