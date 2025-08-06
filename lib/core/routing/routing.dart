@@ -326,14 +326,11 @@ Widget _buildInterestDetails({
 
   final interest =
       extra[Str.detailsScreenParamInterest] ??
-      context.read<TempNavHistory>().interestsHistory?.last;
-  if (extra[Str.detailsScreenParamInterest] == null) {
-    /*
-    Remove the last selected interest from the list of interests history
-    because it is going to be used now for back navigation and not needed anymore.
-     */
-    context.read<TempNavHistory>().updateInterestsHistory(interest);
-  }
+      context.read<TempNavHistory>().popInterestsHistory();
+  /*
+  Remove the last selected interest from the list of interests history
+  because it is going to be used now for back navigation and not needed anymore.
+  */
 
   final fromPath =
       extra[Str.detailsScreenParamFromPath] ??
@@ -462,7 +459,7 @@ void onTapInterest({
   required String fromPath,
   bool startEditing = false,
 }) {
-  context.read<TempNavHistory>().updateInterestsHistory(interest);
+  context.read<TempNavHistory>().pushInterestsHistory(interest);
 
   /*
    Todo fix. when an interest is open then trying to tap another interest,

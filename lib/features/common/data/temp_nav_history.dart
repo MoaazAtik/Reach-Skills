@@ -1,24 +1,19 @@
 import 'interest_model.dart';
 
 class TempNavHistory {
-  List<InterestModel?>? get interestsHistory => _interestsHistory;
   List<InterestModel?>? _interestsHistory;
-
-  List<Map<String, dynamic>>? get chatPropertiesPackHistory =>
-      _chatPropertiesPackHistory;
   List<Map<String, dynamic>>? _chatPropertiesPackHistory;
 
-  void updateInterestsHistory(InterestModel? interest) {
+  void pushInterestsHistory(InterestModel? interest) {
     _interestsHistory ??= [];
-    if (_interestsHistory!.isEmpty) {
-      _interestsHistory!.add(interest);
-      return;
+    _interestsHistory!.add(interest);
+  }
+
+  InterestModel? popInterestsHistory() {
+    if (_interestsHistory == null || _interestsHistory!.isEmpty) {
+      return null;
     }
-    if (_interestsHistory!.last == interest) {
-      _interestsHistory!.removeLast();
-    } else {
-      _interestsHistory!.add(interest);
-    }
+    return _interestsHistory!.removeLast();
   }
 
   void pushChatPropertiesPackHistory(Map<String, dynamic> chatPropertiesPack) {
