@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/utils/utils.dart';
+import 'package:reach_skills/features/common/data/temp_nav_history.dart';
 import 'package:reach_skills/features/common/widgets/scaffold_app_bar_bodies.dart';
 import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
 import 'package:reach_skills/features/help/ui/help_body.dart';
@@ -211,13 +212,28 @@ Widget _chatScreenBuilder(BuildContext context, GoRouterState state) {
 }
 
 Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
-  final chatPropertiesPack = state.extra;
+  /*
+  Get `chatPropertiesPack` from `TempNavHistory` when navigating back to
+  a Messages Screen.
+   */
+  final chatPropertiesPack =
+      state.extra ??
+      context.read<TempNavHistory>().popChatPropertiesPackHistory();
+
   if (chatPropertiesPack == null || chatPropertiesPack is! Map) {
     print(
       '${Str.excMessageMissingChatPropertiesPack}'
       ' ${Str.excMessage_messagesScreenBuilder} - ${Str.excMessageFileRouting}'
       '\n  chatPropertiesPack: $chatPropertiesPack \n',
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((duration) {
+      if (context.canPop()) {
+        context.pop();
+      } else {
+        context.goNamed(Str.chatScreenRouteName);
+      }
+    });
     return ErrorRoute();
   }
 
@@ -302,20 +318,21 @@ Widget _buildInterestDetails({
   final extra = state.extra ?? const <String, dynamic>{};
   if (extra is! Map) {
     print(
-      '`extra` is not a Map. - ${state.matchedLocation}'
-      ' - Check `buildInterestDetails` function.',
+      '${Str.excMessageExtraNotMap} - ${state.matchedLocation}'
+      ' - ${Str.excMessage_buildInterestDetails}',
     );
     return ErrorRoute();
   }
+
   final interest =
       extra[Str.detailsScreenParamInterest] ??
-      context.read<ProfileRepositoryImpl>().interestsHistory?.last;
+      context.read<TempNavHistory>().interestsHistory?.last;
   if (extra[Str.detailsScreenParamInterest] == null) {
     /*
     Remove the last selected interest from the list of interests history
     because it is going to be used now for back navigation and not needed anymore.
      */
-    context.read<ProfileRepositoryImpl>().updateInterestsHistory(interest);
+    context.read<TempNavHistory>().updateInterestsHistory(interest);
   }
 
   final fromPath =
@@ -331,8 +348,8 @@ Widget _buildInterestDetails({
       startEditing == null ||
       startEditing is! bool) {
     print(
-      '`interest` is null or not an InterestModel. Or `fromPath` is null or not a String.'
-      ' - ${state.matchedLocation} - Check `buildInterestDetails` function.',
+      '${Str.excMessageInterestFromPathCheck} - ${state.matchedLocation}'
+      ' - ${Str.excMessage_buildInterestDetails}',
     );
     return ErrorRoute();
   }
@@ -445,7 +462,7 @@ void onTapInterest({
   required String fromPath,
   bool startEditing = false,
 }) {
-  context.read<ProfileRepositoryImpl>().updateInterestsHistory(interest);
+  context.read<TempNavHistory>().updateInterestsHistory(interest);
 
   /*
    Todo fix. when an interest is open then trying to tap another interest,
@@ -467,7 +484,9 @@ void onTapInterest({
 }
 
 void onTapChat(BuildContext context, Map<String, String> chatPropertiesPack) {
-  if (chatPropertiesPack[Str.messagesScreenParamChatId] == null) {
+  final chatId = chatPropertiesPack[Str.messagesScreenParamChatId];
+
+  if (chatId == null) {
     print(
       '${Str.excMessageNullChatId}'
       ' ${Str.excMessageOnTapChat} - ${Str.excMessageFileRouting}'
@@ -476,7 +495,9 @@ void onTapChat(BuildContext context, Map<String, String> chatPropertiesPack) {
     return;
   }
 
-  final chatId = chatPropertiesPack[Str.messagesScreenParamChatId]!;
+  context.read<TempNavHistory>().pushChatPropertiesPackHistory(
+    chatPropertiesPack,
+  );
 
   // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
   // context.go('${Str.chatScreenRoutePath}/$selectedChatId');

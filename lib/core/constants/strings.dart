@@ -282,8 +282,13 @@ abstract class Str {
   static const excMessageNullUser = 'Passed "null user".';
 
   static const excMessageMin1 = 'Pass at least 1 of them.';
+  static const excMessageExtraNotMap = '`extra` is not a Map.';
+
   static const excMessageMissingChatPropertiesPack =
       'Missing "chat properties pack" fields.';
+  static const excMessageInterestFromPathCheck =
+      '`interest` is null or not an InterestModel.'
+      ' Or `fromPath` is null or not a String.';
 
   static const excMessageInterestModelFromMap =
       'Check `map` passed to `InterestModel.fromMap` constructor.';
@@ -306,6 +311,8 @@ abstract class Str {
       'Check `_messagesScreenBuilder`';
   static const excMessageStartMessagesSubscription =
       'Check `startMessagesSubscription`';
+  static const excMessage_buildInterestDetails =
+      'Check `buildInterestDetails`.';
 
   static const excMessageFileRouting = 'routing.dart';
 

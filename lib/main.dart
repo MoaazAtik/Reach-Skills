@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reach_skills/features/common/data/temp_nav_history.dart';
 
 import 'app.dart';
 import 'core/preferences_repository/data/preferences_repository_impl.dart';
@@ -22,6 +23,7 @@ void main() async {
         Provider(create: (context) => AuthRepositoryImpl()),
         Provider(create: (context) => ProfileRepositoryImpl()),
         Provider(create: (context) => ChatRepositoryImpl()),
+        Provider(create: (context) => TempNavHistory()),
 
         ChangeNotifierProvider(
           create:
