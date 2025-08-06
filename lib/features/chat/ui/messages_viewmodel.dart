@@ -121,6 +121,18 @@ class MessagesViewModel extends ChangeNotifier {
   }
 
   Future<void> sendMessage(String content) async {
+    if (chatId == null ||
+        currentSenderId == null ||
+        currentSenderName == null ||
+        currentReceiverId == null ||
+        currentReceiverName == null) {
+      print(
+        '${Str.excMessageNullFields}'
+        ' ${Str.excMessageSendMessage} - $runtimeType',
+      );
+      return;
+    }
+
     MessageModel messageModel = MessageModel.toBeStored(
       chatId: chatId!,
       senderId: currentSenderId!,

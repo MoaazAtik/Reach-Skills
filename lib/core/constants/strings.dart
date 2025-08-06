@@ -286,6 +286,7 @@ abstract class Str {
 
   static const excMessageMin1 = 'Pass at least 1 of them.';
   static const excMessageExtraNotMap = '`extra` is not a Map.';
+  static const excMessageNullFields = 'One or more fields are null.';
 
   static const excMessageMissingChatPropertiesPack =
       'Missing "chat properties pack" fields.';
@@ -316,6 +317,7 @@ abstract class Str {
       'Check `startMessagesSubscription`';
   static const excMessage_buildInterestDetails =
       'Check `buildInterestDetails`.';
+  static const excMessageSendMessage = 'Check `sendMessage`.';
 
   static const excMessageFileRouting = 'routing.dart';
 

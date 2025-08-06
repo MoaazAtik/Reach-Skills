@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/utils/utils.dart';
+import 'package:reach_skills/features/chat/data/message_model.dart';
 import 'package:reach_skills/features/chat/ui/message_tile.dart';
 
 import '../../../core/constants/strings.dart';
@@ -18,7 +19,21 @@ class MessagesBody extends StatefulWidget {
 
 class _MessagesBodyState extends State<MessagesBody> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_MessageState');
-  final _controller = TextEditingController();
+  final _messageController = TextEditingController();
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Todo remove Scroll Listener. It shall be used later with pagination.
+    // _scrollController.addListener(() {
+    //   if (_scrollController.position.pixels ==
+    //       _scrollController.position.maxScrollExtent) {
+    //     context.read<MessagesViewModel>().loadMoreMessages();
+    //   }
+    // });
+    registerScrollToBottom();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +46,7 @@ class _MessagesBodyState extends State<MessagesBody> {
     final loading = messagesViewModel.loading;
     final currentSenderName = messagesViewModel.currentSenderName;
 
-    final messages = messagesViewModel.messages;
+    final messages = messagesViewModel.messages?.reversed.toList();
     final messagesError = messagesViewModel.messagesError;
 
     if (!isLoggedIn) {
@@ -67,8 +82,12 @@ class _MessagesBodyState extends State<MessagesBody> {
             child: ListView.builder(
               // Todo remove mock comments
               // itemCount: 10,
+              // reverse: true, // I reversed the `messages` instead
+              controller: _scrollController,
               itemCount: messages.length,
               itemBuilder: (context, index) {
+                registerScrollToBottom();
+
                 final message = messages[index];
                 return MessageTile(
                   // Todo remove mock comments
@@ -117,7 +136,7 @@ class _MessagesBodyState extends State<MessagesBody> {
                         // fillColor: Styles.skillChipBackgroundColor,
                         // fillColor: Styles.buttonFullBackgroundColor,
                       ),
-                      controller: _controller,
+                      controller: _messageController,
                       validator:
                           (value) => textValidator(
                             value,
@@ -134,12 +153,15 @@ class _MessagesBodyState extends State<MessagesBody> {
                     style: Styles.styleOutlineButton,
                     // Todo implement onPressed
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        await context.read<MessagesViewModel>().sendMessage(
-                          _controller.text,
-                        );
-                        _controller.clear();
+                      if (_formKey.currentState == null ||
+                          !_formKey.currentState!.validate()) {
+                        return;
                       }
+
+                      await context.read<MessagesViewModel>().sendMessage(
+                        _messageController.text.trim(),
+                      );
+                      _messageController.clear();
                     },
                     child: const Row(
                       children: [
@@ -158,5 +180,24 @@ class _MessagesBodyState extends State<MessagesBody> {
         const SizedBox(height: Styles.spacingSmall),
       ],
     );
+  }
+
+  void registerScrollToBottom() {
+    if (!_scrollController.hasClients) return;
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (duration) => _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 }
