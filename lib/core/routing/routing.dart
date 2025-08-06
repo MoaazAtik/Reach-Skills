@@ -234,7 +234,7 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
         ),
     builder: (context, child) {
       context.read<MessagesViewModel>().updateFields(
-        chatPropertiesPack as Map<String, String>,
+        chatPropertiesPack as Map<String, dynamic>,
       );
 
       return MessagesBody();

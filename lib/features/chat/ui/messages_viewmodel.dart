@@ -39,7 +39,7 @@ class MessagesViewModel extends ChangeNotifier {
     startAuthStateSubscription();
   }
 
-  void updateFields(Map<String, String> chatPropertiesPack) {
+  void updateFields(Map<String, dynamic> chatPropertiesPack) {
     /*
      chatPropertiesPack[Str.messagesScreenParamChatId] will be null when coming
      form Explore Screen aka, when 'Reach' is tapped.

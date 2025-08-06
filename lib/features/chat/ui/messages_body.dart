@@ -11,7 +11,7 @@ class MessagesBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('build - messages body');
-    print(context.watch<MessagesViewModel>().messages);
+    print('  messages length: ${context.watch<MessagesViewModel>().messages?.length}');
 
     return ListView.builder(
       itemCount: 10,
