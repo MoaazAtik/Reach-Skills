@@ -23,7 +23,7 @@ class ChatRepositoryImpl extends ChatRepository {
   @override
   Stream<List<ChatModel>>? get chatsStream => _chatsStream;
 
-  final StreamController<List<MessageModel>> _messagesController =
+  StreamController<List<MessageModel>> _messagesController =
       StreamController<List<MessageModel>>.broadcast();
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>?
   _messagesSubscription;
@@ -81,7 +81,7 @@ class ChatRepositoryImpl extends ChatRepository {
     });
   }
 
-  /// - Delayed subscription canceling is only for Optimization purposes.
+  /// - Delaying subscription canceling is only for Optimization purposes.
   ///
   /// - Tracking `_chatsSubscriptionCount` is *Currently not needed*.
   /// - `_chatsSubscriptionCount < 1` can be replaced with
@@ -190,6 +190,10 @@ class ChatRepositoryImpl extends ChatRepository {
     _messagesSubscriptionCount++;
 
     if (_messagesSubscriptionCount <= 1) {
+      if (_messagesController.isClosed) {
+        _messagesController = StreamController<List<MessageModel>>.broadcast();
+      }
+
       _messagesStream = _messagesController.stream;
 
       _messagesSubscription = _firestore
@@ -233,12 +237,20 @@ class ChatRepositoryImpl extends ChatRepository {
     });
   }
 
+  /// - Delaying subscription canceling is only for Optimization purposes.
+  ///
+  /// - Tracking `_messagesSubscriptionCount` is *Currently not needed*.
+  /// - `_messagesSubscriptionCount < 1` can be replaced with
+  /// `_messagesController.hasListener`.
   @override
   void unsubscribeFromMessagesStream() {
     _messagesSubscriptionCount--;
-    if (_messagesSubscriptionCount < 1) {
-      _messagesController.close();
-      _messagesSubscription?.cancel();
-    }
+
+     Future.delayed(Duration(seconds: 5), () {
+      if (_messagesSubscriptionCount < 1) {
+        _messagesController.close();
+        _messagesSubscription?.cancel();
+      }
+    });
   }
 }

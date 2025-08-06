@@ -250,7 +250,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
     });
   }
 
-  /// - Delayed subscription canceling is only for Optimization purposes.
+  /// - Delaying subscription canceling is only for Optimization purposes.
   ///
   /// - Tracking `_interestsSubscriptionCount` is *Currently not needed*.
   /// - `_interestsSubscriptionCount < 1` can be replaced with
