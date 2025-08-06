@@ -50,6 +50,7 @@ abstract class Styles {
   static const fontSize16 = 16.0;
   static const fontSize14 = 16.0;
 
+  static const elevationCard = 4.0;
   static const elevationMenu = 8.0;
   static const elevationDialog = 24.0;
 
@@ -156,6 +157,14 @@ abstract class Styles {
         ),
       ),
     ),
+  );
+
+  static final styleOutlineButton = OutlinedButton.styleFrom(
+    side: const BorderSide(style: BorderStyle.none),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(Styles.borderRadius),
+    ),
+    padding: const EdgeInsets.all(Styles.paddingMedium),
   );
 
   static const rsFilledButtonTextStyle = TextStyle(

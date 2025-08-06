@@ -149,6 +149,9 @@ abstract class Str {
       'A short description of the interest...';
   static const interestTags = 'Tags';
   static const interestTagsHint = 'eg, Guitar, Music, Art, Programming...';
+  static const send = 'SEND';
+  static const messageHint = 'Leave a message';
+  static const emptyMessageError = 'Enter your message to continue';
 
   static const account = 'Account';
   static const name = 'Name';

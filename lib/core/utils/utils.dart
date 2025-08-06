@@ -3,24 +3,27 @@ import 'package:flutter/material.dart';
 import '../constants/strings.dart';
 import '../theme/styles.dart';
 
-extension WidgetFullWidth on Widget {
+extension WidgetExtensions on Widget {
+  /// For widgets with **Bounded** width like `Columns`
   Widget withFullWidth() => SizedBox(width: double.infinity, child: this);
-}
 
-extension WidgetFullSize on Widget {
-  Widget withFullSize() => SizedBox.expand(child: this);
+  /// For widgets with **Unbounded** horizontal axis like `Rows`
+  Widget withFiniteMaxWidth({
+    required BuildContext context,
+    double ratio = 1.0,
+  }) => SizedBox(width: MediaQuery.sizeOf(context).width * ratio, child: this);
+
   /*
-  OR
   Widget withFullSize() => Positioned.fill(child: this);
-  */
-}
-
-extension WidgetCenter on Widget {
-  Widget alignCenter() => Align(alignment: Alignment.center, child: this);
-  /*
   OR
-  Widget alignCenter() => Center(child: this);
   */
+  Widget withFullSize() => SizedBox.expand(child: this);
+
+  /*
+  Widget alignCenter() => Center(child: this);
+  OR
+  */
+  Widget alignCenter() => Align(alignment: Alignment.center, child: this);
 }
 
 bool checkLargeScreen(BuildContext context) {
@@ -86,8 +89,8 @@ extension StringExtensions on String {
   }
 }
 
-String? textValidator(String? value) {
-  return value == null || value.isEmpty ? Str.required : null;
+String? textValidator(String? value, {String errorMessage = Str.required}) {
+  return value == null || value.isEmpty ? errorMessage : null;
 }
 
 void showSnackBarMessage(

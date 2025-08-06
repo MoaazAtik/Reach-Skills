@@ -253,7 +253,7 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
         chatPropertiesPack as Map<String, dynamic>,
       );
 
-      return MessagesBody();
+      return MessagesBody(onSignInPressed: () => onTapSignIn(context));
     },
   );
 
