@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/utils/utils.dart';
-import 'package:reach_skills/features/chat/data/message_model.dart';
 import 'package:reach_skills/features/chat/ui/message_tile.dart';
 
 import '../../../core/constants/strings.dart';
