@@ -15,4 +15,6 @@ abstract class AuthRepository {
   String? getUserId();
 
   String? getUserEmail();
+
+  Future<void> updateUserName(String name);
 }

@@ -287,12 +287,16 @@ abstract class Str {
   static const excMessageMin1 = 'Pass at least 1 of them.';
   static const excMessageExtraNotMap = '`extra` is not a Map.';
   static const excMessageNullFields = 'One or more fields are null.';
+  static const excMessageNullFirebaseAuthCurrentUser =
+      'Null `FirebaseAuth.instance.currentUser`.';
 
   static const excMessageMissingChatPropertiesPack =
       'Missing "chat properties pack" fields.';
   static const excMessageInterestFromPathCheck =
       '`interest` is null or not an InterestModel.'
       ' Or `fromPath` is null or not a String.';
+  static const excMessageUserIdAndNameStream =
+      'Error getting current user\'s id and name.';
 
   static const excMessageInterestModelFromMap =
       'Check `map` passed to `InterestModel.fromMap` constructor.';
@@ -303,7 +307,8 @@ abstract class Str {
   static const excMessageMessageModelFromMapAndId =
       'Check data passed to `MessageModel.fromMapAndId` constructor.';
   static const excMessageInterestDetails =
-      'Check `InterestDetails` constructor.';
+      'Check `InterestDetails` build method.';
+  static const excMessageInterestDetailsReach = 'Check `onTapReach` method.';
   static const excMessageScaffoldAppBarBodies = 'Check `ScaffoldAppBarBodies`.';
   static const excMessageStartAllChatsSubscription =
       'Check `startAllChatsSubscription`';
@@ -318,6 +323,9 @@ abstract class Str {
   static const excMessage_buildInterestDetails =
       'Check `buildInterestDetails`.';
   static const excMessageSendMessage = 'Check `sendMessage`.';
+  static const excMessageSubscribeToUserIdAndNameStream =
+      'Check `subscribeToUserIdAndNameStream`.';
+  static const excMessageUpdateUserName = 'Check `updateUserName`.';
 
   static const excMessageFileRouting = 'routing.dart';
 

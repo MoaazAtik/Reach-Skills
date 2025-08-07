@@ -57,6 +57,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                 return ChangeNotifierProvider(
                   create:
                       (BuildContext _) => ExploreViewModel(
+                        authViewModel: context.read<AuthViewModel>(),
                         profileRepository:
                             context.read<ProfileRepositoryImpl>(),
                       ),
@@ -358,9 +359,8 @@ Widget _buildInterestDetails({
     interest: interest,
     isOwner: isOwner,
     startEditing: startEditing,
-    // Todo implement
-    onTapReach: () {
-      onTapReach(context);
+    onTapReach: ({required Map<String, String> chatPropertiesPack}) {
+      onTapReach(context, chatPropertiesPack);
     },
   );
 
@@ -510,8 +510,22 @@ void onTapChat(BuildContext context, Map<String, String> chatPropertiesPack) {
   // }
 }
 
-void onTapReach(BuildContext context) {
-  // context.goNamed(Str.chatScreenRouteName);
+void onTapReach(BuildContext context, Map<String, String> chatPropertiesPack) {
+  context.read<TempNavHistory>().pushChatPropertiesPackHistory(
+    chatPropertiesPack,
+  );
+
+  /*
+  Going to Chats screen first is for better UX so that navigating back takes to
+  the Chats screen instead of the InterestDetails screen.
+  */
+  context.goNamed(Str.chatScreenRouteName);
+
+  /*
+  `goNamed` or `Str.messagesScreenRoutePath` with `go` don't work especially
+  on large screens.
+  */
+  context.go(Str.messagesScreenRouteFullPath, extra: chatPropertiesPack);
 }
 
 void onTapOnboardingGuide(BuildContext context) {

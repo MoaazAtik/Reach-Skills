@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../core/constants/strings.dart';
 import '../domain/auth_repository.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
@@ -29,8 +30,10 @@ class AuthRepositoryImpl extends AuthRepository {
     _authStateSubscriptionCount++;
 
     if (_authStateSubscriptionCount <= 1) {
-      _authStateSubscription = _auth.authStateChanges().listen(
-        (user) {
+      _authStateSubscription = _auth.userChanges().listen(
+        (User? user) {
+          if (_currentUserNotifier.value == user) return;
+
           _currentUserNotifier.value = user;
           _isLoggedIn.value = user != null;
           _authError.value = null;
@@ -53,6 +56,7 @@ class AuthRepositoryImpl extends AuthRepository {
     }
   }
 
+  // Todo replace these `FirebaseAuth.instance`s with `_auth`
   @override
   Future<void> signOut() {
     return FirebaseAuth.instance.signOut();
@@ -66,5 +70,24 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   String? getUserEmail() {
     return FirebaseAuth.instance.currentUser?.email;
+  }
+
+  /// Update user name in Firebase Auth user profile aka,
+  /// `FirebaseAuth.instance`, not the profile repository which is
+  /// a Firestore collection aka, `FirebaseFirestore.instance`.
+  @override
+  Future<void> updateUserName(String name) async {
+    final User? currentAuthUser = _auth.currentUser;
+    if (currentAuthUser == null) {
+      print(
+        '${Str.excMessageNullFirebaseAuthCurrentUser}'
+        ' ${Str.excMessageUpdateUserName} - $this',
+      );
+      return;
+    }
+
+    if (currentAuthUser.displayName == name) return;
+
+    await _auth.currentUser!.updateDisplayName(name);
   }
 }

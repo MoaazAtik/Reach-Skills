@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../core/constants/strings.dart';
+import '../../auth/domain/auth_repository.dart';
 import '../../common/data/interest_model.dart';
 import '../../common/data/skill_model.dart';
 import '../../common/data/wish_model.dart';
@@ -10,7 +11,11 @@ import '../domain/profile_model.dart';
 import '../domain/profile_repository.dart';
 
 class ProfileRepositoryImpl extends ProfileRepository {
+  ProfileRepositoryImpl({required AuthRepository authRepository})
+    : _authRepository = authRepository;
+
   final _firestore = FirebaseFirestore.instance;
+  final AuthRepository _authRepository;
 
   int _interestsSubscriptionCount = 0;
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>?
@@ -52,7 +57,11 @@ class ProfileRepositoryImpl extends ProfileRepository {
           print('error saving profile: $error');
           result = Str.errorSavingProfile;
         })
-        .then((value) => result = Str.profileSaved);
+        .then((value) {
+          _authRepository.updateUserName(profile.name);
+
+          return result = Str.profileSaved;
+        });
 
     return result;
   }
@@ -73,7 +82,11 @@ class ProfileRepositoryImpl extends ProfileRepository {
           print('error creating profile: $error');
           result = Str.errorSavingProfile;
         })
-        .then((value) => result = Str.profileSaved);
+        .then((value) {
+          _authRepository.updateUserName(profile.name);
+
+          return result = Str.profileSaved;
+        });
 
     return result;
   }

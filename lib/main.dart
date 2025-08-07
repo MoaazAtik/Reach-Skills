@@ -21,7 +21,12 @@ void main() async {
       providers: [
         Provider(create: (context) => PreferencesRepositoryImpl()),
         Provider(create: (context) => AuthRepositoryImpl()),
-        Provider(create: (context) => ProfileRepositoryImpl()),
+        Provider(
+          create:
+              (context) => ProfileRepositoryImpl(
+                authRepository: context.read<AuthRepositoryImpl>(),
+              ),
+        ),
         Provider(create: (context) => ChatRepositoryImpl()),
         Provider(create: (context) => TempNavHistory()),
 

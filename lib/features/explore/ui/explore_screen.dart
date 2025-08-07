@@ -66,20 +66,20 @@ class ExploreScreen extends StatelessWidget {
                       return;
                     }
 
-                    navigatorState.push(
-                      MaterialPageRoute(
-                        builder:
-                            (_) => MessagesScreen(
-                              currentSenderId: exploreViewModel.currentSenderId,
-                              currentSenderName:
-                                  exploreViewModel.currentSenderName,
-                              currentReceiverId:
-                                  exploreViewModel.currentReceiverId,
-                              currentReceiverName:
-                                  exploreViewModel.currentReceiverName,
-                            ),
-                      ),
-                    );
+                    // navigatorState.push(
+                    //   MaterialPageRoute(
+                    //     builder:
+                    //         (_) => MessagesScreen(
+                    //           currentSenderId: exploreViewModel.currentSenderId,
+                    //           currentSenderName:
+                    //               exploreViewModel.currentSenderName,
+                    //           currentReceiverId:
+                    //               exploreViewModel.currentReceiverId,
+                    //           currentReceiverName:
+                    //               exploreViewModel.currentReceiverName,
+                    //         ),
+                    //   ),
+                    // );
                   },
                 ),
             ],

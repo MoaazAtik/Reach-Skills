@@ -37,6 +37,11 @@ class MessagesViewModel extends ChangeNotifier {
   void init() {
     print('init - Messages ViewModel');
     startAuthStateSubscription();
+    /*
+    `updateFields()` will be called right after creating the ViewModel. It'll
+    use data passed when navigating from the previous screen as an `extra`
+    through the Router.
+    */
   }
 
   void updateFields(Map<String, dynamic> chatPropertiesPack) {

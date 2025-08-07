@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reach_skills/core/constants/strings.dart';
 import 'package:reach_skills/core/theme/styles.dart';
 import 'package:reach_skills/core/utils/utils.dart';
 import 'package:reach_skills/features/common/data/interest_model.dart';
 import 'package:reach_skills/features/common/widgets/rs_chip.dart';
 
+import '../../explore/ui/explore_viewmodel.dart';
 import '../../profile/ui/profile_body.dart';
 import '../data/skill_model.dart';
 import '../data/wish_model.dart';
@@ -21,7 +23,8 @@ class InterestDetails extends StatefulWidget {
   final InterestModel? interest;
   final bool isOwner;
   final bool startEditing;
-  final void Function()? onTapReach;
+  final void Function({required Map<String, String> chatPropertiesPack})?
+  onTapReach;
 
   @override
   State<InterestDetails> createState() => _InterestDetailsState();
@@ -35,6 +38,10 @@ class _InterestDetailsState extends State<InterestDetails> {
   late TextEditingController _descriptionController;
   late InterestType? _selectedInterestType;
   late String _tags;
+  late final String? currentSenderId;
+  late final String? currentSenderName;
+  late final String? currentReceiverId;
+  late final String? currentReceiverName;
 
   @override
   void initState() {
@@ -46,6 +53,14 @@ class _InterestDetailsState extends State<InterestDetails> {
     _descriptionController = TextEditingController(
       text: widget.interest?.description,
     );
+
+    currentSenderId = context.read<ExploreViewModel>().currentSenderId;
+    currentSenderName = context.read<ExploreViewModel>().currentSenderName;
+    currentReceiverId = widget.interest?.userId;
+    currentReceiverName = widget.interest?.userName;
+    /*
+    `currentReceiverId` and `currentReceiverName` will be Null when creating a new interest aka, when `interest` is null.
+    */
   }
 
   @override
@@ -203,6 +218,7 @@ class _InterestDetailsState extends State<InterestDetails> {
           // if Not owner Or Is editing
           if ((!widget.isOwner) || isEditing)
             FilledButton(
+              // Todo extract this callback
               onPressed: () {
                 if (isEditing) {
                   if (widget.isOwner) {
@@ -218,7 +234,26 @@ class _InterestDetailsState extends State<InterestDetails> {
                     );
                   }
                 } else if (widget.onTapReach != null) {
-                  widget.onTapReach!();
+                  if (currentSenderId == null ||
+                      currentSenderName == null ||
+                      currentReceiverId == null ||
+                      currentReceiverName == null) {
+                    print(
+                      '${Str.excMessageNullFields} ${Str.excMessageInterestDetailsReach} ${Str.excMessageInterestDetails} - $this',
+                    );
+                    return;
+                  }
+                  widget.onTapReach!(
+                    chatPropertiesPack: {
+                      Str.messagesScreenParamCurrentSenderId: currentSenderId!,
+                      Str.messagesScreenParamCurrentSenderName:
+                          currentSenderName!,
+                      Str.messagesScreenParamCurrentReceiverId:
+                          currentReceiverId!,
+                      Str.messagesScreenParamCurrentReceiverName:
+                          currentReceiverName!,
+                    },
+                  );
                 } else {
                   throw Exception(
                     '${Str.excMessageNullOnTapSave} ${Str.excMessageNullOnTapReach} ${Str.excMessageMin1} ${Str.excMessageInterestDetails}',

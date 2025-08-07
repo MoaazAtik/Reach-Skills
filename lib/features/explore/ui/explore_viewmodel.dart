@@ -1,20 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:reach_skills/core/preferences_repository/domain/preferences_repository.dart';
 
 import '../../../core/constants/strings.dart';
-import '../../auth/domain/auth_repository.dart';
+import '../../auth/ui/auth_viewmodel.dart';
 import '../../common/data/interest_model.dart';
-import '../../profile/domain/profile_model.dart';
 import '../../profile/domain/profile_repository.dart';
 
 class ExploreViewModel extends ChangeNotifier {
-  ExploreViewModel({required ProfileRepository profileRepository})
-    : _profileRepository = profileRepository {
+  ExploreViewModel({
+    required AuthViewModel authViewModel,
+    required ProfileRepository profileRepository,
+  }) : _authViewModel = authViewModel,
+       _profileRepository = profileRepository {
     init();
   }
 
+  final AuthViewModel _authViewModel;
   final ProfileRepository _profileRepository;
 
   StreamSubscription<List<InterestModel>>? _interestsSubscription;
@@ -27,11 +29,10 @@ class ExploreViewModel extends ChangeNotifier {
 
   String? currentSenderId;
   String? currentSenderName;
-  String? currentReceiverId;
-  String? currentReceiverName;
 
   void init() {
     startInterestsSubscription(interestTypes);
+    getCurrentUserIdAndName();
     notifyListeners(); /* Investigate why app works fine even without this line. */
   }
 
@@ -56,6 +57,16 @@ class ExploreViewModel extends ChangeNotifier {
         // notifyListeners();
       },
     );
+  }
+
+  /// Get current user id and name to be passed through `InterestDetails` screen
+  /// when tapping `Reach` button.
+  void getCurrentUserIdAndName() {
+    /*
+    Null check is done by `InterestDetails` screen when calling `onTapReach`.
+     */
+    currentSenderId = _authViewModel.currentUser?.uid;
+    currentSenderName = _authViewModel.currentUser?.displayName;
   }
 
   void stopSubscriptions() {
