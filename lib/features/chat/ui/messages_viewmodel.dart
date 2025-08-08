@@ -102,23 +102,26 @@ class MessagesViewModel extends ChangeNotifier {
     _chatRepository.subscribeToMessagesStream(chatId, currentSenderId!);
 
     if (_chatRepository.messagesStream == null) {
-      // Todo check this logic
-      loading = true;
-    } else {
-      _messagesSubscription = _chatRepository.messagesStream!.listen(
-        (data) {
-          messages = data;
-          messagesError = null;
-          loading = false;
-          notifyListeners();
-        },
-        onError: (errorObject, stackTrace) {
-          messagesError = Str.serverErrorMessage;
-          loading = false;
-          notifyListeners();
-        },
+      print(
+        '${Str.excMessageNullMessagesStream}'
+        ' ${Str.excMessageStartMessagesSubscription} - $this',
       );
+      return;
     }
+
+    _messagesSubscription = _chatRepository.messagesStream!.listen(
+      (data) {
+        messages = data;
+        messagesError = null;
+        loading = false;
+        notifyListeners();
+      },
+      onError: (errorObject, stackTrace) {
+        messagesError = Str.serverErrorMessage;
+        loading = false;
+        notifyListeners();
+      },
+    );
   }
 
   Future<void> sendMessage(String content) async {

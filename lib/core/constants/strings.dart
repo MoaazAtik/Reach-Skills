@@ -283,6 +283,7 @@ abstract class Str {
       ' onTapEditProfile, or onTapHelp is null.'
       ' They are required for the popup menu button (RsPopupMenuButton).';
   static const excMessageNullUser = 'Passed "null user".';
+  static const excMessageNullMessagesStream = 'Null "Messages Stream".';
 
   static const excMessageMin1 = 'Pass at least 1 of them.';
   static const excMessageExtraNotMap = '`extra` is not a Map.';
