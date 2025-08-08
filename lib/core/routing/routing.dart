@@ -248,12 +248,9 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
         (BuildContext _) => MessagesViewModel(
           authRepository: context.read<AuthRepositoryImpl>(),
           chatRepository: context.read<ChatRepositoryImpl>(),
+          chatPropertiesPack: chatPropertiesPack as Map<String, dynamic>,
         ),
     builder: (context, child) {
-      context.read<MessagesViewModel>().updateFields(
-        chatPropertiesPack as Map<String, dynamic>,
-      );
-
       return MessagesBody(onSignInPressed: () => onTapSignIn(context));
     },
   );
@@ -447,6 +444,8 @@ Widget _buildScaffoldAppBarBodies({
 /// Helper functions
 
 void goToBranchDestination(int index, StatefulNavigationShell navigationShell) {
+  // Todo enhance this. Check if the previous page is the `initialLocation` then
+  // just navigate back instead of adding a new page to navigation stack.
   navigationShell.goBranch(
     index,
     initialLocation: index == navigationShell.currentIndex,

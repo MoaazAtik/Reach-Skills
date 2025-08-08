@@ -24,22 +24,11 @@ class _MessagesBodyState extends State<MessagesBody> {
   @override
   void initState() {
     super.initState();
-    // Todo remove Scroll Listener. It shall be used later with pagination.
-    // _scrollController.addListener(() {
-    //   if (_scrollController.position.pixels ==
-    //       _scrollController.position.maxScrollExtent) {
-    //     context.read<MessagesViewModel>().loadMoreMessages();
-    //   }
-    // });
     registerScrollToBottom();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('build - messages body');
-    print(
-      '  messages length: ${context.watch<MessagesViewModel>().messages?.length}',
-    );
     final messagesViewModel = context.watch<MessagesViewModel>();
     final isLoggedIn = messagesViewModel.isLoggedIn;
     final loading = messagesViewModel.loading;

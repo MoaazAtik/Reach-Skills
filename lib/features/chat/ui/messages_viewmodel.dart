@@ -11,9 +11,10 @@ class MessagesViewModel extends ChangeNotifier {
   MessagesViewModel({
     required AuthRepository authRepository,
     required ChatRepository chatRepository,
+    required Map<String, dynamic> chatPropertiesPack,
   }) : _authRepository = authRepository,
        _chatRepository = chatRepository {
-    init();
+    init(chatPropertiesPack);
   }
 
   final AuthRepository _authRepository;
@@ -34,14 +35,9 @@ class MessagesViewModel extends ChangeNotifier {
 
   StreamSubscription<List<MessageModel>>? _messagesSubscription;
 
-  void init() {
-    print('init - Messages ViewModel');
+  void init(Map<String, dynamic> chatPropertiesPack) {
+    updateFields(chatPropertiesPack);
     startAuthStateSubscription();
-    /*
-    `updateFields()` will be called right after creating the ViewModel. It'll
-    use data passed when navigating from the previous screen as an `extra`
-    through the Router.
-    */
   }
 
   void updateFields(Map<String, dynamic> chatPropertiesPack) {
