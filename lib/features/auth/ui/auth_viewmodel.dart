@@ -44,25 +44,38 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
 
     // Listen to changes
-    _authRepository.currentUserNotifier.addListener(() {
-      _currentUser = _authRepository.currentUserNotifier.value;
-      _authError = null;
-      notifyListeners();
-    });
-
-    _authRepository.authError.addListener(() {
-      _authError = _authRepository.authError.value;
-      notifyListeners();
-    });
-
-    _authRepository.isLoggedIn.addListener(() {
-      _isLoggedIn = _authRepository.isLoggedIn.value;
-      notifyListeners();
-    });
+    _authRepository.currentUserNotifier.addListener(
+      _listenerCurrentUserNotifier,
+    );
+    _authRepository.authError.addListener(_listenerAuthError);
+    _authRepository.isLoggedIn.addListener(_listenerIsLoggedIn);
   }
 
-  void stopAuthStateSubscription() {
+  void stopSubscriptions() {
     _authRepository.unsubscribeFromAuthStateChanges();
+    _authRepository.currentUserNotifier.removeListener(
+      _listenerCurrentUserNotifier,
+    );
+    (_authRepository as AuthRepositoryImpl).authError.removeListener(
+      _listenerAuthError,
+    );
+    _authRepository.isLoggedIn.removeListener(_listenerIsLoggedIn);
+  }
+
+  void _listenerCurrentUserNotifier() {
+    _currentUser = _authRepository.currentUserNotifier.value;
+    _authError = null;
+    notifyListeners();
+  }
+
+  void _listenerAuthError() {
+    _authError = (_authRepository as AuthRepositoryImpl).authError.value;
+    notifyListeners();
+  }
+
+  void _listenerIsLoggedIn() {
+    _isLoggedIn = _authRepository.isLoggedIn.value;
+    notifyListeners();
   }
 
   Future<void> signOut() async {
@@ -71,7 +84,7 @@ class AuthViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    stopAuthStateSubscription();
+    stopSubscriptions();
     super.dispose();
   }
 }
