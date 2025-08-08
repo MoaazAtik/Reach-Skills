@@ -59,22 +59,11 @@ class ChatViewModel extends ChangeNotifier {
     _authError = (_authRepository as AuthRepositoryImpl).authError.value;
     notifyListeners();
 
-    _authRepository.isLoggedIn.addListener(() {
-      _isLoggedIn = _authRepository.isLoggedIn.value;
-      notifyListeners();
-    });
-
-    _authRepository.currentUserNotifier.addListener(() {
-      _currentUser = _authRepository.currentUserNotifier.value;
-      _authError = null;
-      startAllChatsSubscription();
-      notifyListeners();
-    });
-
-    _authRepository.authError.addListener(() {
-      _authError = _authRepository.authError.value;
-      notifyListeners();
-    });
+    _authRepository.isLoggedIn.addListener(_listenerIsLoggedIn);
+    _authRepository.currentUserNotifier.addListener(
+      _listenerCurrentUserNotifier,
+    );
+    _authRepository.authError.addListener(_listenerAuthError);
   }
 
   void startAllChatsSubscription() {
@@ -108,8 +97,33 @@ class ChatViewModel extends ChangeNotifier {
   void stopSubscriptions() {
     _authRepository.unsubscribeFromAuthStateChanges();
 
+    _authRepository.isLoggedIn.removeListener(_listenerIsLoggedIn);
+    _authRepository.currentUserNotifier.removeListener(
+      _listenerCurrentUserNotifier,
+    );
+    (_authRepository as AuthRepositoryImpl).authError.removeListener(
+      _listenerAuthError,
+    );
+
     _chatRepository.unsubscribeFromChatsStream();
     _allChatsSubscription?.cancel();
+  }
+
+  void _listenerIsLoggedIn() {
+    _isLoggedIn = _authRepository.isLoggedIn.value;
+    notifyListeners();
+  }
+
+  void _listenerCurrentUserNotifier() {
+    _currentUser = _authRepository.currentUserNotifier.value;
+    _authError = null;
+    startAllChatsSubscription();
+    notifyListeners();
+  }
+
+  void _listenerAuthError() {
+    _authError = (_authRepository as AuthRepositoryImpl).authError.value;
+    notifyListeners();
   }
 
   void updateSelectedChatFields(ChatModel chat) {
