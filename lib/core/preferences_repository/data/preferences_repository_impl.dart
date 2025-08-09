@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesRepositoryImpl extends PreferencesRepository {
   static const String _keyIsFirstInitialization = 'isFirstInitialization';
+  static const bool defaultIsFirstInitialization = true;
 
   @override
   Future<void> setIsFirstInitialization(bool value) async {
@@ -13,7 +14,7 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
   @override
   Future<bool> isFirstInitialization() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await Future.delayed(const Duration(seconds: 3));
-    return prefs.getBool(_keyIsFirstInitialization) ?? true;
+    return prefs.getBool(_keyIsFirstInitialization) ??
+        defaultIsFirstInitialization;
   }
 }

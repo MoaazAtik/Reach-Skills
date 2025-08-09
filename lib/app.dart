@@ -19,7 +19,7 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
   @override
   void initState() {
     super.initState();
-    _getIsFirstInitialization();
+    _defineRouter();
   }
 
   @override
@@ -39,23 +39,16 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
    rebuilds (especially in Dev mode).
    It also removed the unwanted screen blinking when rebuilding.
    */
-  late final GoRouter _router;
-  bool? isFirstInitialization;
+  GoRouter? _router;
   late Brightness _brightness;
   late TextTheme _textTheme;
   late MaterialTheme _theme;
 
   @override
   Widget build(BuildContext context) {
-    if (isFirstInitialization == null) {
+    if (_router == null) {
       return const Center(child: CircularProgressIndicator());
     }
-
-    // print(
-    //   'build - Key: ${widget.key} | '
-    //   'Type: $runtimeType | Hash: ${identityHashCode(this)} ie, $hashCode '
-    //   'this: $this'
-    // );
 
     return MaterialApp.router(
       title: Str.appTitle,
@@ -72,33 +65,24 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
     );
   }
 
-  Future<void> _getIsFirstInitialization() async {
-    await context
+  Future<void> _defineRouter() async {
+    bool isFirstInitialization = await context
         .read<PreferencesRepositoryImpl>()
         .isFirstInitialization()
-        .then((value) {
-          if (!mounted) {
-            print('Not mounted - $this');
-            return value;
-          }
-          setState(() {
-            isFirstInitialization = value;
-            _router = getRouter(isFirstInitialization!);
-          });
-        })
         .timeout(
           const Duration(seconds: 3),
-          onTimeout: () {
-            if (!mounted) {
-              print('Not mounted - Timeout - $this');
-              return true;
-            }
-            setState(() {
-              isFirstInitialization = true;
-              _router = getRouter(isFirstInitialization!);
-            });
-            return true;
-          },
+          onTimeout:
+              () => PreferencesRepositoryImpl.defaultIsFirstInitialization,
         );
+
+    /*
+    Prevent setState after dispose
+     */
+    if (!mounted) {
+      print('${Str.excMessageNotMounted} - $this');
+      return;
+    }
+
+    setState(() => _router = getRouter(isFirstInitialization));
   }
 }
