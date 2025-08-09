@@ -2,7 +2,7 @@ import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
+import 'package:reach_skills/core/preferences_repository/data/preferences_repository_impl.dart';
 
 import 'core/constants/strings.dart';
 import 'core/routing/routing.dart';
@@ -19,7 +19,7 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
   @override
   void initState() {
     super.initState();
-    _router = getRouter(false);
+    _getIsFirstInitialization();
   }
 
   @override
@@ -40,25 +40,21 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
    It also removed the unwanted screen blinking when rebuilding.
    */
   late final GoRouter _router;
+  bool? isFirstInitialization;
   late Brightness _brightness;
   late TextTheme _textTheme;
   late MaterialTheme _theme;
 
   @override
   Widget build(BuildContext context) {
-    // Todo uncomment and fix infinite loading. maybe initialize it in `initState`.
-    // bool? isFirstInitialization = context.select<ExploreViewModel, bool?>((
-    //   viewModel,
-    // ) {
-    //   return viewModel.isFirstInitialization;
-    // });
-    //
-    // if (isFirstInitialization == null) {
-    //   return Center(child: const CircularProgressIndicator());
-    // }
+    if (isFirstInitialization == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     // print(
     //   'build - Key: ${widget.key} | '
-    //   'Type: $runtimeType | Hash: ${identityHashCode(this)} ie, $hashCode',
+    //   'Type: $runtimeType | Hash: ${identityHashCode(this)} ie, $hashCode '
+    //   'this: $this'
     // );
 
     return MaterialApp.router(
@@ -74,5 +70,35 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
 
       routerConfig: _router,
     );
+  }
+
+  Future<void> _getIsFirstInitialization() async {
+    await context
+        .read<PreferencesRepositoryImpl>()
+        .isFirstInitialization()
+        .then((value) {
+          if (!mounted) {
+            print('Not mounted - $this');
+            return value;
+          }
+          setState(() {
+            isFirstInitialization = value;
+            _router = getRouter(isFirstInitialization!);
+          });
+        })
+        .timeout(
+          const Duration(seconds: 3),
+          onTimeout: () {
+            if (!mounted) {
+              print('Not mounted - Timeout - $this');
+              return true;
+            }
+            setState(() {
+              isFirstInitialization = true;
+              _router = getRouter(isFirstInitialization!);
+            });
+            return true;
+          },
+        );
   }
 }

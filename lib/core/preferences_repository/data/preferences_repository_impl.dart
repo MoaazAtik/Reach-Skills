@@ -13,6 +13,7 @@ class PreferencesRepositoryImpl extends PreferencesRepository {
   @override
   Future<bool> isFirstInitialization() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await Future.delayed(const Duration(seconds: 3));
     return prefs.getBool(_keyIsFirstInitialization) ?? true;
   }
 }

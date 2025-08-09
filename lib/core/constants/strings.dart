@@ -290,6 +290,7 @@ abstract class Str {
   static const excMessageNullFields = 'One or more fields are null.';
   static const excMessageNullFirebaseAuthCurrentUser =
       'Null `FirebaseAuth.instance.currentUser`.';
+  static const excMessageNotMounted = 'Not mounted.';
 
   static const excMessageMissingChatPropertiesPack =
       'Missing "chat properties pack" fields.';
