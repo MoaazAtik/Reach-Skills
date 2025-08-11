@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/theme/styles.dart';
-import 'package:reach_skills/features/common/data/wish_model.dart';
+import 'package:reach_skills/features/explore/ui/rs_interests_filter_menu.dart';
 import 'package:reach_skills/features/explore/ui/search_widget.dart';
 
-import '../../../core/constants/strings.dart';
 import '../../common/data/interest_model.dart';
-import '../../common/data/skill_model.dart';
-import '../../common/widgets/rs_chip.dart';
 import 'explore_viewmodel.dart';
 import 'interest_card.dart';
 
 class ExploreBody extends StatefulWidget {
-  const ExploreBody({super.key, required this.onTapInterest, this.interests = const []});
+  const ExploreBody({
+    super.key,
+    required this.onTapInterest,
+    this.interests = const [],
+  });
 
   final void Function(InterestModel interest) onTapInterest;
   final List<InterestModel> interests;
@@ -34,6 +35,8 @@ class _ExploreBodyState extends State<ExploreBody> {
     final interests = context.select<ExploreViewModel, List<InterestModel>>(
       (exploreViewModel) => exploreViewModel.interests,
     );
+    final void Function(List<InterestType> interestTypes) onTapFilter =
+        context.read<ExploreViewModel>().startInterestsSubscription;
     // final interests = <InterestModel>[SkillModel(title: 'Flutter'), WishModel(title: 'Dart')];
     // final interests = widget.interests;
 
@@ -58,22 +61,8 @@ class _ExploreBodyState extends State<ExploreBody> {
           Row(
             spacing: Styles.spacing12,
             children: [
-
-              // Filter widget // Todo implement
-              RsChip(
-                onTap: () {},
-                paddingRight: Styles.paddingSmall,
-                children: [
-                  Text(
-                    Str.filterAll,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      fontSize: Styles.fontSizeChip,
-                      fontWeight: Styles.fontWeightChip,
-                    ),
-                  ),
-                  Icon(Icons.keyboard_arrow_down_rounded, size: 24),
-                ],
-              ),
+              // Filter widget
+              RsInterestsFilterMenu(onTapFilter: onTapFilter),
 
               // Search widget // Todo implement
               SearchWidget(onSearch: () {}),

@@ -115,6 +115,8 @@ abstract class Str {
   static const error = 'Error';
 
   static const filterAll = 'All';
+  static const filterSkills = 'Skills';
+  static const filterWishes = 'Wishes';
 
   static const searchHint = 'Search interests...';
   static const pleaseSignIn = 'Please sign in.';

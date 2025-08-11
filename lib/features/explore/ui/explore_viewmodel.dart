@@ -37,9 +37,13 @@ class ExploreViewModel extends ChangeNotifier {
   }
 
   void startInterestsSubscription(List<InterestType> interestTypes) {
-    // cancel previous subscription when interest types change
+    if (_interestsSubscription != null) {
+      if (this.interestTypes == interestTypes) return;
+      // cancel previous subscription when interest types change
+      stopSubscriptions(immediately: true);
+    }
+
     this.interestTypes = interestTypes;
-    _interestsSubscription?.cancel();
     _profileRepository.subscribeToInterestsStream(interestTypes: interestTypes);
 
     _interestsSubscription = _profileRepository.interestsStream!.listen(
@@ -69,8 +73,11 @@ class ExploreViewModel extends ChangeNotifier {
     currentSenderName = _authViewModel.currentUser?.displayName;
   }
 
-  void stopSubscriptions() {
-    _profileRepository.unsubscribeFromInterestsStream();
+  /// Pass `immediately = true` to cancel the previous subscription immediately
+  /// only when you change the `interest types` filter aka, when you call
+  /// `startInterestsSubscription` with a different `interestTypes` value.
+  void stopSubscriptions({bool immediately = false}) {
+    _profileRepository.unsubscribeFromInterestsStream(immediately: immediately);
     _interestsSubscription?.cancel();
   }
 

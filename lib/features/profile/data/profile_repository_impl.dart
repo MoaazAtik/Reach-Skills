@@ -258,16 +258,23 @@ class ProfileRepositoryImpl extends ProfileRepository {
     });
   }
 
+  /// Pass `immediately = true` to cancel the previous subscription immediately
+  /// only when you change the `interest types` filter aka, when you call
+  /// `subscribeToInterestsStream` with a different `interestTypes` value.
+  /// Though it works fine without `immediately = true`, it is meant to provide
+  /// better performance by making sure that the previous subscription is
+  /// canceled.
+  ///
   /// - Delaying subscription canceling is only for Optimization purposes.
   ///
   /// - Tracking `_interestsSubscriptionCount` is *Currently not needed*.
   /// - `_interestsSubscriptionCount < 1` can be replaced with
   /// `_interestsController.hasListener`.
   @override
-  void unsubscribeFromInterestsStream() {
+  void unsubscribeFromInterestsStream({bool immediately = false}) {
     _interestsSubscriptionCount--;
 
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(Duration(seconds: immediately ? 0 : 5), () {
       if (_interestsSubscriptionCount < 1) {
         _interestsController.close();
         _interestsSubscription?.cancel();
