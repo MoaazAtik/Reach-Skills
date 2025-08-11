@@ -163,6 +163,7 @@ class ChatRepositoryImpl extends ChatRepository {
           Str.CHAT_FIELD_PERSON1_NAME: senderName,
           Str.CHAT_FIELD_PERSON2_ID: receiverId,
           Str.CHAT_FIELD_PERSON2_NAME: receiverName,
+          Str.CHAT_FIELD_LAST_MESSAGE_CONTENT: '',
           Str.CHAT_FIELD_CREATED_AT: DateTime.now().millisecondsSinceEpoch,
           Str.CHAT_FIELD_UPDATED_AT: DateTime.now().millisecondsSinceEpoch,
         })
@@ -183,6 +184,15 @@ class ChatRepositoryImpl extends ChatRepository {
     final newDocRef = _firestore.collection(Str.MESSAGE_COLLECTION_NAME).doc();
     messageModelMap[Str.MESSAGE_FIELD_ID] = newDocRef.id;
     await newDocRef.set(messageModelMap);
+
+    // Update last message in chat
+    await _firestore
+        .collection(Str.CHAT_COLLECTION_NAME)
+        .doc(messageModel.chatId)
+        .update({
+          Str.CHAT_FIELD_LAST_MESSAGE_CONTENT: messageModel.content,
+          Str.CHAT_FIELD_UPDATED_AT: DateTime.now().millisecondsSinceEpoch,
+        });
   }
 
   @override
@@ -246,7 +256,7 @@ class ChatRepositoryImpl extends ChatRepository {
   void unsubscribeFromMessagesStream() {
     _messagesSubscriptionCount--;
 
-     Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(Duration(seconds: 5), () {
       if (_messagesSubscriptionCount < 1) {
         _messagesController.close();
         _messagesSubscription?.cancel();

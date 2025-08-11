@@ -135,9 +135,10 @@ abstract class Styles {
   static const chatSubtitleTextStyle = TextStyle(
     fontSize: fontSizeChatSubtitle,
     color: chatSubtitleColor,
-    overflow: TextOverflow.fade,
+    overflow: TextOverflow.ellipsis,
   );
 
+  // Todo use or remove
   // static const chatTimestampTextStyle = TextStyle(
   //   fontSize: fontSizeChatSubtitle,
   //   color: secondaryTextBlueColor,

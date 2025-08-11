@@ -14,6 +14,7 @@ class MessageTile extends StatelessWidget {
   final String currentUserName;
 
   /*
+  Todo remove unused fields.
   // final bool isMe;
   // final String time;
   // final String chatId;

@@ -72,7 +72,8 @@ class ChatBody extends StatelessWidget {
           name: hisName,
           // name: 'Chat $index user name',
           // Todo replace mock message
-          lastMessage: '${Str.mockMessage1} ${Str.mockMessage2}',
+          // lastMessage: '${Str.mockMessage1} ${Str.mockMessage2}',
+          lastMessage: allChats[index].lastMessageContent,
           timestamp: allChats[index].updatedAt,
           onTap: () {
             final Map<String, String>? chatPropertiesPack =

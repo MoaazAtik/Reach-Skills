@@ -6,6 +6,7 @@ class ChatModel {
   final String person1Name;
   final String person2Id;
   final String person2Name;
+  final String lastMessageContent;
   final int createdAt;
   final int updatedAt;
 
@@ -15,6 +16,7 @@ class ChatModel {
     this.person1Name = '',
     this.person2Id = '',
     this.person2Name = '',
+    this.lastMessageContent = '',
     this.createdAt = 0,
     this.updatedAt = 0,
   });
@@ -34,6 +36,7 @@ class ChatModel {
             '${Str.excMessageNullPerson2Id} ${Str.excMessageChatModelFromMapAndId}',
           )),
       person2Name: map[Str.CHAT_FIELD_PERSON2_NAME] ?? '',
+      lastMessageContent: map[Str.CHAT_FIELD_LAST_MESSAGE_CONTENT] ?? '',
       createdAt: map[Str.CHAT_FIELD_CREATED_AT] ?? 0,
       updatedAt: map[Str.CHAT_FIELD_UPDATED_AT] ?? 0,
     );
@@ -46,6 +49,7 @@ class ChatModel {
       Str.CHAT_FIELD_PERSON1_NAME: person1Name,
       Str.CHAT_FIELD_PERSON2_ID: person2Id,
       Str.CHAT_FIELD_PERSON2_NAME: person2Name,
+      Str.CHAT_FIELD_LAST_MESSAGE_CONTENT: lastMessageContent,
       Str.CHAT_FIELD_CREATED_AT: createdAt,
       Str.CHAT_FIELD_UPDATED_AT: updatedAt,
     };
@@ -57,6 +61,7 @@ class ChatModel {
     String? person1Name,
     String? person2Id,
     String? person2Name,
+    String? lastMessageContent,
     int? createdAt,
     int? updatedAt,
   }) {
@@ -66,6 +71,7 @@ class ChatModel {
       person1Name: person1Name ?? this.person1Name,
       person2Id: person2Id ?? this.person2Id,
       person2Name: person2Name ?? this.person2Name,
+      lastMessageContent: lastMessageContent ?? this.lastMessageContent,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -73,7 +79,7 @@ class ChatModel {
 
   @override
   String toString() {
-    return 'ChatModel {${Str.CHAT_FIELD_ID}: $id, ${Str.CHAT_FIELD_PERSON1_ID}: $person1Id, ${Str.CHAT_FIELD_PERSON1_NAME}: $person1Name, ${Str.CHAT_FIELD_PERSON2_ID}: $person2Id, ${Str.CHAT_FIELD_PERSON2_NAME}: $person2Name, ${Str.CHAT_FIELD_CREATED_AT}: $createdAt, ${Str.CHAT_FIELD_UPDATED_AT}: $updatedAt}';
+    return 'ChatModel {${Str.CHAT_FIELD_ID}: $id, ${Str.CHAT_FIELD_PERSON1_ID}: $person1Id, ${Str.CHAT_FIELD_PERSON1_NAME}: $person1Name, ${Str.CHAT_FIELD_PERSON2_ID}: $person2Id, ${Str.CHAT_FIELD_PERSON2_NAME}: $person2Name, ${Str.CHAT_FIELD_LAST_MESSAGE_CONTENT}: $lastMessageContent, ${Str.CHAT_FIELD_CREATED_AT}: $createdAt, ${Str.CHAT_FIELD_UPDATED_AT}: $updatedAt}';
   }
 
   @override
@@ -86,6 +92,7 @@ class ChatModel {
         person1Name == other.person1Name &&
         person2Id == other.person2Id &&
         person2Name == other.person2Name &&
+        lastMessageContent == other.lastMessageContent &&
         createdAt == other.createdAt &&
         updatedAt == other.updatedAt;
   }
@@ -97,6 +104,7 @@ class ChatModel {
     person1Name,
     person2Id,
     person2Name,
+    lastMessageContent,
     createdAt,
     updatedAt,
   );

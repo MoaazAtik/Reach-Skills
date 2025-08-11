@@ -79,6 +79,7 @@ abstract class Str {
   static const String CHAT_FIELD_PERSON1_NAME = 'person1Name';
   static const String CHAT_FIELD_PERSON2_ID = 'person2Id';
   static const String CHAT_FIELD_PERSON2_NAME = 'person2Name';
+  static const String CHAT_FIELD_LAST_MESSAGE_CONTENT = 'lastMessageContent';
   static const String CHAT_FIELD_CREATED_AT = 'createdAt';
   static const String CHAT_FIELD_UPDATED_AT = 'updatedAt';
 
