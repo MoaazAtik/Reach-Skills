@@ -63,21 +63,13 @@ class _RsInterestsFilterMenuState extends State<RsInterestsFilterMenu> {
   }
 }
 
-final _menuItemAll = PopupMenuItem<String>(
-  value: Str.filterAll,
-  child: Text(Str.filterAll),
-);
-
-final _menuItemSkills = PopupMenuItem(
-  value: Str.filterSkills,
-  child: Text(Str.filterSkills),
-);
-
-final _menuItemWishes = PopupMenuItem(
-  value: Str.filterWishes,
-  child: Text(Str.filterWishes),
-);
+final _filters = [Str.filterAll, Str.filterSkills, Str.filterWishes];
 
 List<PopupMenuItem<dynamic>> _getMenuItems() {
-  return <PopupMenuItem>[_menuItemAll, _menuItemSkills, _menuItemWishes];
+  return _filters
+      .map(
+        (String filter) =>
+            PopupMenuItem<String>(value: filter, child: Text(filter)),
+      )
+      .toList();
 }
