@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/theme/styles.dart';
+import 'package:reach_skills/core/utils/utils.dart';
 import 'package:reach_skills/features/explore/ui/rs_interests_filter_menu.dart';
 import 'package:reach_skills/features/explore/ui/search_widget.dart';
 
+import '../../../core/constants/strings.dart';
 import '../../common/data/interest_model.dart';
 import 'explore_viewmodel.dart';
 import 'interest_card.dart';
@@ -65,7 +67,9 @@ class _ExploreBodyState extends State<ExploreBody> {
               RsInterestsFilterMenu(onTapFilter: onTapFilter),
 
               // Search widget // Todo implement
-              SearchWidget(onSearch: () {}),
+              SearchWidget(onSearch: () {
+                showSnackBarMessage(context, Str.featureComingSoon);
+              }),
             ],
           ),
           const SizedBox(height: Styles.spacing12),
