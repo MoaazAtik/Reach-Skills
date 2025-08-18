@@ -30,8 +30,10 @@ class ProfileViewModel extends ChangeNotifier {
   List<InterestModel> interests = [];
   StreamSubscription<ProfileModel>? _profileSubscription;
   String? profileStreamError;
+  bool? isLoggedIn;
 
   void init() {
+    isLoggedIn = _authRepository.isLoggedIn.value;
     // startInterestsSubscription();
     startProfileSubscription();
   }

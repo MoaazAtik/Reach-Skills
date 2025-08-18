@@ -6,6 +6,7 @@ import 'package:reach_skills/core/theme/styles.dart';
 import 'package:reach_skills/core/utils/utils.dart';
 import 'package:reach_skills/features/common/data/interest_model.dart';
 import 'package:reach_skills/features/common/widgets/rs_chip.dart';
+import 'package:reach_skills/features/profile/ui/profile_viewmodel.dart';
 
 import '../../explore/ui/explore_viewmodel.dart';
 import '../../profile/ui/profile_body.dart';
@@ -62,8 +63,10 @@ class _InterestDetailsState extends State<InterestDetails> {
       context,
     ).state.matchedLocation.contains(Str.profileScreenRoutePath)) {
       fromPath = Str.profileScreenRoutePath;
+      isLoggedIn = context.read<ProfileViewModel>().isLoggedIn ?? false;
     } else {
       fromPath = Str.exploreScreenRoutePath;
+      isLoggedIn = context.read<ExploreViewModel>().isLoggedIn ?? false;
     }
 
     /*
@@ -77,7 +80,6 @@ class _InterestDetailsState extends State<InterestDetails> {
       currentReceiverName = widget.interest?.userName;
     }
 
-    isLoggedIn = context.read<ExploreViewModel>().isLoggedIn ?? false;
   }
 
   @override
