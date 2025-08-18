@@ -22,15 +22,16 @@ class ExploreViewModel extends ChangeNotifier {
   StreamSubscription<List<InterestModel>>? _interestsSubscription;
   List<InterestModel> interests = [];
 
-  // Todo replace '= InterestType.values' with values from UI
   List<InterestType> interestTypes = InterestType.values;
   String? interestsStreamError;
   bool loading = true;
 
   String? currentSenderId;
   String? currentSenderName;
+  bool? isLoggedIn;
 
   void init() {
+    isLoggedIn = _authViewModel.isLoggedIn;
     startInterestsSubscription(interestTypes);
     getCurrentUserIdAndName();
     notifyListeners(); /* Investigate why app works fine even without this line. */

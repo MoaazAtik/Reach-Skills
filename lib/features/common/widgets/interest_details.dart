@@ -45,6 +45,7 @@ class _InterestDetailsState extends State<InterestDetails> {
   late final String? currentReceiverName;
 
   late final String fromPath;
+  late final bool isLoggedIn;
 
   @override
   void initState() {
@@ -75,6 +76,8 @@ class _InterestDetailsState extends State<InterestDetails> {
       currentReceiverId = widget.interest?.userId;
       currentReceiverName = widget.interest?.userName;
     }
+
+    isLoggedIn = context.read<ExploreViewModel>().isLoggedIn ?? false;
   }
 
   @override
@@ -240,7 +243,9 @@ class _InterestDetailsState extends State<InterestDetails> {
             FilledButton(
               // Todo extract this callback
               onPressed: () {
-                if (isEditing) {
+                if (!isLoggedIn) {
+                  showSnackBarMessage(context, Str.pleaseSignIn);
+                } else if (isEditing) {
                   if (widget.isOwner) {
                     saveProfile(
                       context: context,
