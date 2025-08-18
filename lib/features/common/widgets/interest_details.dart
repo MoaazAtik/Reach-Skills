@@ -67,19 +67,16 @@ class _InterestDetailsState extends State<InterestDetails> {
     } else {
       fromPath = Str.exploreScreenRoutePath;
       isLoggedIn = context.read<ExploreViewModel>().isLoggedIn ?? false;
-    }
 
-    /*
-    Sender and receiver Ids and Names are initialized only if Interest Details
-    is opened from Explore Screen for `onTapReach`.
-    */
-    if (!widget.isOwner) {
+      /*
+      Sender and receiver Ids and Names are initialized only if Interest Details
+      is opened from Explore Screen for `onTapReach`.
+      */
       currentSenderId = context.read<ExploreViewModel>().currentSenderId;
       currentSenderName = context.read<ExploreViewModel>().currentSenderName;
       currentReceiverId = widget.interest?.userId;
       currentReceiverName = widget.interest?.userName;
     }
-
   }
 
   @override
