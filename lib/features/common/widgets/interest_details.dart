@@ -241,50 +241,7 @@ class _InterestDetailsState extends State<InterestDetails> {
           // if Not owner Or Is editing
           if ((!widget.isOwner) || isEditing)
             FilledButton(
-              // Todo extract this callback
-              onPressed: () {
-                if (!isLoggedIn) {
-                  showSnackBarMessage(context, Str.pleaseSignIn);
-                } else if (isEditing) {
-                  if (widget.isOwner) {
-                    saveProfile(
-                      context: context,
-                      formKey: _formKey,
-                      interest: _assembleInterest(),
-                    );
-                    setState(() => isEditing = !isEditing);
-                  } else {
-                    throw Exception(
-                      '${Str.excMessageNullOnTapSave} ${Str.excMessageInterestDetails}',
-                    );
-                  }
-                } else if (widget.onTapReach != null) {
-                  if (currentSenderId == null ||
-                      currentSenderName == null ||
-                      currentReceiverId == null ||
-                      currentReceiverName == null) {
-                    print(
-                      '${Str.excMessageNullFields} ${Str.excMessageInterestDetailsReach} ${Str.excMessageInterestDetails} - $this',
-                    );
-                    return;
-                  }
-                  widget.onTapReach!(
-                    chatPropertiesPack: {
-                      Str.messagesScreenParamCurrentSenderId: currentSenderId!,
-                      Str.messagesScreenParamCurrentSenderName:
-                          currentSenderName!,
-                      Str.messagesScreenParamCurrentReceiverId:
-                          currentReceiverId!,
-                      Str.messagesScreenParamCurrentReceiverName:
-                          currentReceiverName!,
-                    },
-                  );
-                } else {
-                  throw Exception(
-                    '${Str.excMessageNullOnTapSave} ${Str.excMessageNullOnTapReach} ${Str.excMessageMin1} ${Str.excMessageInterestDetails}',
-                  );
-                }
-              },
+              onPressed: onTapSaveOrReach,
               child: Text(
                 isEditing ? Str.save : Str.reach,
                 style: Styles.rsFilledButtonTextStyle,
@@ -387,6 +344,49 @@ class _InterestDetailsState extends State<InterestDetails> {
 
   void _setInterestType(InterestType? value) {
     setState(() => _selectedInterestType = value);
+  }
+
+  void onTapSaveOrReach() {
+    if (!isLoggedIn) {
+      showSnackBarMessage(context, Str.pleaseSignIn);
+    } else if (isEditing) {
+      if (widget.isOwner) {
+        saveProfile(
+          context: context,
+          formKey: _formKey,
+          interest: _assembleInterest(),
+        );
+        setState(() => isEditing = !isEditing);
+      } else {
+        throw Exception(
+          '${Str.excMessageNullOnTapSave} ${Str.excMessageInterestDetails}',
+        );
+      }
+    } else if (widget.onTapReach != null) {
+      if (currentSenderId == null ||
+          currentSenderName == null ||
+          currentReceiverId == null ||
+          currentReceiverName == null) {
+        print(
+          '${Str.excMessageNullFields} ${Str.excMessageInterestDetailsReach}'
+          ' ${Str.excMessageInterestDetails} - $this',
+        );
+        return;
+      }
+      widget.onTapReach!(
+        chatPropertiesPack: {
+          Str.messagesScreenParamCurrentSenderId: currentSenderId!,
+          Str.messagesScreenParamCurrentSenderName: currentSenderName!,
+          Str.messagesScreenParamCurrentReceiverId: currentReceiverId!,
+          Str.messagesScreenParamCurrentReceiverName: currentReceiverName!,
+        },
+      );
+    } else {
+      throw Exception(
+        '${Str.excMessageNullOnTapSave} ${Str.excMessageNullOnTapReach}'
+        ' ${Str.excMessageMin1} ${Str.excMessageInterestDetails}',
+      );
+    }
   }
 
   @override
