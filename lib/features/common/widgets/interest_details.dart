@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/constants/strings.dart';
 import 'package:reach_skills/core/theme/styles.dart';
@@ -43,6 +44,8 @@ class _InterestDetailsState extends State<InterestDetails> {
   late final String? currentReceiverId;
   late final String? currentReceiverName;
 
+  late final String fromPath;
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +56,14 @@ class _InterestDetailsState extends State<InterestDetails> {
     _descriptionController = TextEditingController(
       text: widget.interest?.description,
     );
+
+    if (GoRouter.of(
+      context,
+    ).state.matchedLocation.contains(Str.profileScreenRoutePath)) {
+      fromPath = Str.profileScreenRoutePath;
+    } else {
+      fromPath = Str.exploreScreenRoutePath;
+    }
 
     /*
     Sender and receiver Ids and Names are initialized only if Interest Details
@@ -123,7 +134,13 @@ class _InterestDetailsState extends State<InterestDetails> {
               ),
 
               // Edit button
-              if (widget.isOwner) // ie, can edit
+              /*
+              Temporary fix of saving interest by disabling this behavior from
+              Explore screen because it needs access to `ProfileViewModel`.
+              Thus, it's only enabled for Profile screen for now.
+              // if (widget.isOwner) // ie, can edit
+              */
+              if (fromPath == Str.profileScreenRoutePath)
                 IconButton(
                   onPressed: () {
                     if (isEditing) {
