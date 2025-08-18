@@ -54,13 +54,16 @@ class _InterestDetailsState extends State<InterestDetails> {
       text: widget.interest?.description,
     );
 
-    currentSenderId = context.read<ExploreViewModel>().currentSenderId;
-    currentSenderName = context.read<ExploreViewModel>().currentSenderName;
-    currentReceiverId = widget.interest?.userId;
-    currentReceiverName = widget.interest?.userName;
     /*
-    `currentReceiverId` and `currentReceiverName` will be Null when creating a new interest aka, when `interest` is null.
+    Sender and receiver Ids and Names are initialized only if Interest Details
+    is opened from Explore Screen for `onTapReach`.
     */
+    if (!widget.isOwner) {
+      currentSenderId = context.read<ExploreViewModel>().currentSenderId;
+      currentSenderName = context.read<ExploreViewModel>().currentSenderName;
+      currentReceiverId = widget.interest?.userId;
+      currentReceiverName = widget.interest?.userName;
+    }
   }
 
   @override
