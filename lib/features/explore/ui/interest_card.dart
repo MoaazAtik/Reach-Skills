@@ -51,7 +51,7 @@ class InterestCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(Styles.paddingExtraSmall),
               child: Text(
-                '$title, $userName',
+                '$title,\n$userName',
                 style: TextStyle(
                   overflow: TextOverflow.fade,
                   fontSize: Styles.fontSizeChip,
