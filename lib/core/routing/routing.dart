@@ -244,6 +244,21 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
   Widget? detailBody;
 
   Widget messagesBody = ChangeNotifierProvider(
+    /*
+    - Using a key fixed unnecessary recreating the ViewModel (aka, Preserved
+    State of MessagesViewModel) when screen size changes between large/mid and
+    small aka, when widget tree changes because on small screens the old
+    `detailBody` (of the large screen) becomes the new `masterBody`, and the
+    new `detailBody` is null.
+
+    - Worked Key type:
+    `GlobalObjectKey(chatPropertiesPack)`, `GlobalObjectKey('chatPropertiesPack')`.
+    - Didn't work:
+    `ValueKey(chatPropertiesPack)`, `ValueKey('chatPropertiesPack')`,
+    `ObjectKey(chatPropertiesPack)`, `ObjectKey('chatPropertiesPack')`,
+    `GlobalKey()`, `UniqueKey()`.
+    */
+    key: GlobalObjectKey(chatPropertiesPack),
     create:
         (BuildContext _) => MessagesViewModel(
           authRepository: context.read<AuthRepositoryImpl>(),
