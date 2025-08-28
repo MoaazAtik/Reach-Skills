@@ -38,9 +38,11 @@ class ScaffoldAppBarBodies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMidOrLargeScreen = checkScreenSize(context) != RsScreenSize.small;
+
     return Scaffold(
       body:
-          (checkLargeScreen(context)) // ie, large screen
+          (isMidOrLargeScreen)
               ? SafeArea(
                 child: Row(
                   children: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/strings.dart';
+import '../../../core/utils/utils.dart';
 
 class RsNavigationRail extends StatelessWidget {
   const RsNavigationRail({
@@ -14,11 +15,17 @@ class RsNavigationRail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLargeScreen = checkScreenSize(context) == RsScreenSize.large;
+    final labelType =
+        !isLargeScreen
+            ? NavigationRailLabelType.all
+            : NavigationRailLabelType.none;
+
     return NavigationRail(
       selectedIndex: currentIndex,
       onDestinationSelected: (int index) => onTap(index),
-      // labelType: NavigationRailLabelType.all,
-      extended: true,
+      labelType: labelType,
+      extended: isLargeScreen,
 
       destinations: [
         NavigationRailDestination(

@@ -238,7 +238,7 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
     return ErrorRoute();
   }
 
-  final isLargeScreen = checkLargeScreen(context);
+  final isMidOrLargeScreen = checkScreenSize(context) != RsScreenSize.small;
 
   Widget masterBody;
   Widget? detailBody;
@@ -270,7 +270,7 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
     },
   );
 
-  if (isLargeScreen) {
+  if (isMidOrLargeScreen) {
     masterBody = ChatBody(
       // Todo maybe pass 'selectedChatId'
       // selectedChatId: chatId,

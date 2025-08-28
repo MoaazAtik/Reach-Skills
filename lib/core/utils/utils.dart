@@ -26,10 +26,30 @@ extension WidgetExtensions on Widget {
   Widget alignCenter() => Align(alignment: Alignment.center, child: this);
 }
 
-bool checkLargeScreen(BuildContext context) {
-  final isLargeScreen =
-      MediaQuery.sizeOf(context).width > Styles.smallScreenWidthThreshold;
-  return isLargeScreen;
+enum RsScreenSize {
+  small(0, smallScreenWidthThreshold),
+  medium(smallScreenWidthThreshold, largeScreenWidthThreshold),
+  large(largeScreenWidthThreshold, 1_000_000);
+
+  const RsScreenSize(this.fromWidth, this.toWidth);
+
+  final int fromWidth;
+  final int toWidth;
+
+  static const int smallScreenWidthThreshold = Styles.smallScreenWidthThreshold;
+  static const int largeScreenWidthThreshold = Styles.largeScreenWidthThreshold;
+}
+
+RsScreenSize checkScreenSize(BuildContext context) {
+  final width = MediaQuery.sizeOf(context).width;
+
+  if (width < RsScreenSize.small.toWidth) {
+    return RsScreenSize.small;
+  } else if (width < RsScreenSize.medium.toWidth) {
+    return RsScreenSize.medium;
+  } else {
+    return RsScreenSize.large;
+  }
 }
 
 int _calculateDaysDifference(DateTime? dateTime, int? dateInMillis) {

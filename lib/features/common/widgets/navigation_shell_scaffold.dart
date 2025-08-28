@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/routing/routing.dart';
-import '../../../core/theme/styles.dart';
+import '../../../core/utils/utils.dart';
 import 'rs_bottom_navigation_bar.dart';
-import 'rs_navigation_drawer.dart';
+import 'rs_navigation_rail.dart';
 
 class NavigationShellScaffold extends StatelessWidget {
   const NavigationShellScaffold({super.key, required this.navigationShell});
@@ -13,13 +13,12 @@ class NavigationShellScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLargeScreen =
-        MediaQuery.sizeOf(context).width > Styles.smallScreenWidthThreshold;
+    final isMidOrLargeScreen = checkScreenSize(context) != RsScreenSize.small;
 
     return Scaffold(
       body: Row(
         children: [
-          if (isLargeScreen)
+          if (isMidOrLargeScreen)
             RsNavigationRail(
               currentIndex: navigationShell.currentIndex,
               onTap:
@@ -29,7 +28,7 @@ class NavigationShellScaffold extends StatelessWidget {
         ],
       ),
       bottomNavigationBar:
-          isLargeScreen
+          isMidOrLargeScreen
               ? null
               : RsBottomNavigationBar(
                 onTap:
