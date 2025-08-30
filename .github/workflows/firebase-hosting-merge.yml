@@ -9,6 +9,12 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+
+    # Optional - For easier maintenance
+    env:
+      ENV_GOOGLE_CLIENT_ID_WEB: ${{ secrets.GOOGLE_CLIENT_ID_WEB }}
+      ENV_GOOGLE_CLIENT_ID_IOS: ${{ secrets.GOOGLE_CLIENT_ID_IOS }}
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up Flutter
@@ -18,8 +24,19 @@ jobs:
       - run: flutter pub get
 #      - run: flutter analyze
 #      - run: flutter test
-      - run: flutter build web
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+
+      # Create .env file from secrets
+      - name: Create env file
+        run: |
+          echo "GOOGLE_CLIENT_ID_WEB=$ENV_GOOGLE_CLIENT_ID_WEB" >> .env
+          echo "GOOGLE_CLIENT_ID_IOS=$ENV_GOOGLE_CLIENT_ID_IOS" >> .env
+
+      # Build web version
+      - name: Build web version
+        run: flutter build web --dart-define-from-file=.env
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_REACH_SKILLS }}
