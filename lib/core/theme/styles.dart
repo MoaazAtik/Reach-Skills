@@ -25,6 +25,8 @@ abstract class Styles {
 
   static const chipHeight = 32.0;
   static const buttonHeight = 48.0;
+  static const buttonMinWidthM3 = 64.0; // Material 3 default
+  static const buttonMinHeightM3 = 40.0; // Material 3 default
   static const progressChipHeight = 8.0;
 
   static const interestIconSize = 64.0;
@@ -149,7 +151,7 @@ abstract class Styles {
   static FilledButtonThemeData rsFilledButtonStyle = FilledButtonThemeData(
     style: ButtonStyle(
       minimumSize: WidgetStateProperty.all(
-        const Size(double.infinity, buttonHeight),
+        const Size(buttonMinWidthM3, buttonHeight),
       ),
       backgroundColor: WidgetStateProperty.all(buttonFullBackgroundColor),
       shape: WidgetStateProperty.all(
@@ -164,9 +166,8 @@ abstract class Styles {
       OutlinedButtonThemeData(
         style: ButtonStyle(
           minimumSize: WidgetStateProperty.all(
-            const Size(double.infinity, buttonHeight),
+            const Size(buttonMinWidthM3, buttonHeight),
           ),
-          textStyle: WidgetStateProperty.all(rsFilledButtonTextStyle),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(borderRadius),
@@ -175,11 +176,13 @@ abstract class Styles {
         ),
       );
 
-  static final styleOutlineButton = OutlinedButton.styleFrom(
-    side: const BorderSide(style: BorderStyle.none),
+  /// Affected by the custom app style `rsOutlinedButtonStyle`
+  static final styleSendButton = OutlinedButton.styleFrom(
+    minimumSize: const Size(buttonMinWidthM3, buttonHeight),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(Styles.borderRadius),
     ),
+    side: const BorderSide(style: BorderStyle.none),
     padding: const EdgeInsets.all(Styles.paddingMedium),
   );
 

@@ -47,6 +47,9 @@ class OnboardingBase extends StatelessWidget {
               backgroundColor: WidgetStateProperty.all(
                 _getButtonBackground(onboardingProgress),
               ),
+              minimumSize: WidgetStateProperty.all(
+                const Size(double.infinity, Styles.buttonHeight),
+              ),
             ),
             child: Text(
               _getButtonText(onboardingProgress),

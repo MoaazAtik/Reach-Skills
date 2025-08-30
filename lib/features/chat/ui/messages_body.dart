@@ -138,7 +138,7 @@ class _MessagesBodyState extends State<MessagesBody> {
 
                   // Send Button
                   OutlinedButton(
-                    style: Styles.styleOutlineButton,
+                    style: Styles.styleSendButton,
                     // Todo implement onPressed
                     onPressed: () async {
                       if (_formKey.currentState == null ||
