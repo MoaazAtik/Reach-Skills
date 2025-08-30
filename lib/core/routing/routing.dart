@@ -294,10 +294,12 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
 
 Widget _onboardingScreenBuilder(BuildContext context, GoRouterState state) {
   return Scaffold(
-    body: Onboarding(
-      endOnboarding: () {
-        endOnboarding(context);
-      },
+    body: SafeArea(
+      child: Onboarding(
+        endOnboarding: () {
+          endOnboarding(context);
+        },
+      ),
     ),
   );
 }
