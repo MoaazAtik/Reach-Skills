@@ -356,6 +356,8 @@ class MaterialTheme {
 
     // Custom filled button theme
     filledButtonTheme: Styles.rsFilledButtonStyle,
+    // Custom outlined button theme
+    outlinedButtonTheme: Styles.rsOutlinedButtonStyle,
 
     // Dialog Theme
     dialogTheme: DialogThemeData(
@@ -365,6 +367,12 @@ class MaterialTheme {
       elevation: Styles.elevationDialog,
       shape: Styles.shapeDialog,
     ),
+
+    // buttonTheme: ButtonThemeData(
+    //   buttonColor: colorScheme.primary,
+    //   textTheme: ButtonTextTheme.primary,
+    //   shape: Styles.shapeButton,
+    // ),
   );
 
 

@@ -160,6 +160,21 @@ abstract class Styles {
     ),
   );
 
+  static OutlinedButtonThemeData rsOutlinedButtonStyle =
+      OutlinedButtonThemeData(
+        style: ButtonStyle(
+          minimumSize: WidgetStateProperty.all(
+            const Size(double.infinity, buttonHeight),
+          ),
+          textStyle: WidgetStateProperty.all(rsFilledButtonTextStyle),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+            ),
+          ),
+        ),
+      );
+
   static final styleOutlineButton = OutlinedButton.styleFrom(
     side: const BorderSide(style: BorderStyle.none),
     shape: RoundedRectangleBorder(
