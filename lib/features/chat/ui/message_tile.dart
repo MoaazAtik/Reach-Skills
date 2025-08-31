@@ -7,11 +7,13 @@ class MessageTile extends StatelessWidget {
     required this.messageContent,
     required this.senderName,
     required this.currentUserName,
+    this.onLongPress,
   });
 
   final String messageContent;
   final String senderName;
   final String currentUserName;
+  final VoidCallback? onLongPress;
 
   /*
   Todo remove unused fields.
@@ -59,16 +61,23 @@ class MessageTile extends StatelessWidget {
         children: [
           Text(senderName, style: Styles.messageNameTextStyle),
           SizedBox(height: Styles.spacingExtraSmall),
-          Container(
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(Styles.borderRadius),
+          InkWell(
+            onLongPress: onLongPress,
+            borderRadius: BorderRadius.circular(Styles.borderRadius),
+            child: Ink(
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(Styles.borderRadius),
+              ),
+              padding: const EdgeInsets.symmetric(
+                vertical: Styles.padding12,
+                horizontal: Styles.paddingMedium,
+              ),
+              child: Text(
+                messageContent,
+                style: Styles.messageContentTextStyle,
+              ),
             ),
-            padding: const EdgeInsets.symmetric(
-              vertical: Styles.padding12,
-              horizontal: Styles.paddingMedium,
-            ),
-            child: Text(messageContent, style: Styles.messageContentTextStyle),
           ),
         ],
       ),

@@ -218,6 +218,8 @@ abstract class Str {
 
   static const undo = 'Undo';
   static const removed = 'Removed';
+  static const removeMessage = 'Remove message';
+  static const remove = 'Remove';
 
   static const featureComingSoon = 'Feature\'s coming soon...';
 

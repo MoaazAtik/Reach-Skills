@@ -148,6 +148,25 @@ class MessagesViewModel extends ChangeNotifier {
     await _chatRepository.sendMessage(messageModel);
   }
 
+  Future<void> removeMessage(MessageModel message, int messageIndex) async {
+    if (messages == null) return;
+
+    MessageModel? lastMessage;
+    /*
+    Remember that messages are fetched from Database in reverse chronological
+    order, ie, Newest first.
+    */
+    int olderMessageIndex = messageIndex + 1;
+
+    if (messageIndex != 0 || olderMessageIndex > messages!.length - 1) {
+      lastMessage = null;
+    } else {
+      lastMessage = messages![olderMessageIndex];
+    }
+
+    await _chatRepository.removeMessage(message, lastMessage);
+  }
+
   void startAuthStateSubscription() {
     _authRepository.subscribeToAuthStateChanges();
 

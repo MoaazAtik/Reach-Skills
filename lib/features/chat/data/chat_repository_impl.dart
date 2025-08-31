@@ -196,6 +196,36 @@ class ChatRepositoryImpl extends ChatRepository {
   }
 
   @override
+  Future<void> removeMessage(
+    MessageModel message,
+    MessageModel? olderMessage,
+  ) async {
+    await _firestore
+        .collection(Str.MESSAGE_COLLECTION_NAME)
+        .doc(message.id)
+        .delete();
+
+    if (olderMessage != null) {
+      // Update last message in chat
+      await _firestore
+          .collection(Str.CHAT_COLLECTION_NAME)
+          .doc(olderMessage.chatId)
+          .update({
+            Str.CHAT_FIELD_LAST_MESSAGE_CONTENT: olderMessage.content,
+            Str.CHAT_FIELD_UPDATED_AT: DateTime.now().millisecondsSinceEpoch,
+          });
+    } else {
+      // Update chat timestamp only
+      await _firestore
+          .collection(Str.CHAT_COLLECTION_NAME)
+          .doc(message.chatId)
+          .update({
+            Str.CHAT_FIELD_UPDATED_AT: DateTime.now().millisecondsSinceEpoch,
+          });
+    }
+  }
+
+  @override
   void subscribeToMessagesStream(String chatId, String userId) {
     _messagesSubscriptionCount++;
 

@@ -85,6 +85,27 @@ class _MessagesBodyState extends State<MessagesBody> {
                   messageContent: message.content,
                   senderName: message.senderName,
                   currentUserName: currentSenderName ?? '',
+                  onLongPress:
+                      currentSenderName != message.senderName
+                          ? null
+                          : () {
+                            showSnackBarMessage(
+                              context,
+                              '${Str.removeMessage} "${message.content}"?',
+                              actionLabel: Str.remove,
+                              onActionPressed: () async {
+                                /*
+                                Remember `messages` are reversed above.
+                                */
+                                await context
+                                    .read<MessagesViewModel>()
+                                    .removeMessage(
+                                      message,
+                                      messages.length - 1 - index,
+                                    );
+                              },
+                            );
+                          },
                   // Todo add timestamp 'message.updatedAt'
                 );
               },

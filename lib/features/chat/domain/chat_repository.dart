@@ -23,4 +23,9 @@ abstract class ChatRepository {
   void unsubscribeFromMessagesStream();
 
   Future<void> sendMessage(MessageModel messageModel);
+
+  Future<void> removeMessage(
+    MessageModel message,
+    MessageModel? olderMessage,
+  );
 }
