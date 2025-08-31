@@ -20,12 +20,7 @@ class _MessagesBodyState extends State<MessagesBody> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_MessageState');
   final _messageController = TextEditingController();
   final _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    registerScrollToBottom();
-  }
+  var _messagesLength = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +54,11 @@ class _MessagesBodyState extends State<MessagesBody> {
       return Center(child: Text(messagesError));
     }
 
+    if (_messagesLength != messages?.length) {
+      registerScrollToBottom();
+      _messagesLength = messages?.length ?? 0;
+    }
+
     return Column(
       children: [
         // No Messages Widget
@@ -74,8 +74,6 @@ class _MessagesBodyState extends State<MessagesBody> {
               controller: _scrollController,
               itemCount: messages.length,
               itemBuilder: (context, index) {
-                registerScrollToBottom();
-
                 final message = messages[index];
                 return MessageTile(
                   // Todo remove mock comments
@@ -171,15 +169,15 @@ class _MessagesBodyState extends State<MessagesBody> {
   }
 
   void registerScrollToBottom() {
-    if (!_scrollController.hasClients) return;
+    WidgetsBinding.instance.addPostFrameCallback((duration) {
+      if (!_scrollController.hasClients) return;
 
-    WidgetsBinding.instance.addPostFrameCallback(
-      (duration) => _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent + 100,
         duration: Duration(milliseconds: 300),
         curve: Curves.easeOut,
-      ),
-    );
+      );
+    });
   }
 
   @override
