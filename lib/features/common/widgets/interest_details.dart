@@ -240,6 +240,11 @@ class _InterestDetailsState extends State<InterestDetails> {
           // if Not owner Or Is editing
           if ((!widget.isOwner) || isEditing)
             FilledButton(
+              style: Theme.of(context).filledButtonTheme.style?.copyWith(
+                minimumSize: WidgetStateProperty.all(
+                  const Size(double.infinity, Styles.buttonHeight),
+                ),
+              ),
               onPressed: onTapSaveOrReach,
               child: Text(
                 isEditing ? Str.save : Str.reach,

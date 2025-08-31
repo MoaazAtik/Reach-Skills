@@ -176,6 +176,20 @@ abstract class Styles {
         ),
       );
 
+  static ElevatedButtonThemeData rsElevatedButtonStyle =
+      ElevatedButtonThemeData(
+        style: ButtonStyle(
+          minimumSize: WidgetStateProperty.all(
+            const Size(buttonMinWidthM3, buttonHeight),
+          ),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+            ),
+          ),
+        ),
+      );
+
   /// Affected by the custom app style `rsOutlinedButtonStyle`
   static final styleSendButton = OutlinedButton.styleFrom(
     minimumSize: const Size(buttonMinWidthM3, buttonHeight),

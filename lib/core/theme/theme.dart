@@ -358,6 +358,8 @@ class MaterialTheme {
     filledButtonTheme: Styles.rsFilledButtonStyle,
     // Custom outlined button theme
     outlinedButtonTheme: Styles.rsOutlinedButtonStyle,
+    // Custom elevated button theme
+    elevatedButtonTheme: Styles.rsElevatedButtonStyle,
 
     // Dialog Theme
     dialogTheme: DialogThemeData(
