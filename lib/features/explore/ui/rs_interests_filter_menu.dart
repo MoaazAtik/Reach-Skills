@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/strings.dart';
 import '../../../core/theme/styles.dart';
 import '../../common/data/interest_model.dart';
-import '../../common/widgets/rs_chip.dart';
+import '../../common/ui/rs_chip.dart';
 
 class RsInterestsFilterMenu extends StatefulWidget {
   final void Function(List<InterestType> interestTypes) onTapFilter;

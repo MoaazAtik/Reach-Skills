@@ -5,7 +5,7 @@ import 'package:reach_skills/core/constants/strings.dart';
 import 'package:reach_skills/core/theme/styles.dart';
 import 'package:reach_skills/core/utils/utils.dart';
 import 'package:reach_skills/features/common/data/interest_model.dart';
-import 'package:reach_skills/features/common/widgets/rs_chip.dart';
+import 'package:reach_skills/features/common/ui/rs_chip.dart';
 import 'package:reach_skills/features/profile/ui/profile_viewmodel.dart';
 
 import '../../explore/ui/explore_viewmodel.dart';

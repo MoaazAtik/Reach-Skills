@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../../core/theme/styles.dart';
-import '../../common/widgets/rs_chip.dart';
+import '../../common/ui/rs_chip.dart';
 
 class SearchWidget extends StatefulWidget {
   const SearchWidget({super.key, required this.onSearch});

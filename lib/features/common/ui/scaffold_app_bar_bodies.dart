@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reach_skills/core/utils/utils.dart';
-import 'package:reach_skills/features/common/widgets/rs_app_bar.dart';
-import 'package:reach_skills/features/common/widgets/rs_popup_menu_button.dart';
+import 'package:reach_skills/features/common/ui/rs_app_bar.dart';
+import 'package:reach_skills/features/common/ui/rs_popup_menu_button.dart';
 
 import '../../../core/constants/strings.dart';
 import 'declarative_dialog_overlay.dart';
