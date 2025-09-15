@@ -44,8 +44,6 @@ dependencies:
   # Google Sign in for Firebase auth
   google_sign_in: ^6.2.1
   firebase_ui_oauth_google: ^1.2.16
-  # Firebase localization
-  firebase_ui_localizations: ^1.14.0
   # Firebase Cloud Firestore Database
   cloud_firestore: ^5.6.9
   # Navigation: Go Router

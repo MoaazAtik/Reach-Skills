@@ -14,11 +14,9 @@ class ExploreBody extends StatefulWidget {
   const ExploreBody({
     super.key,
     required this.onTapInterest,
-    this.interests = const [],
   });
 
   final void Function(InterestModel interest) onTapInterest;
-  final List<InterestModel> interests;
 
   @override
   State<ExploreBody> createState() => _ExploreBodyState();
@@ -27,12 +25,9 @@ class ExploreBody extends StatefulWidget {
 class _ExploreBodyState extends State<ExploreBody> {
   @override
   Widget build(BuildContext context) {
-    // final exploreViewModel = context.watch<ExploreViewModel>();
-    // final loading = exploreViewModel.loading;
-
-    // final interests = exploreViewModel.interests;
-    // final interestsStreamError = exploreViewModel.interestsStreamError;
-
+    final exploreViewModel = context.watch<ExploreViewModel>();
+    final loading = exploreViewModel.loading;
+    final interestsStreamError = exploreViewModel.interestsStreamError;
 
     final interests = context.select<ExploreViewModel, List<InterestModel>>(
       (exploreViewModel) => exploreViewModel.interests,
@@ -40,20 +35,18 @@ class _ExploreBodyState extends State<ExploreBody> {
     final void Function(List<InterestType> interestTypes) onTapFilter =
         context.read<ExploreViewModel>().startInterestsSubscription;
     // final interests = <InterestModel>[SkillModel(title: 'Flutter'), WishModel(title: 'Dart')];
-    // final interests = widget.interests;
 
-    // Todo uncomment
-    // if (loading) {
-    //   return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    // }
-    //
-    // if (interestsStreamError != null) {
-    //   return Center(child: Text(interestsStreamError));
-    // }
-    //
-    // if (interests == null || interests.isEmpty) {
-    //   return const Text(Str.noSkillsFound);
-    // }
+    if (loading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (interestsStreamError != null) {
+      return Center(child: Text(interestsStreamError));
+    }
+
+    if (interests.isEmpty) {
+      return const Text(Str.noSkillsFound);
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Styles.padding12),
@@ -93,46 +86,6 @@ class _ExploreBodyState extends State<ExploreBody> {
                   },
                 );
               }),
-
-                // for (final interest in interests)
-                //   InterestCard(
-                //     interestType: interest.interestType,
-                //     title: interest.title,
-                //     userName: interest.userName,
-                //     onTap: () {
-                //       widget.onInterestTap(interest);
-                //     },
-                //     // onReach: () async {
-                //     //   String? errorMessage;
-                //     //   errorMessage = await exploreViewModel.updateFields(
-                //     //     currentReceiverId: interest.uid,
-                //     //     currentReceiverName: interest.userName,
-                //     //   );
-                //     //
-                //     //   if (errorMessage != null) {
-                //     //     ScaffoldMessenger.of(
-                //     //       context,
-                //     //     ).showSnackBar(SnackBar(content: Text(errorMessage)));
-                //     //     return;
-                //     //   }
-                //
-                //     // Navigator.of(context).push(
-                //     //   MaterialPageRoute(
-                //     //     builder:
-                //     //         (_) => MessagesScreen(
-                //     //       currentSenderId: exploreViewModel.currentSenderId,
-                //     //       currentSenderName:
-                //     //       exploreViewModel.currentSenderName,
-                //     //       currentReceiverId:
-                //     //       exploreViewModel.currentReceiverId,
-                //     //       currentReceiverName:
-                //     //       exploreViewModel.currentReceiverName,
-                //     //     ),
-                //     //   ),
-                //     // );
-                //     // },
-                //   ),
-              // ],
             ),
           ),
         ],

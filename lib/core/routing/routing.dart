@@ -181,10 +181,6 @@ Widget _exploreScreenBuilder(BuildContext context, GoRouterState state) {
   return _buildScaffoldAppBarBodies(
     context: context,
     masterBody: ExploreBody(
-      // interests: context.select<ExploreViewModel, List<InterestModel>>(
-      //   (exploreViewModel) => exploreViewModel.interests,
-      // ),
-      // interests: context.watch<ExploreViewModel>().interests,
       onTapInterest: (interest) {
         onTapInterest(
           context: context,
