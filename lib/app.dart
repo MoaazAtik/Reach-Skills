@@ -29,7 +29,6 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
      No need to call `setState` because changes in `MediaQuery` and `Theme`
      will trigger `build` automatically after calling `didChangeDependencies`.
      */
-    _brightness = MediaQuery.of(context).platformBrightness;
     _textTheme = Theme.of(context).textTheme;
     _theme = MaterialTheme(_textTheme);
   }
@@ -40,7 +39,6 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
    It also removed the unwanted screen blinking when rebuilding.
    */
   GoRouter? _router;
-  late Brightness _brightness;
   late TextTheme _textTheme;
   late MaterialTheme _theme;
 
@@ -52,7 +50,7 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
 
     return MaterialApp.router(
       title: Str.appTitle,
-      theme: _brightness == Brightness.light ? _theme.light() : _theme.dark(),
+      theme: _theme.light(),
 
       // debugShowMaterialGrid: true,
       // showSemanticsDebugger: true,
