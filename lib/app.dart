@@ -58,9 +58,6 @@ class _ReachSkillsAppState extends State<ReachSkillsApp> {
       // showSemanticsDebugger: true,
       debugShowCheckedModeBanner: false,
 
-      localizationsDelegates: [FirebaseUILocalizations.delegate],
-      supportedLocales: const [Locale('en', 'US'), Locale('tr', 'TR')],
-
       routerConfig: _router,
     );
   }
