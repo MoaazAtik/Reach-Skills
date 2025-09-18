@@ -31,18 +31,25 @@ class ExploreViewModel extends ChangeNotifier {
   bool? isLoggedIn;
 
   void init() {
-    isLoggedIn = _authViewModel.isLoggedIn;
-    // Todo refactor and add Remove listener
-    _authViewModel.addListener(() {
-      isLoggedIn = _authViewModel.isLoggedIn;
-      currentSenderId = _authViewModel.currentUser?.uid;
-      currentSenderName = _authViewModel.currentUser?.displayName;
-      notifyListeners();
-    });
-
+    _initializeAndListenToFields();
     startInterestsSubscription(interestTypes);
-    getCurrentUserIdAndName();
     notifyListeners(); /* Investigate why app works fine even without this line. */
+  }
+
+  void _initializeAndListenToFields() {
+    // Initialize fields
+    isLoggedIn = _authViewModel.isLoggedIn;
+    getCurrentUserIdAndName();
+
+    // Listen to changes
+    _authViewModel.addListener(_listenerAuth);
+  }
+
+  void _listenerAuth() {
+    isLoggedIn = _authViewModel.isLoggedIn;
+    currentSenderId = _authViewModel.currentUser?.uid;
+    currentSenderName = _authViewModel.currentUser?.displayName;
+    notifyListeners();
   }
 
   void startInterestsSubscription(List<InterestType> interestTypes) {
@@ -88,6 +95,7 @@ class ExploreViewModel extends ChangeNotifier {
   void stopSubscriptions({bool immediately = false}) {
     _profileRepository.unsubscribeFromInterestsStream(immediately: immediately);
     _interestsSubscription?.cancel();
+    _authViewModel.removeListener(_listenerAuth);
   }
 
   @override
