@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -228,7 +229,11 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
       if (context.canPop()) {
         context.pop();
       } else {
-        context.goNamed(Str.chatScreenRouteName);
+        if (kIsWeb) {
+          context.goNamed(Str.chatScreenRouteName);
+        } else {
+          context.pushNamed(Str.chatScreenRouteName);
+        }
       }
     });
     return ErrorRoute();
@@ -270,6 +275,7 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
     masterBody = ChatBody(
       // Todo maybe pass 'selectedChatId'
       // selectedChatId: chatId,
+      // Todo fix infinite loading when tapping on the currently opened chat
       onTapChat: (Map<String, String> chatPropertiesPack) {
         onTapChat(context, chatPropertiesPack);
       },
@@ -304,7 +310,6 @@ Widget _authScreenBuilder(BuildContext context, GoRouterState state) {
   final bool isLoggedIn = context.watch<AuthViewModel>().isLoggedIn;
   if (isLoggedIn) {
     WidgetsBinding.instance.addPostFrameCallback(
-      // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
       (Duration duration) => context.goNamed(Str.exploreScreenRouteName),
     );
   }
@@ -338,6 +343,7 @@ Widget _buildInterestDetails({
   final interest =
       extra[Str.detailsScreenParamInterest] ??
       context.read<TempNavHistory>().popInterestsHistory();
+  // Todo fix ui doesn't update but url updates when navigating back from an interest the very first one (interest) before it. this happens when starting to navigate back while currently being on an interest. Check the Todo below (null fetch...) and probably remove the `popInterestsHistory` call logic at all.
   /*
   Remove the last selected interest from the list of interests history
   because it is going to be used now for back navigation and not needed anymore.
@@ -366,6 +372,7 @@ Widget _buildInterestDetails({
       interest.userId == context.read<AuthViewModel>().currentUser?.uid;
 
   final Widget interestDetails = InterestDetails(
+    key: ValueKey(interest.id),
     interest: interest,
     isOwner: isOwner,
     startEditing: startEditing,
@@ -473,23 +480,36 @@ void onTapInterest({
 }) {
   context.read<TempNavHistory>().pushInterestsHistory(interest);
 
-  /*
-   Todo fix. when an interest is open then trying to tap another interest,
-  `goNamed` and `pushReplacementNamed` changes the path (in the browser)
-   but doesn't change the UI state.
-  `pushNamed` doesn't change the path but does change the UI state.
-   */
-  context.pushNamed(
-    fromPath == Str.profileScreenRoutePath
-        ? Str.detailsProfileScreenRouteName
-        : Str.detailsExploreScreenRouteName,
-    pathParameters: {Str.detailsScreenParamId: interest.id},
-    extra: {
-      Str.detailsScreenParamInterest: interest,
-      Str.detailsScreenParamFromPath: fromPath,
-      Str.detailsScreenParamStartEditing: startEditing,
-    },
-  );
+  if (kIsWeb) {
+    context.goNamed(
+      fromPath == Str.profileScreenRoutePath
+          ? Str.detailsProfileScreenRouteName
+          : Str.detailsExploreScreenRouteName,
+      pathParameters: {Str.detailsScreenParamId: interest.id},
+      extra: {
+        Str.detailsScreenParamInterest: interest,
+        Str.detailsScreenParamFromPath: fromPath,
+        Str.detailsScreenParamStartEditing: startEditing,
+      },
+    );
+  } else {
+    /*
+    Although I didn't need 'push' because details screen is currently a
+    sub-route of profile and explore screens, I used 'push' in case of changing
+    this relation in the future.
+    */
+    context.pushNamed(
+      fromPath == Str.profileScreenRoutePath
+          ? Str.detailsProfileScreenRouteName
+          : Str.detailsExploreScreenRouteName,
+      pathParameters: {Str.detailsScreenParamId: interest.id},
+      extra: {
+        Str.detailsScreenParamInterest: interest,
+        Str.detailsScreenParamFromPath: fromPath,
+        Str.detailsScreenParamStartEditing: startEditing,
+      },
+    );
+  }
 }
 
 void onTapChat(BuildContext context, Map<String, String> chatPropertiesPack) {
@@ -508,18 +528,24 @@ void onTapChat(BuildContext context, Map<String, String> chatPropertiesPack) {
     chatPropertiesPack,
   );
 
-  // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
-  // context.go('${Str.chatScreenRoutePath}/$selectedChatId');
-  context.goNamed(
-    Str.messagesScreenRouteName,
-    pathParameters: {Str.messagesScreenParamChatId: chatId},
-    extra: chatPropertiesPack,
-  );
-
-  // else if (!isLargeScreen) {
-  //   // context.push('/chat/$index');
-  //   context.go('/chat/$index');
-  // }
+  if (kIsWeb) {
+    context.goNamed(
+      Str.messagesScreenRouteName,
+      pathParameters: {Str.messagesScreenParamChatId: chatId},
+      extra: chatPropertiesPack,
+    );
+  } else {
+    /*
+    Although I didn't need 'push' because messages screen is currently a
+    sub-route of chat screen, I used 'push' in case of changing this relation
+    in the future.
+    */
+    context.pushNamed(
+      Str.messagesScreenRouteName,
+      pathParameters: {Str.messagesScreenParamChatId: chatId},
+      extra: chatPropertiesPack,
+    );
+  }
 }
 
 void onTapReach(BuildContext context, Map<String, String> chatPropertiesPack) {
@@ -531,17 +557,38 @@ void onTapReach(BuildContext context, Map<String, String> chatPropertiesPack) {
   Going to Chats screen first is for better UX so that navigating back takes to
   the Chats screen instead of the InterestDetails screen.
   */
-  context.goNamed(Str.chatScreenRouteName);
+  /*
+  Although I didn't need 'push' because messages screen is currently a
+  sub-route of chat screen, I used 'push' in case of changing this relation
+  in the future.
+  */
+  if (kIsWeb) {
+    context.goNamed(Str.chatScreenRouteName);
+  } else {
+    context.pushNamed(Str.chatScreenRouteName);
+  }
 
   /*
-  `goNamed` or `Str.messagesScreenRoutePath` with `go` don't work especially
-  on large screens.
+  Using `goNamed` or using `Str.messagesScreenRoutePath` with `go` don't work
+  especially on large screens.
   */
-  context.go(Str.messagesScreenRouteFullPath, extra: chatPropertiesPack);
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    // Todo call `onTapChat(context, chatPropertiesPack);` instead of the following lines and move `chatId != null ? setChatId(chatId) : getChatId();` from messages view model to chat view model to show the chat id in the url.
+
+    if (kIsWeb) {
+      context.go(Str.messagesScreenRouteFullPath, extra: chatPropertiesPack);
+    } else {
+      context.push(Str.messagesScreenRouteFullPath, extra: chatPropertiesPack);
+    }
+  });
 }
 
 void onTapOnboardingGuide(BuildContext context) {
-  context.goNamed(Str.onboardingScreenRouteName);
+  if (kIsWeb) {
+    context.goNamed(Str.onboardingScreenRouteName);
+  } else {
+    context.pushNamed(Str.onboardingScreenRouteName);
+  }
   // context.read<PreferencesRepositoryImpl>().setIsFirstInitialization(true);
 }
 
@@ -552,19 +599,34 @@ void endOnboarding(BuildContext context) {
 }
 
 void onTapSignIn(BuildContext context) {
-  context.goNamed(Str.authScreenRouteName);
+  if (kIsWeb) {
+    context.goNamed(Str.authScreenRouteName);
+  } else {
+    context.pushNamed(Str.authScreenRouteName);
+  }
 }
 
 void onTapSignOut(BuildContext context) {
   context.read<AuthViewModel>().signOut();
-  context.goNamed(Str.exploreScreenRouteName);
+  if (kIsWeb) {
+    context.goNamed(Str.exploreScreenRouteName);
+  } else {
+    context.pushNamed(Str.exploreScreenRouteName);
+  }
 }
 
 void onTapEditProfile(BuildContext context) {
-  // Todo maybe replace with `pushReplacementNamed` (check gpt 4's response).
-  context.goNamed(Str.profileScreenRouteName);
+  if (kIsWeb) {
+    context.goNamed(Str.profileScreenRouteName);
+  } else {
+    context.pushNamed(Str.profileScreenRouteName);
+  }
 }
 
 void onTapHelp(BuildContext context) {
-  context.goNamed(Str.helpScreenRouteName);
+  if (kIsWeb) {
+    context.goNamed(Str.helpScreenRouteName);
+  } else {
+    context.pushNamed(Str.helpScreenRouteName);
+  }
 }

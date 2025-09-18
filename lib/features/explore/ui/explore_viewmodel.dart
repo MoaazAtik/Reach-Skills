@@ -32,6 +32,14 @@ class ExploreViewModel extends ChangeNotifier {
 
   void init() {
     isLoggedIn = _authViewModel.isLoggedIn;
+    // Todo refactor and add Remove listener
+    _authViewModel.addListener(() {
+      isLoggedIn = _authViewModel.isLoggedIn;
+      currentSenderId = _authViewModel.currentUser?.uid;
+      currentSenderName = _authViewModel.currentUser?.displayName;
+      notifyListeners();
+    });
+
     startInterestsSubscription(interestTypes);
     getCurrentUserIdAndName();
     notifyListeners(); /* Investigate why app works fine even without this line. */
