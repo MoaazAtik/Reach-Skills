@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../auth/ui/auth_viewmodel.dart';
+import '../../chat/domain/chat_repository.dart';
 import '../../common/data/interest_model.dart';
 import '../../profile/domain/profile_repository.dart';
 
@@ -34,6 +35,53 @@ class ExploreViewModel extends ChangeNotifier {
     _initializeAndListenToFields();
     startInterestsSubscription(interestTypes);
     notifyListeners(); /* Investigate why app works fine even without this line. */
+  }
+
+  Future<Map<String, String>?> packChatId(
+    Map<String, String> chatPropertiesPack,
+    ChatRepository chatRepository,
+  ) async {
+    if (chatPropertiesPack[Str.messagesScreenParamCurrentSenderId] == null ||
+        chatPropertiesPack[Str.messagesScreenParamCurrentSenderName] == null ||
+        chatPropertiesPack[Str.messagesScreenParamCurrentReceiverId] == null ||
+        chatPropertiesPack[Str.messagesScreenParamCurrentReceiverName] ==
+            null) {
+      print(
+        '${Str.excMessageMissingChatPropertiesPack}'
+        ' ${Str.excMessageOnTapReach} - $runtimeType'
+        '\n  chatPropertiesPack: $chatPropertiesPack',
+      );
+      return null;
+    }
+
+    String? currentSenderId =
+        chatPropertiesPack[Str.messagesScreenParamCurrentSenderId]!;
+    String? currentSenderName =
+        chatPropertiesPack[Str.messagesScreenParamCurrentSenderName]!;
+    String? currentReceiverId =
+        chatPropertiesPack[Str.messagesScreenParamCurrentReceiverId]!;
+    String? currentReceiverName =
+        chatPropertiesPack[Str.messagesScreenParamCurrentReceiverName]!;
+
+    String? chatId = await chatRepository.getChatIdOrCreateChat(
+      personAId: currentSenderId,
+      personAName: currentSenderName,
+      personBId: currentReceiverId,
+      personBName: currentReceiverName,
+    );
+
+    if (chatId == null) {
+      print(
+        '${Str.excMessageNullChatId}'
+        ' ${Str.excMessagePackChatId} - $runtimeType'
+        '\n  chatPropertiesPack: $chatPropertiesPack',
+      );
+      return null;
+    }
+
+    chatPropertiesPack[Str.messagesScreenParamChatId] = chatId;
+
+    return chatPropertiesPack;
   }
 
   void _initializeAndListenToFields() {

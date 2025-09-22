@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/utils/utils.dart';
+import 'package:reach_skills/features/chat/domain/chat_repository.dart';
 import 'package:reach_skills/features/common/data/temp_nav_history.dart';
 import 'package:reach_skills/features/common/ui/scaffold_app_bar_bodies.dart';
 import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
@@ -548,17 +549,37 @@ void onTapChat(BuildContext context, Map<String, String> chatPropertiesPack) {
   }
 }
 
-void onTapReach(BuildContext context, Map<String, String> chatPropertiesPack) {
-  context.read<TempNavHistory>().pushChatPropertiesPackHistory(
-    chatPropertiesPack,
-  );
+void onTapReach(
+  BuildContext context,
+  Map<String, String> chatPropertiesPack,
+) async {
+  // Todo refactor: move this to Interest details view model.
+  final chatRepository = context.read<ChatRepositoryImpl>();
 
   /*
-  Going to Chats screen first is for better UX so that navigating back takes to
-  the Chats screen instead of the InterestDetails screen.
+  Get `chatId` especially to be passed as a parameter to the Messages Screen.
   */
+  final Map<String, String>? packWithChatId = await context
+      .read<ExploreViewModel>()
+      .packChatId(chatPropertiesPack, chatRepository);
+
+  if (packWithChatId == null) {
+    print(
+      '${Str.excMessageNoChatPropertiesPack}'
+      ' ${Str.excMessageOnTapReach} - ${Str.excMessageFileRouting}'
+      '\n  chatPropertiesPack: $chatPropertiesPack \n',
+    );
+    return;
+  }
+
+  if (!context.mounted) return;
+
+  context.read<TempNavHistory>().pushChatPropertiesPackHistory(packWithChatId);
+
   /*
-  Although I didn't need 'push' because messages screen is currently a
+  - Going to Chats screen first is for better UX so that navigating back takes to
+  the Chats screen instead of the InterestDetails screen.
+  - Although I didn't need 'push' because messages screen is currently a
   sub-route of chat screen, I used 'push' in case of changing this relation
   in the future.
   */
@@ -568,17 +589,25 @@ void onTapReach(BuildContext context, Map<String, String> chatPropertiesPack) {
     context.pushNamed(Str.chatScreenRouteName);
   }
 
-  /*
-  Using `goNamed` or using `Str.messagesScreenRoutePath` with `go` don't work
-  especially on large screens.
-  */
   WidgetsBinding.instance.addPostFrameCallback((_) {
     // Todo call `onTapChat(context, chatPropertiesPack);` instead of the following lines and move `chatId != null ? setChatId(chatId) : getChatId();` from messages view model to chat view model to show the chat id in the url.
 
+    if (!context.mounted) return;
+
+    final chatId = packWithChatId[Str.messagesScreenParamChatId];
+
     if (kIsWeb) {
-      context.go(Str.messagesScreenRouteFullPath, extra: chatPropertiesPack);
+      context.goNamed(
+        Str.messagesScreenRouteName,
+        pathParameters: {Str.messagesScreenParamChatId: chatId ?? ':id'},
+        extra: packWithChatId,
+      );
     } else {
-      context.push(Str.messagesScreenRouteFullPath, extra: chatPropertiesPack);
+      context.pushNamed(
+        Str.messagesScreenRouteName,
+        pathParameters: {Str.messagesScreenParamChatId: chatId ?? ':id'},
+        extra: packWithChatId,
+      );
     }
   });
 }

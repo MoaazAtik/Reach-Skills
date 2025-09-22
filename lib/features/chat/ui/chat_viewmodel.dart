@@ -31,10 +31,6 @@ class ChatViewModel extends ChangeNotifier {
   String? _authError;
 
   String? get authError => _authError;
-  String? currentSenderId;
-  String? currentSenderName;
-  String? currentReceiverId;
-  String? currentReceiverName;
 
   List<ChatModel>? _allChats;
 
@@ -124,20 +120,6 @@ class ChatViewModel extends ChangeNotifier {
   void _listenerAuthError() {
     _authError = (_authRepository as AuthRepositoryImpl).authError.value;
     notifyListeners();
-  }
-
-  void updateSelectedChatFields(ChatModel chat) {
-    if (_currentUser!.uid == chat.person1Id) {
-      currentSenderId = chat.person1Id;
-      currentSenderName = chat.person1Name;
-      currentReceiverId = chat.person2Id;
-      currentReceiverName = chat.person2Name;
-    } else {
-      currentSenderId = chat.person2Id;
-      currentSenderName = chat.person2Name;
-      currentReceiverId = chat.person1Id;
-      currentReceiverName = chat.person1Name;
-    }
   }
 
   String determineChatterProperty({

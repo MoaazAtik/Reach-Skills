@@ -301,6 +301,8 @@ abstract class Str {
 
   static const excMessageMissingChatPropertiesPack =
       'Missing "chat properties pack" fields.';
+  static const excMessageNoChatPropertiesPack =
+      'Could not get "chat properties pack" due to missing chatId.';
   static const excMessageInterestFromPathCheck =
       '`interest` is null or not an InterestModel.'
       ' Or `fromPath` is null or not a String.';
@@ -335,6 +337,8 @@ abstract class Str {
   static const excMessageSubscribeToUserIdAndNameStream =
       'Check `subscribeToUserIdAndNameStream`.';
   static const excMessageUpdateUserName = 'Check `updateUserName`.';
+  static const excMessageOnTapReach = 'Check `onTapReach`.';
+  static const excMessagePackChatId = 'Check `packChatId`.';
 
   static const excMessageFileRouting = 'routing.dart';
 
