@@ -326,6 +326,7 @@ abstract class Str {
   static const excMessagePackChattersProperties =
       'Check `packChattersProperties`';
   static const excMessageOnTapChat = 'Check `onTapChat`';
+  static const excMessageReach = 'Check `reach`';
   static const excMessageUpdateFields = 'Check `updateFields`';
   static const excMessage_messagesScreenBuilder =
       'Check `_messagesScreenBuilder`';

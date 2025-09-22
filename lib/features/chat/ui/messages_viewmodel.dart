@@ -37,15 +37,13 @@ class MessagesViewModel extends ChangeNotifier {
 
   void init(Map<String, dynamic> chatPropertiesPack) {
     updateFields(chatPropertiesPack);
+    startMessagesSubscription();
     startAuthStateSubscription();
   }
 
   void updateFields(Map<String, dynamic> chatPropertiesPack) {
-    /*
-     chatPropertiesPack[Str.messagesScreenParamChatId] will be null when coming
-     form Explore Screen aka, when 'Reach' is tapped.
-    */
-    if (chatPropertiesPack[Str.messagesScreenParamCurrentSenderId] == null ||
+    if (chatPropertiesPack[Str.messagesScreenParamChatId] == null ||
+        chatPropertiesPack[Str.messagesScreenParamCurrentSenderId] == null ||
         chatPropertiesPack[Str.messagesScreenParamCurrentSenderName] == null ||
         chatPropertiesPack[Str.messagesScreenParamCurrentReceiverId] == null ||
         chatPropertiesPack[Str.messagesScreenParamCurrentReceiverName] ==
@@ -58,6 +56,7 @@ class MessagesViewModel extends ChangeNotifier {
       return;
     }
 
+    chatId = chatPropertiesPack[Str.messagesScreenParamChatId]!;
     currentSenderId =
         chatPropertiesPack[Str.messagesScreenParamCurrentSenderId]!;
     currentSenderName =
@@ -67,39 +66,22 @@ class MessagesViewModel extends ChangeNotifier {
     currentReceiverName =
         chatPropertiesPack[Str.messagesScreenParamCurrentReceiverName]!;
 
-    final chatId = chatPropertiesPack[Str.messagesScreenParamChatId];
-
-    /* notifyListeners is called via setChatId by startMessagesSubscription */
-
-    chatId != null ? setChatId(chatId) : getChatId();
+    /*
+    `notifyListeners` is called by `startMessagesSubscription` that should be
+    called after this function is called.
+    */
   }
 
-  Future<void> getChatId() async {
-    String? chatId = await _chatRepository.getChatIdOrCreateChat(
-      personAId: currentSenderId!,
-      personAName: currentSenderName!,
-      personBId: currentReceiverId!,
-      personBName: currentReceiverName!,
-    );
-
-    setChatId(chatId!);
-  }
-
-  void setChatId(String chatId) {
-    this.chatId = chatId;
-    startMessagesSubscription(chatId);
-  }
-
-  void startMessagesSubscription(String chatId) {
-    if (currentSenderId == null) {
+  void startMessagesSubscription() {
+    if (chatId == null || currentSenderId == null) {
       print(
-        '${Str.excMessageNullCurrentSenderId}'
+        '${Str.excMessageNullCurrentSenderId} Or ${Str.excMessageNullChatId}'
         ' ${Str.excMessageStartMessagesSubscription} - $runtimeType',
       );
       return;
     }
 
-    _chatRepository.subscribeToMessagesStream(chatId, currentSenderId!);
+    _chatRepository.subscribeToMessagesStream(chatId!, currentSenderId!);
 
     if (_chatRepository.messagesStream == null) {
       print(

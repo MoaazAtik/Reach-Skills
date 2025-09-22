@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/utils/utils.dart';
-import 'package:reach_skills/features/chat/domain/chat_repository.dart';
 import 'package:reach_skills/features/common/data/temp_nav_history.dart';
 import 'package:reach_skills/features/common/ui/scaffold_app_bar_bodies.dart';
 import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
@@ -14,6 +13,7 @@ import '../../features/auth/data/auth_repository_impl.dart';
 import '../../features/auth/ui/auth_screen.dart';
 import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/data/chat_repository_impl.dart';
+import '../../features/chat/domain/chat_repository.dart';
 import '../../features/chat/ui/chat_body.dart';
 import '../../features/chat/ui/chat_viewmodel.dart';
 import '../../features/chat/ui/messages_body.dart';
@@ -202,7 +202,7 @@ Widget _chatScreenBuilder(BuildContext context, GoRouterState state) {
     masterBody: ChatBody(
       selectedChatId: null,
       onTapChat: (Map<String, String> chatPropertiesPack) {
-        onTapChat(context, chatPropertiesPack);
+        reach(context, chatPropertiesPack);
       },
       onSignInPressed: () => onTapSignIn(context),
     ),
@@ -278,7 +278,7 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
       // selectedChatId: chatId,
       // Todo fix infinite loading when tapping on the currently opened chat
       onTapChat: (Map<String, String> chatPropertiesPack) {
-        onTapChat(context, chatPropertiesPack);
+        reach(context, chatPropertiesPack);
       },
       onSignInPressed: () => onTapSignIn(context),
     );
@@ -378,7 +378,7 @@ Widget _buildInterestDetails({
     isOwner: isOwner,
     startEditing: startEditing,
     onTapReach: ({required Map<String, String> chatPropertiesPack}) {
-      onTapReach(context, chatPropertiesPack);
+      reach(context, chatPropertiesPack);
     },
   );
 
@@ -513,55 +513,13 @@ void onTapInterest({
   }
 }
 
-void onTapChat(BuildContext context, Map<String, String> chatPropertiesPack) {
-  final chatId = chatPropertiesPack[Str.messagesScreenParamChatId];
-
-  if (chatId == null) {
-    print(
-      '${Str.excMessageNullChatId}'
-      ' ${Str.excMessageOnTapChat} - ${Str.excMessageFileRouting}'
-      '\n  chatPropertiesPack: $chatPropertiesPack \n',
-    );
-    return;
-  }
-
-  context.read<TempNavHistory>().pushChatPropertiesPackHistory(
-    chatPropertiesPack,
-  );
-
-  if (kIsWeb) {
-    context.goNamed(
-      Str.messagesScreenRouteName,
-      pathParameters: {Str.messagesScreenParamChatId: chatId},
-      extra: chatPropertiesPack,
-    );
-  } else {
-    /*
-    Although I didn't need 'push' because messages screen is currently a
-    sub-route of chat screen, I used 'push' in case of changing this relation
-    in the future.
-    */
-    context.pushNamed(
-      Str.messagesScreenRouteName,
-      pathParameters: {Str.messagesScreenParamChatId: chatId},
-      extra: chatPropertiesPack,
-    );
-  }
-}
-
-void onTapReach(
-  BuildContext context,
-  Map<String, String> chatPropertiesPack,
-) async {
-  // Todo refactor: move this to Interest details view model.
+void reach(BuildContext context, Map<String, String> chatPropertiesPack) async {
   final chatRepository = context.read<ChatRepositoryImpl>();
 
   /*
   Get `chatId` especially to be passed as a parameter to the Messages Screen.
   */
-  final Map<String, String>? packWithChatId = await context
-      .read<ExploreViewModel>()
-      .packChatId(chatPropertiesPack, chatRepository);
+  final packWithChatId = await packChatId(chatPropertiesPack, chatRepository);
 
   if (packWithChatId == null) {
     print(
@@ -576,40 +534,97 @@ void onTapReach(
 
   context.read<TempNavHistory>().pushChatPropertiesPackHistory(packWithChatId);
 
-  /*
-  - Going to Chats screen first is for better UX so that navigating back takes to
-  the Chats screen instead of the InterestDetails screen.
-  - Although I didn't need 'push' because messages screen is currently a
-  sub-route of chat screen, I used 'push' in case of changing this relation
-  in the future.
-  */
-  if (kIsWeb) {
-    context.goNamed(Str.chatScreenRouteName);
-  } else {
-    context.pushNamed(Str.chatScreenRouteName);
+  final fromPath = GoRouterState.of(context).matchedLocation;
+  if (!fromPath.contains(Str.chatScreenRoutePath)) {
+    /*
+    - When coming from Explore Screen -> InterestDetails Screen going to
+    Chats screen first is for better UX so that navigating back takes
+    to the Chats screen instead of the InterestDetails screen.
+    - Although I didn't need 'push' because messages screen is currently a
+    sub-route of chat screen, I used 'push' in case of changing this relation
+    in the future.
+    */
+    if (kIsWeb) {
+      context.goNamed(Str.chatScreenRouteName);
+    } else {
+      context.pushNamed(Str.chatScreenRouteName);
+    }
   }
 
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    // Todo call `onTapChat(context, chatPropertiesPack);` instead of the following lines and move `chatId != null ? setChatId(chatId) : getChatId();` from messages view model to chat view model to show the chat id in the url.
-
     if (!context.mounted) return;
 
     final chatId = packWithChatId[Str.messagesScreenParamChatId];
 
+    if (chatId == null) {
+      print(
+        '${Str.excMessageNullChatId}'
+        ' ${Str.excMessageReach} - ${Str.excMessageFileRouting}'
+        '\n  chatPropertiesPack: $chatPropertiesPack \n',
+      );
+      return;
+    }
+
     if (kIsWeb) {
       context.goNamed(
         Str.messagesScreenRouteName,
-        pathParameters: {Str.messagesScreenParamChatId: chatId ?? ':id'},
+        pathParameters: {Str.messagesScreenParamChatId: chatId},
         extra: packWithChatId,
       );
     } else {
       context.pushNamed(
         Str.messagesScreenRouteName,
-        pathParameters: {Str.messagesScreenParamChatId: chatId ?? ':id'},
+        pathParameters: {Str.messagesScreenParamChatId: chatId},
         extra: packWithChatId,
       );
     }
   });
+}
+
+Future<Map<String, String>?> packChatId(
+  Map<String, String> chatPropertiesPack,
+  ChatRepository chatRepository,
+) async {
+  if (chatPropertiesPack[Str.messagesScreenParamCurrentSenderId] == null ||
+      chatPropertiesPack[Str.messagesScreenParamCurrentSenderName] == null ||
+      chatPropertiesPack[Str.messagesScreenParamCurrentReceiverId] == null ||
+      chatPropertiesPack[Str.messagesScreenParamCurrentReceiverName] == null) {
+    print(
+      '${Str.excMessageMissingChatPropertiesPack}'
+      ' ${Str.excMessageOnTapReach} - ${Str.excMessageFileRouting}'
+      '\n  chatPropertiesPack: $chatPropertiesPack',
+    );
+    return null;
+  }
+
+  String? currentSenderId =
+      chatPropertiesPack[Str.messagesScreenParamCurrentSenderId]!;
+  String? currentSenderName =
+      chatPropertiesPack[Str.messagesScreenParamCurrentSenderName]!;
+  String? currentReceiverId =
+      chatPropertiesPack[Str.messagesScreenParamCurrentReceiverId]!;
+  String? currentReceiverName =
+      chatPropertiesPack[Str.messagesScreenParamCurrentReceiverName]!;
+
+  String? chatId = await chatRepository.getChatIdOrCreateChat(
+    personAId: currentSenderId,
+    personAName: currentSenderName,
+    personBId: currentReceiverId,
+    personBName: currentReceiverName,
+  );
+
+  if (chatId == null) {
+    print(
+      '${Str.excMessageNullChatId}'
+      ' ${Str.excMessagePackChatId} - ${Str.excMessageFileRouting}'
+      '\n  chatPropertiesPack: $chatPropertiesPack',
+    );
+    return null;
+  }
+
+  chatPropertiesPack[Str.messagesScreenParamChatId] = chatId;
+
+  return chatPropertiesPack;
 }
 
 void onTapOnboardingGuide(BuildContext context) {
