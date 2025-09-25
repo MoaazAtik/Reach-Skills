@@ -11,17 +11,17 @@ It’s live on [reach-skills.web.app](https://reach-skills.web.app/).<br>Support
 <br>
 
 It covers:<br>
-✔️ Firebase Authentication.<br>
-✔️ Cloud Firestore database.<br>
-✔️ Firebase Hosting.<br>
-✔️ CI/CD with GitHub Actions.<br>
-✔️ Environment key management with GitHub Secrets & dotenv package.<br>
-✔️ Local storage with Shared Preferences package.<br>
-✔️ Clean Architecture with MVVM.<br>
-✔️ Url-based navigation with the Go Router package.<br>
-✔️ State management with the Provider package.<br>
-✔️ Responsive design & Material 3 Theming.<br>
-✔️ User Onboarding guide.
+✔️ **Firebase Authentication**.<br>
+✔️ **Cloud Firestore database**.<br>
+✔️ Firebase **Hosting**.<br>
+✔️ **CI/CD** with GitHub Actions.<br>
+✔️ Environment **key** management with **GitHub Secrets** & dotenv package.<br>
+✔️ Local storage with **Shared Preferences** package.<br>
+✔️ **Clean Architecture** with MVVM.<br>
+✔️ **Url-based navigation** with the Go Router package.<br>
+✔️ **State management** with the Provider package.<br>
+✔️ **Responsive** design & **Material 3 Theming**.<br>
+✔️ User **Onboarding** guide.
 
 <br>
 
