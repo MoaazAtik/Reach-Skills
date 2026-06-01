@@ -77,7 +77,7 @@ class _ExploreBodyState extends State<ExploreBody> {
                 widget.onTapSignIn(email: Str.guestEmail1);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(Str.guestInfoPassword),
+                    content: Text('${Str.guestPasswordLabel} ${Str.guestPassword}'),
                     duration: const Duration(seconds: 4),
                   ),
                 );

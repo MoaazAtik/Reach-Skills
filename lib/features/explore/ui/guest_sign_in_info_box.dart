@@ -16,6 +16,8 @@ class _GuestSignInInfoBoxState extends State<GuestSignInInfoBox> {
 
   @override
   Widget build(BuildContext context) {
+    final defaultTextStyle = DefaultTextStyle.of(context).style;
+
     return Card(
       elevation: Styles.elevationCard,
       shape: RoundedRectangleBorder(
@@ -64,7 +66,29 @@ class _GuestSignInInfoBoxState extends State<GuestSignInInfoBox> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(Str.guestInfoDescription),
+                      RichText(
+                        text: TextSpan(
+                          style: defaultTextStyle,
+                          children: [
+                            const TextSpan(text: Str.guestInfoDescriptionPart1),
+                            const TextSpan(
+                              text: Str.guestInfoDescriptionGuestAccess,
+                              style: Styles.textStyle14BlackWeight600,
+                            ),
+                            const TextSpan(text: Str.guestInfoDescriptionPart2),
+                            const TextSpan(
+                              text: Str.devUserName1,
+                              style: Styles.textStyle14BlackWeight600,
+                            ),
+                            const TextSpan(text: Str.guestInfoDescriptionAnd),
+                            const TextSpan(
+                              text: Str.devUserName2,
+                              style: Styles.textStyle14BlackWeight600,
+                            ),
+                            const TextSpan(text: Str.guestInfoDescriptionPart3),
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: Styles.spacingSmall),
 
                       Column(
@@ -82,13 +106,38 @@ class _GuestSignInInfoBoxState extends State<GuestSignInInfoBox> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  Str.guestInfoEmail,
-                                  style: Styles.textStyle14BlackWeight600,
+                                RichText(
+                                  text: TextSpan(
+                                    style: defaultTextStyle,
+                                    children: [
+                                      const TextSpan(text: Str.guestEmailLabel),
+                                      const TextSpan(
+                                        text: Str.guestEmail1,
+                                        style: Styles.textStyle14BlackWeight600,
+                                      ),
+                                      const TextSpan(
+                                        text: Str.guestEmailSeparator,
+                                      ),
+                                      const TextSpan(
+                                        text: Str.guestEmail2,
+                                        style: Styles.textStyle14BlackWeight600,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                const Text(
-                                  Str.guestInfoPassword,
-                                  style: Styles.textStyle14BlackWeight600,
+                                RichText(
+                                  text: TextSpan(
+                                    style: defaultTextStyle,
+                                    children: [
+                                      const TextSpan(
+                                        text: Str.guestPasswordLabel,
+                                      ),
+                                      const TextSpan(
+                                        text: Str.guestPassword,
+                                        style: Styles.textStyle14BlackWeight600,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

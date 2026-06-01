@@ -194,15 +194,24 @@ abstract class Str {
   static const poweredBy = 'Powered by';
   static const whiteWings = 'White Wings';
 
-  static const guestInfoTitle = 'Try $appTitle easily as a Guest! 🚀';
-  static const guestInfoDescription =
-      'Explore the app instantly with our guest credentials.\nYou can also interact with our team members $devUserName1 and $devUserName2.';
+  static const guestInfoTitle = 'Experience $appTitle Now 🚀';
+  static const _guestInfoDescription =
+      'No signup needed! Try guest access using the Credentials below and chat with $devUserName1 and $devUserName2 from our team.';
+  static const guestInfoDescriptionPart1 = 'No signup needed! Try ';
+  static const guestInfoDescriptionGuestAccess = 'guest access';
+  static const guestInfoDescriptionPart2 =
+      ' using the Credentials below and chat with ';
+  static const guestInfoDescriptionAnd = ' and ';
+  static const guestInfoDescriptionPart3 = ' from our team.';
   static const devUserName1 = 'Albert Tesla';
   static const devUserName2 = 'Leonardo Stark';
   static const guestEmail1 = 'hi@skill.com';
   static const guestEmail2 = 'hi2@skill.com';
-  static const guestInfoEmail = 'Email: $guestEmail1    OR    $guestEmail2';
-  static const guestInfoPassword = 'Password: 123456';
+  static const guestEmailLabel = 'Email: ';
+  static const guestEmailSeparator = '    OR    ';
+  static const _guestInfoPassword = 'Password: $guestPassword';
+  static const guestPasswordLabel = 'Password: ';
+  static const guestPassword = '123456';
   static const guestSignInButton = 'Guest Sign in';
 
   static const onboarding0Title = 'Connect, Share, Grow';
