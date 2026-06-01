@@ -195,21 +195,15 @@ abstract class Str {
   static const whiteWings = 'White Wings';
 
   static const guestInfoTitle = 'Experience $appTitle Now 🚀';
-  static const _guestInfoDescription =
-      'No signup needed! Try guest access using the Credentials below and chat with $devUserName1 and $devUserName2 from our team.';
-  static const guestInfoDescriptionPart1 = 'No signup needed! Try ';
+  static const guestInfoDescription =
+      'No signup needed! Try $guestInfoDescriptionGuestAccess using the Credentials below and chat with $devUserName1 and $devUserName2 from our team.';
   static const guestInfoDescriptionGuestAccess = 'guest access';
-  static const guestInfoDescriptionPart2 =
-      ' using the Credentials below and chat with ';
-  static const guestInfoDescriptionAnd = ' and ';
-  static const guestInfoDescriptionPart3 = ' from our team.';
   static const devUserName1 = 'Albert Tesla';
   static const devUserName2 = 'Leonardo Stark';
   static const guestEmail1 = 'hi@skill.com';
   static const guestEmail2 = 'hi2@skill.com';
   static const guestEmailLabel = 'Email: ';
   static const guestEmailSeparator = '    OR    ';
-  static const _guestInfoPassword = 'Password: $guestPassword';
   static const guestPasswordLabel = 'Password: ';
   static const guestPassword = '123456';
   static const guestSignInButton = 'Guest Sign in';

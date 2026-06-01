@@ -69,24 +69,7 @@ class _GuestSignInInfoBoxState extends State<GuestSignInInfoBox> {
                       RichText(
                         text: TextSpan(
                           style: defaultTextStyle,
-                          children: [
-                            const TextSpan(text: Str.guestInfoDescriptionPart1),
-                            const TextSpan(
-                              text: Str.guestInfoDescriptionGuestAccess,
-                              style: Styles.textStyle14BlackWeight600,
-                            ),
-                            const TextSpan(text: Str.guestInfoDescriptionPart2),
-                            const TextSpan(
-                              text: Str.devUserName1,
-                              style: Styles.textStyle14BlackWeight600,
-                            ),
-                            const TextSpan(text: Str.guestInfoDescriptionAnd),
-                            const TextSpan(
-                              text: Str.devUserName2,
-                              style: Styles.textStyle14BlackWeight600,
-                            ),
-                            const TextSpan(text: Str.guestInfoDescriptionPart3),
-                          ],
+                          children: _buildStyledDescription(context),
                         ),
                       ),
                       const SizedBox(height: Styles.spacingSmall),
@@ -162,5 +145,46 @@ class _GuestSignInInfoBoxState extends State<GuestSignInInfoBox> {
         ),
       ),
     );
+  }
+
+  List<InlineSpan> _buildStyledDescription(BuildContext context) {
+    final String fullText = Str.guestInfoDescription;
+    final List<String> highlights = [
+      Str.guestInfoDescriptionGuestAccess,
+      Str.devUserName1,
+      Str.devUserName2,
+    ];
+
+    final List<InlineSpan> spans = [];
+    int lastMatchEnd = 0;
+
+    // Build a regex that matches any of the highlights
+    /* Ensure that special characters are treated as literal text,
+    * not regex commands.*/
+    final String pattern = highlights.map(RegExp.escape).join('|');
+    final RegExp regex = RegExp(pattern);
+
+    for (final Match match in regex.allMatches(fullText)) {
+      // Add text before the match
+      /* If there is text between the end of the previous match and the start of
+      * the current match, add it as a normal TextSpan.*/
+      if (match.start > lastMatchEnd) {
+        spans.add(
+          TextSpan(text: fullText.substring(lastMatchEnd, match.start)),
+        );
+      }
+      // Add the matched highlight with bold style
+      spans.add(
+        TextSpan(text: match.group(0), style: Styles.textStyle14BlackWeight600),
+      );
+      lastMatchEnd = match.end;
+    }
+
+    // Add remaining text
+    if (lastMatchEnd < fullText.length) {
+      spans.add(TextSpan(text: fullText.substring(lastMatchEnd)));
+    }
+
+    return spans;
   }
 }
