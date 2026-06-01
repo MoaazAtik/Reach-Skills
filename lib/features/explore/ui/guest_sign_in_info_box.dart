@@ -13,6 +13,13 @@ class GuestSignInInfoBox extends StatefulWidget {
 
 class _GuestSignInInfoBoxState extends State<GuestSignInInfoBox> {
   bool _isExpanded = false;
+  late final List<InlineSpan> descriptionTextSpans;
+
+  @override
+  void initState() {
+    descriptionTextSpans = _buildStyledDescription();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +76,7 @@ class _GuestSignInInfoBoxState extends State<GuestSignInInfoBox> {
                       RichText(
                         text: TextSpan(
                           style: defaultTextStyle,
-                          children: _buildStyledDescription(context),
+                          children: descriptionTextSpans,
                         ),
                       ),
                       const SizedBox(height: Styles.spacingSmall),
@@ -147,7 +154,7 @@ class _GuestSignInInfoBoxState extends State<GuestSignInInfoBox> {
     );
   }
 
-  List<InlineSpan> _buildStyledDescription(BuildContext context) {
+  List<InlineSpan> _buildStyledDescription() {
     final String fullText = Str.guestInfoDescription;
     final List<String> highlights = [
       Str.guestInfoDescriptionGuestAccess,
