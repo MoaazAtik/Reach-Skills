@@ -112,7 +112,8 @@ abstract class Str {
 
   /// Model fields end
 
-  /// Localizable strings start
+  /// Localizable strings start (en_US)
+  /// Includes some non-localizable strings for ease of development.
 
   static const error = 'Error';
 
