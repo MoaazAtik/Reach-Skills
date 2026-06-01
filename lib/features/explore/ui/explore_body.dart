@@ -8,15 +8,18 @@ import 'package:reach_skills/features/explore/ui/search_widget.dart';
 import '../../../core/constants/strings.dart';
 import '../../common/data/interest_model.dart';
 import 'explore_viewmodel.dart';
+import 'guest_sign_in_info_box.dart';
 import 'interest_card.dart';
 
 class ExploreBody extends StatefulWidget {
   const ExploreBody({
     super.key,
     required this.onTapInterest,
+    required this.onTapSignIn,
   });
 
   final void Function(InterestModel interest) onTapInterest;
+  final void Function({String? email}) onTapSignIn;
 
   @override
   State<ExploreBody> createState() => _ExploreBodyState();
@@ -28,6 +31,7 @@ class _ExploreBodyState extends State<ExploreBody> {
     final exploreViewModel = context.watch<ExploreViewModel>();
     final loading = exploreViewModel.loading;
     final interestsStreamError = exploreViewModel.interestsStreamError;
+    final isLoggedIn = exploreViewModel.isLoggedIn ?? false;
 
     final interests = context.select<ExploreViewModel, List<InterestModel>>(
       (exploreViewModel) => exploreViewModel.interests,
@@ -66,6 +70,21 @@ class _ExploreBodyState extends State<ExploreBody> {
             ],
           ),
           const SizedBox(height: Styles.spacing12),
+
+          if (!isLoggedIn) ...[
+            GuestSignInInfoBox(
+              onTapSignIn: () {
+                widget.onTapSignIn(email: Str.guestEmail1);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(Str.guestInfoPassword),
+                    duration: const Duration(seconds: 4),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: Styles.spacing12),
+          ],
 
           // Interest Cards
           Expanded(

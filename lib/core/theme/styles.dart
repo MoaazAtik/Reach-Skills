@@ -50,7 +50,7 @@ abstract class Styles {
   static const fontSizeOnboardingTitle = 28.0;
   static const fontSizeOnboardingDescription = 16.0;
   static const fontSize16 = 16.0;
-  static const fontSize14 = 16.0;
+  static const fontSize14 = 14.0;
 
   static const elevationCard = 4.0;
   static const elevationMenu = 8.0;
@@ -278,6 +278,12 @@ abstract class Styles {
     fontSize: fontSize16,
     color: primaryTextBlackColor,
     fontWeight: FontWeight.w500,
+  );
+
+  static const TextStyle textStyle14BlackWeight600 = TextStyle(
+    fontSize: fontSize14,
+    color: primaryTextBlackColor,
+    fontWeight: FontWeight.w600,
   );
 
   static const TextStyle textStyle14SubtitleBlue = TextStyle(

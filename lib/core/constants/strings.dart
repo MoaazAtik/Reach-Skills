@@ -49,6 +49,7 @@ abstract class Str {
   static const onboardingScreenRouteName = 'onboarding';
   static const onboardingScreenRoutePath = '/onboarding';
 
+  static const exploreScreenParamEmail = 'email';
   static const messagesScreenParamChatId = 'id'; // only for deep linking
   static const messagesScreenParamCurrentSenderId = 'currentSenderId';
   static const messagesScreenParamCurrentSenderName = 'currentSenderName';
@@ -193,6 +194,17 @@ abstract class Str {
   static const poweredBy = 'Powered by';
   static const whiteWings = 'White Wings';
 
+  static const guestInfoTitle = 'Try $appTitle easily as a Guest! 🚀';
+  static const guestInfoDescription =
+      'Explore the app instantly with our guest credentials.\nYou can also interact with our team members $devUserName1 and $devUserName2.';
+  static const devUserName1 = 'Albert Tesla';
+  static const devUserName2 = 'Leonardo Stark';
+  static const guestEmail1 = 'hi@skill.com';
+  static const guestEmail2 = 'hi2@skill.com';
+  static const guestInfoEmail = 'Email: $guestEmail1    OR    $guestEmail2';
+  static const guestInfoPassword = 'Password: 123456';
+  static const guestSignInButton = 'Guest Sign in';
+
   static const onboarding0Title = 'Connect, Share, Grow';
   static const onboarding0Description =
       'Reach Skills is a vibrant community where you can exchange skills, pursue your aspirations, and connect with like-minded individuals.';
@@ -269,7 +281,7 @@ abstract class Str {
 
   /// Mock data end
 
-  /// Exception messages start
+  /// Exception and Info messages start
 
   static const excMessageNullId = 'Passed "null ID".';
   static const excMessageNullUserId = 'Passed "null User ID".';
@@ -283,6 +295,10 @@ abstract class Str {
   static const excMessageNullTitle = 'Passed "null Title".';
   static const excMessageNullUserName = 'Passed "null User Name".';
   static const excMessageNullEmail = 'Passed "null Email".';
+  static const excMessageNonNullableStringEmail =
+      'Passed "non-nullable String Email".';
+  static const infMessageNullableStringEmail =
+      'Passed "nullable String Email".';
   static const excMessageNullOnTapSave = 'Passed "null onTapSave".';
   static const excMessageNullOnTapReach = 'Passed "null onTapReach".';
   static const excMessageNullAppBarActions =
@@ -334,6 +350,7 @@ abstract class Str {
       'Check `startMessagesSubscription`';
   static const excMessage_buildInterestDetails =
       'Check `buildInterestDetails`.';
+  static const excMessage_authScreenBuilder = 'Check `authScreenBuilder`.';
   static const excMessageSendMessage = 'Check `sendMessage`.';
   static const excMessageSubscribeToUserIdAndNameStream =
       'Check `subscribeToUserIdAndNameStream`.';
@@ -343,5 +360,5 @@ abstract class Str {
 
   static const excMessageFileRouting = 'routing.dart';
 
-  /// Exception messages end
+  /// Exception and Info messages end
 }

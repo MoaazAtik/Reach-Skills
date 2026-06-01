@@ -11,7 +11,9 @@ import '../../../core/constants/strings.dart';
 import 'auth_viewmodel.dart';
 
 class AuthScreen extends StatelessWidget {
-  const AuthScreen({super.key});
+  const AuthScreen({super.key, this.email});
+
+  final String? email;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class AuthScreen extends StatelessWidget {
             : '';
 
     return SignInScreen(
+      email: email,
       providers: [
         EmailAuthProvider(),
         GoogleProvider(clientId: googleClientId),

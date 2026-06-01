@@ -183,6 +183,9 @@ Widget _exploreScreenBuilder(BuildContext context, GoRouterState state) {
   return _buildScaffoldAppBarBodies(
     context: context,
     masterBody: ExploreBody(
+      onTapSignIn: ({String? email}) {
+        onTapSignIn(context, email: email);
+      },
       onTapInterest: (interest) {
         onTapInterest(
           context: context,
@@ -314,9 +317,34 @@ Widget _authScreenBuilder(BuildContext context, GoRouterState state) {
       (Duration duration) => context.goNamed(Str.exploreScreenRouteName),
     );
   }
+
+  late final AuthScreen authScreen;
+
+  final extra = state.extra ?? const <String, dynamic>{};
+  if (extra is! Map) {
+    print(
+      '${Str.excMessageExtraNotMap} - ${state.matchedLocation}'
+      ' - ${Str.excMessage_authScreenBuilder}',
+    );
+  }
+  final email = (extra as Map)[Str.exploreScreenParamEmail];
+  if (email != null && email is! String?) {
+    print(
+      '${Str.excMessageNonNullableStringEmail} - ${state.matchedLocation}'
+      ' - ${Str.excMessage_authScreenBuilder}',
+    );
+    authScreen = AuthScreen();
+  } else {
+    print(
+      '${Str.infMessageNullableStringEmail} - ${state.matchedLocation}'
+      ' - ${Str.excMessage_authScreenBuilder}',
+    );
+    authScreen = AuthScreen(email: email);
+  }
+
   return _buildScaffoldAppBarBodies(
     context: context,
-    masterBody: AuthScreen(),
+    masterBody: authScreen,
     appBarTitle: Str.authScreenTitle,
     isLoggedIn: isLoggedIn,
   );
@@ -391,6 +419,9 @@ Widget _buildInterestDetails({
       break;
     default: // case Str.exploreScreenRoutePath:
       masterBody = ExploreBody(
+        onTapSignIn: ({String? email}) {
+          onTapSignIn(context, email: email);
+        },
         onTapInterest: (interest) {
           onTapInterest(
             context: context,
@@ -642,11 +673,17 @@ void endOnboarding(BuildContext context) {
   context.read<PreferencesRepositoryImpl>().setIsFirstInitialization(false);
 }
 
-void onTapSignIn(BuildContext context) {
+void onTapSignIn(BuildContext context, {String? email}) {
   if (kIsWeb) {
-    context.goNamed(Str.authScreenRouteName);
+    context.goNamed(
+      Str.authScreenRouteName,
+      extra: email != null ? {Str.exploreScreenParamEmail: email} : null,
+    );
   } else {
-    context.pushNamed(Str.authScreenRouteName);
+    context.pushNamed(
+      Str.authScreenRouteName,
+      extra: email != null ? {Str.exploreScreenParamEmail: email} : null,
+    );
   }
 }
 
