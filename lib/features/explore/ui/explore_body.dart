@@ -64,9 +64,11 @@ class _ExploreBodyState extends State<ExploreBody> {
               RsInterestsFilterMenu(onTapFilter: onTapFilter),
 
               // Search widget // Todo implement
-              SearchWidget(onSearch: () {
-                showSnackBarMessage(context, Str.featureComingSoon);
-              }),
+              SearchWidget(
+                onSearch: () {
+                  showSnackBarMessage(context, Str.featureComingSoon);
+                },
+              ),
             ],
           ),
           const SizedBox(height: Styles.spacing12),
@@ -77,7 +79,9 @@ class _ExploreBodyState extends State<ExploreBody> {
                 widget.onTapSignIn(email: Str.guestEmail1);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('${Str.guestPasswordLabel} ${Str.guestPassword}'),
+                    content: Text(
+                      '${Str.guestPasswordLabel} ${Str.guestPassword}',
+                    ),
                     duration: const Duration(seconds: 4),
                   ),
                 );
