@@ -210,11 +210,11 @@ abstract class Str {
 
   static const onboarding0Title = 'Connect, Share, Grow';
   static const onboarding0Description =
-      'Reach Skills is a vibrant community where you can exchange skills, pursue your aspirations, and connect with like-minded individuals.';
+      '$appTitle is a vibrant community where you can exchange skills, pursue your aspirations, and connect with like-minded individuals.';
 
   static const onboarding1Title = 'What are Interests?';
   static const onboarding1Description =
-      'Interests are the core of Reach Skills. They represent what you can offer (Skills) and what you\'re looking for (Wishes).';
+      'Interests are the core of $appTitle. They represent what you can offer (Skills) and what you\'re looking for (Wishes).';
   static const skills = 'Skills';
   static const skillsDefinition = 'What you can offer to others';
   static const wishes = 'Wishes';
