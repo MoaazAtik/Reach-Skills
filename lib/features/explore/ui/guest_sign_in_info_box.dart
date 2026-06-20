@@ -26,7 +26,7 @@ class _GuestSignInInfoBoxState extends State<GuestSignInInfoBox>
     _glowController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
-    )..repeat(reverse: true);
+    )..repeat(reverse: true, count: 6);
 
     _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
@@ -53,9 +53,9 @@ class _GuestSignInInfoBoxState extends State<GuestSignInInfoBox>
             boxShadow: [
               BoxShadow(
                 color: Styles.skillCardGradientEndColor.withValues(
-                  alpha: 0.5 * _glowAnimation.value,
+                  alpha: 0.9 * _glowAnimation.value,
                 ),
-                blurRadius: 12.0 * _glowAnimation.value + 4.0,
+                blurRadius: 12.0 * _glowAnimation.value + 2.0,
                 spreadRadius: 1.0 * _glowAnimation.value,
               ),
             ],
