@@ -1,26 +1,27 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
 import '../../../core/constants/strings.dart';
-import '../../auth/domain/auth_repository.dart';
+import '../../auth/domain/entities/auth_session.dart';
+import '../../auth/domain/use_cases/get_auth_session_use_case.dart';
 import '../../common/data/interest_model.dart';
 import '../domain/profile_model.dart';
 import '../domain/profile_repository.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   ProfileViewModel({
-    required AuthRepository authRepository,
+    required GetAuthSessionUseCase getAuthSessionUseCase,
     required ProfileRepository profileRepository,
-  }) : _authRepository = authRepository,
+  }) : _getAuthSessionUseCase = getAuthSessionUseCase,
        _profileRepository = profileRepository {
     init();
   }
 
-  final AuthRepository _authRepository;
+  final GetAuthSessionUseCase _getAuthSessionUseCase;
   final ProfileRepository _profileRepository;
 
+  StreamSubscription<AuthSession>? _authSessionSubscription;
   bool loading = true;
   bool isEditing = false;
   String? uid;
@@ -33,18 +34,31 @@ class ProfileViewModel extends ChangeNotifier {
   bool? isLoggedIn;
 
   void init() {
-    isLoggedIn = _authRepository.isLoggedIn.value;
+    _subscribeToAuthSession();
     // startInterestsSubscription();
-    startProfileSubscription();
+  }
+
+  void _subscribeToAuthSession() {
+    _authSessionSubscription = _getAuthSessionUseCase.execute().listen((
+      session,
+    ) {
+      isLoggedIn = session.isLoggedIn;
+      uid = session.user?.uid;
+      email = session.user?.email;
+
+      if ((isLoggedIn ?? false) && uid != null) {
+        startProfileSubscription();
+      } else {
+        stopProfileSubscription();
+      }
+      notifyListeners();
+    });
   }
 
   /* This method gets `uid` is from the auth repository aka,
   `FirebaseAuth.instance`, not the profile repository which is
    a Firestore collection aka, `FirebaseFirestore.instance`. */
   void startProfileSubscription() {
-    uid = _authRepository.getUserId();
-    email = _authRepository.getUserEmail();
-
     if (uid == null) return;
 
     if (_profileSubscription != null) return;
@@ -72,6 +86,11 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   Future<void> stopSubscriptions() async {
+    _authSessionSubscription?.cancel();
+    stopProfileSubscription();
+  }
+
+  Future<void> stopProfileSubscription() async {
     await _profileRepository.unsubscribeFromProfileStream();
     await _profileSubscription?.cancel();
   }
@@ -94,18 +113,18 @@ class ProfileViewModel extends ChangeNotifier {
     String? bio,
     InterestModel? interest,
   }) async {
+    if (uid == null) {
+      print(
+        'Profile ViewModel - `updateProfile`: "null uid".'
+        ' Check `_authRepository.getUserId()`.',
+      );
+      return Str.pleaseSignIn;
+    }
+
     /* This is needed because `startProfileSubscription` is called only on
    `ProfileBody`s initialization. Therefore, `profile` would be null when
     calling `updateProfile` to update an interest from the `ExploreScreen`. */
     if (profile == null && _profileSubscription == null) {
-      uid = _authRepository.getUserId();
-      if (uid == null) {
-        print(
-          'Profile ViewModel - `updateProfile`: "null uid".'
-          ' Check `_authRepository.getUserId()`.',
-        );
-        return Str.pleaseSignIn;
-      }
       profile = await _profileRepository.getProfile(uid!);
       interests = profile?.interests ?? interests;
     }

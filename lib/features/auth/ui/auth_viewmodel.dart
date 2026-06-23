@@ -3,16 +3,24 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
-import '../data/auth_repository_impl.dart';
 import '../domain/auth_repository.dart';
+import '../domain/entities/auth_session.dart';
+import '../domain/use_cases/get_auth_session_use_case.dart';
+import '../domain/use_cases/sign_out_use_case.dart';
 
 class AuthViewModel extends ChangeNotifier {
-  AuthViewModel({required AuthRepository authRepository})
-    : _authRepository = authRepository {
+  AuthViewModel({
+    required GetAuthSessionUseCase getAuthSessionUseCase,
+    required SignOutUseCase signOutUseCase,
+  }) : _getAuthSessionUseCase = getAuthSessionUseCase,
+       _signOutUseCase = signOutUseCase {
     init();
   }
 
-  final AuthRepository _authRepository;
+  final GetAuthSessionUseCase _getAuthSessionUseCase;
+  final SignOutUseCase _signOutUseCase;
+
+  StreamSubscription<AuthSession>? _authSessionSubscription;
 
   bool _isLoggedIn = false;
 
@@ -31,55 +39,23 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   void startAuthStateSubscription() {
-    _authRepository.subscribeToAuthStateChanges();
-
-    // Initialize fields
-    /*
-     Needed because these local fields might not be initialized when they
-     start listening to the repo after the repo updates its fields.
-    */
-    _isLoggedIn = _authRepository.isLoggedIn.value;
-    _currentUser = _authRepository.currentUserNotifier.value;
-    _authError = (_authRepository as AuthRepositoryImpl).authError.value;
-    notifyListeners();
-
     // Listen to changes
-    _authRepository.currentUserNotifier.addListener(
-      _listenerCurrentUserNotifier,
-    );
-    _authRepository.authError.addListener(_listenerAuthError);
-    _authRepository.isLoggedIn.addListener(_listenerIsLoggedIn);
+    _authSessionSubscription = _getAuthSessionUseCase.execute().listen((
+      session,
+    ) {
+      _currentUser = session.user;
+      _isLoggedIn = session.isLoggedIn;
+      _authError = session.error;
+      notifyListeners();
+    });
   }
 
   void stopSubscriptions() {
-    _authRepository.unsubscribeFromAuthStateChanges();
-    _authRepository.currentUserNotifier.removeListener(
-      _listenerCurrentUserNotifier,
-    );
-    (_authRepository as AuthRepositoryImpl).authError.removeListener(
-      _listenerAuthError,
-    );
-    _authRepository.isLoggedIn.removeListener(_listenerIsLoggedIn);
-  }
-
-  void _listenerCurrentUserNotifier() {
-    _currentUser = _authRepository.currentUserNotifier.value;
-    _authError = null;
-    notifyListeners();
-  }
-
-  void _listenerAuthError() {
-    _authError = (_authRepository as AuthRepositoryImpl).authError.value;
-    notifyListeners();
-  }
-
-  void _listenerIsLoggedIn() {
-    _isLoggedIn = _authRepository.isLoggedIn.value;
-    notifyListeners();
+    _authSessionSubscription?.cancel();
   }
 
   Future<void> signOut() async {
-    await _authRepository.signOut();
+    await _signOutUseCase.execute();
   }
 
   @override

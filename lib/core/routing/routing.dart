@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/utils/utils.dart';
+import 'package:reach_skills/features/auth/domain/entities/auth_session.dart';
+import 'package:reach_skills/features/auth/domain/use_cases/get_auth_session_use_case.dart';
+import 'package:reach_skills/features/auth/domain/use_cases/sign_out_use_case.dart';
 import 'package:reach_skills/features/common/data/temp_nav_history.dart';
 import 'package:reach_skills/features/common/ui/scaffold_app_bar_bodies.dart';
 import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
@@ -59,7 +62,8 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                 return ChangeNotifierProvider(
                   create:
                       (BuildContext _) => ExploreViewModel(
-                        authViewModel: context.read<AuthViewModel>(),
+                        getAuthSessionUseCase:
+                            context.read<GetAuthSessionUseCase>(),
                         profileRepository:
                             context.read<ProfileRepositoryImpl>(),
                       ),
@@ -92,7 +96,8 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
                 return ChangeNotifierProvider(
                   create:
                       (BuildContext _) => ChatViewModel(
-                        authRepository: context.read<AuthRepositoryImpl>(),
+                        getAuthSessionUseCase:
+                            context.read<GetAuthSessionUseCase>(),
                         chatRepository: context.read<ChatRepositoryImpl>(),
                       ),
                   child: child,
@@ -128,10 +133,24 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
     ),
 
     // Auth Screen
-    GoRoute(
-      name: Str.authScreenRouteName,
-      path: Str.authScreenRoutePath,
-      builder: _authScreenBuilder,
+    ShellRoute(
+      builder: (context, state, child) {
+        return ChangeNotifierProvider(
+          create:
+              (BuildContext _) => AuthViewModel(
+                getAuthSessionUseCase: context.read<GetAuthSessionUseCase>(),
+                signOutUseCase: context.read<SignOutUseCase>(),
+              ),
+          child: child,
+        );
+      },
+      routes: [
+        GoRoute(
+          name: Str.authScreenRouteName,
+          path: Str.authScreenRoutePath,
+          builder: _authScreenBuilder,
+        ),
+      ],
     ),
 
     ShellRoute(
@@ -139,7 +158,7 @@ GoRouter getRouter(bool isFirstInitialization) => GoRouter(
         return ChangeNotifierProvider(
           create:
               (BuildContext _) => ProfileViewModel(
-                authRepository: context.read<AuthRepositoryImpl>(),
+                getAuthSessionUseCase: context.read<GetAuthSessionUseCase>(),
                 profileRepository: context.read<ProfileRepositoryImpl>(),
               ),
           child: child,
@@ -266,7 +285,7 @@ Widget _messagesScreenBuilder(BuildContext context, GoRouterState state) {
     key: GlobalObjectKey(chatPropertiesPack),
     create:
         (BuildContext _) => MessagesViewModel(
-          authRepository: context.read<AuthRepositoryImpl>(),
+          getAuthSessionUseCase: context.read<GetAuthSessionUseCase>(),
           chatRepository: context.read<ChatRepositoryImpl>(),
           chatPropertiesPack: chatPropertiesPack as Map<String, dynamic>,
         ),
@@ -398,7 +417,7 @@ Widget _buildInterestDetails({
   }
 
   final bool isOwner =
-      interest.userId == context.read<AuthViewModel>().currentUser?.uid;
+      interest.userId == context.read<AuthRepositoryImpl>().getUserId();
 
   final Widget interestDetails = InterestDetails(
     key: ValueKey(interest.id),
@@ -478,18 +497,28 @@ Widget _buildScaffoldAppBarBodies({
   bool appBarEditAction = false,
   VoidCallback? onTapEdit,
 }) {
-  return ScaffoldAppBarBodies(
-    masterBody: masterBody,
-    detailBody: detailBody,
-    dialogBody: dialogBody,
-    appBarTitle: appBarTitle,
-    isLoggedIn: isLoggedIn ?? context.watch<AuthViewModel>().isLoggedIn,
-    appBarEditAction: appBarEditAction,
-    onTapEdit: onTapEdit,
-    onTapSignIn: () => onTapSignIn(context),
-    onTapSignOut: () => onTapSignOut(context),
-    onTapEditProfile: () => onTapEditProfile(context),
-    onTapHelp: () => onTapHelp(context),
+  // Todo try to get rid of StreamBuilder. maybe by passing it (isLoggedIn)
+  // from each of the view models, Or by implementing GoRouter's redirect and
+  // refreshListenable properties, Or via a StreamProvider<AuthSession>
+  return StreamBuilder<AuthSession>(
+    stream: context.read<GetAuthSessionUseCase>().execute(),
+    builder: (context, snapshot) {
+      final bool loggedIn =
+          isLoggedIn ?? (snapshot.hasData && snapshot.data!.isLoggedIn);
+      return ScaffoldAppBarBodies(
+        masterBody: masterBody,
+        detailBody: detailBody,
+        dialogBody: dialogBody,
+        appBarTitle: appBarTitle,
+        isLoggedIn: loggedIn,
+        appBarEditAction: appBarEditAction,
+        onTapEdit: onTapEdit,
+        onTapSignIn: () => onTapSignIn(context),
+        onTapSignOut: () => onTapSignOut(context),
+        onTapEditProfile: () => onTapEditProfile(context),
+        onTapHelp: () => onTapHelp(context),
+      );
+    },
   );
 }
 
@@ -688,7 +717,7 @@ void onTapSignIn(BuildContext context, {String? email}) {
 }
 
 void onTapSignOut(BuildContext context) {
-  context.read<AuthViewModel>().signOut();
+  context.read<SignOutUseCase>().execute();
   if (kIsWeb) {
     context.goNamed(Str.exploreScreenRouteName);
   } else {

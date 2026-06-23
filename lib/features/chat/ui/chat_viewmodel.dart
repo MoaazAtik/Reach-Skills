@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../core/constants/strings.dart';
-import '../../auth/data/auth_repository_impl.dart';
-import '../../auth/domain/auth_repository.dart';
+import '../../auth/domain/entities/auth_session.dart';
+import '../../auth/domain/use_cases/get_auth_session_use_case.dart';
 import '../data/chat_model.dart';
 import '../domain/chat_repository.dart';
 
@@ -13,14 +13,14 @@ enum ChatterProperty { id, name }
 
 class ChatViewModel extends ChangeNotifier {
   ChatViewModel({
-    required AuthRepository authRepository,
+    required GetAuthSessionUseCase getAuthSessionUseCase,
     required ChatRepository chatRepository,
-  }) : _authRepository = authRepository,
+  }) : _getAuthSessionUseCase = getAuthSessionUseCase,
        _chatRepository = chatRepository {
     init();
   }
 
-  final AuthRepository _authRepository;
+  final GetAuthSessionUseCase _getAuthSessionUseCase;
   final ChatRepository _chatRepository;
 
   bool loading = true;
@@ -39,27 +39,29 @@ class ChatViewModel extends ChangeNotifier {
 
   String? get chatsError => _chatsError;
   StreamSubscription<List<ChatModel>>? _allChatsSubscription;
+  StreamSubscription<AuthSession>? _authSessionSubscription;
 
   void init() {
     print('init - Chat View Model');
-    startAuthStateSubscription();
+    _subscribeToAuthSession();
     startAllChatsSubscription();
   }
 
-  void startAuthStateSubscription() {
-    _authRepository.subscribeToAuthStateChanges();
+  void _subscribeToAuthSession() {
+    _authSessionSubscription = _getAuthSessionUseCase.execute().listen((
+      session,
+    ) {
+      _isLoggedIn = session.isLoggedIn;
+      _currentUser = session.user;
+      _authError = session.error;
 
-    _isLoggedIn = _authRepository.isLoggedIn.value;
-    notifyListeners();
-    _currentUser = _authRepository.currentUserNotifier.value;
-    _authError = (_authRepository as AuthRepositoryImpl).authError.value;
-    notifyListeners();
-
-    _authRepository.isLoggedIn.addListener(_listenerIsLoggedIn);
-    _authRepository.currentUserNotifier.addListener(
-      _listenerCurrentUserNotifier,
-    );
-    _authRepository.authError.addListener(_listenerAuthError);
+      if (_isLoggedIn && _currentUser != null) {
+        startAllChatsSubscription();
+      } else {
+        stopAllChatsSubscription();
+      }
+      notifyListeners();
+    });
   }
 
   void startAllChatsSubscription() {
@@ -70,6 +72,8 @@ class ChatViewModel extends ChangeNotifier {
       );
       return;
     }
+
+    if (_allChatsSubscription != null) return;
 
     _chatRepository.subscribeToChatsStream(_currentUser!.uid);
 
@@ -90,36 +94,15 @@ class ChatViewModel extends ChangeNotifier {
     }
   }
 
-  void stopSubscriptions() {
-    _authRepository.unsubscribeFromAuthStateChanges();
-
-    _authRepository.isLoggedIn.removeListener(_listenerIsLoggedIn);
-    _authRepository.currentUserNotifier.removeListener(
-      _listenerCurrentUserNotifier,
-    );
-    (_authRepository as AuthRepositoryImpl).authError.removeListener(
-      _listenerAuthError,
-    );
-
+  void stopAllChatsSubscription() {
     _chatRepository.unsubscribeFromChatsStream();
     _allChatsSubscription?.cancel();
+    _allChatsSubscription = null;
   }
 
-  void _listenerIsLoggedIn() {
-    _isLoggedIn = _authRepository.isLoggedIn.value;
-    notifyListeners();
-  }
-
-  void _listenerCurrentUserNotifier() {
-    _currentUser = _authRepository.currentUserNotifier.value;
-    _authError = null;
-    startAllChatsSubscription();
-    notifyListeners();
-  }
-
-  void _listenerAuthError() {
-    _authError = (_authRepository as AuthRepositoryImpl).authError.value;
-    notifyListeners();
+  void stopSubscriptions() {
+    _authSessionSubscription?.cancel();
+    stopAllChatsSubscription();
   }
 
   String determineChatterProperty({

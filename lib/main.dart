@@ -2,12 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:reach_skills/features/auth/domain/use_cases/get_auth_session_use_case.dart';
+import 'package:reach_skills/features/auth/domain/use_cases/sign_out_use_case.dart';
 import 'package:reach_skills/features/common/data/temp_nav_history.dart';
 
 import 'app.dart';
 import 'core/preferences_repository/data/preferences_repository_impl.dart';
 import 'features/auth/data/auth_repository_impl.dart';
-import 'features/auth/ui/auth_viewmodel.dart';
 import 'features/chat/data/chat_repository_impl.dart';
 import 'features/profile/data/profile_repository_impl.dart';
 import 'firebase_options.dart';
@@ -33,11 +34,15 @@ void main() async {
         Provider(create: (context) => ChatRepositoryImpl()),
         Provider(create: (context) => TempNavHistory()),
 
-        ChangeNotifierProvider(
+        // Use-cases
+        Provider(
           create:
-              (context) => AuthViewModel(
-                authRepository: context.read<AuthRepositoryImpl>(),
-              ),
+              (context) =>
+                  GetAuthSessionUseCase(context.read<AuthRepositoryImpl>()),
+        ),
+        Provider(
+          create:
+              (context) => SignOutUseCase(context.read<AuthRepositoryImpl>()),
         ),
       ],
       child: const ReachSkillsApp(),

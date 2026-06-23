@@ -3,24 +3,26 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import '../../../core/constants/strings.dart';
-import '../../auth/ui/auth_viewmodel.dart';
-import '../../chat/domain/chat_repository.dart';
+import '../../auth/domain/entities/auth_session.dart';
+import '../../auth/domain/use_cases/get_auth_session_use_case.dart';
 import '../../common/data/interest_model.dart';
 import '../../profile/domain/profile_repository.dart';
 
 class ExploreViewModel extends ChangeNotifier {
   ExploreViewModel({
-    required AuthViewModel authViewModel,
+    required GetAuthSessionUseCase getAuthSessionUseCase,
     required ProfileRepository profileRepository,
-  }) : _authViewModel = authViewModel,
+  }) : _getAuthSessionUseCase = getAuthSessionUseCase,
        _profileRepository = profileRepository {
     init();
   }
 
-  final AuthViewModel _authViewModel;
+  final GetAuthSessionUseCase _getAuthSessionUseCase;
   final ProfileRepository _profileRepository;
 
   StreamSubscription<List<InterestModel>>? _interestsSubscription;
+  StreamSubscription<AuthSession>? _authSessionSubscription;
+
   List<InterestModel> interests = [];
 
   List<InterestType> interestTypes = InterestType.values;
@@ -32,25 +34,26 @@ class ExploreViewModel extends ChangeNotifier {
   bool? isLoggedIn;
 
   void init() {
-    _initializeAndListenToFields();
+    _subscribeToAuthSession();
     startInterestsSubscription(interestTypes);
     notifyListeners(); /* Investigate why app works fine even without this line. */
   }
 
-  void _initializeAndListenToFields() {
-    // Initialize fields
-    isLoggedIn = _authViewModel.isLoggedIn;
-    getCurrentUserIdAndName();
+  void _subscribeToAuthSession() {
+    _authSessionSubscription = _getAuthSessionUseCase.execute().listen((
+      session,
+    ) {
+      isLoggedIn = session.isLoggedIn;
 
-    // Listen to changes
-    _authViewModel.addListener(_listenerAuth);
-  }
-
-  void _listenerAuth() {
-    isLoggedIn = _authViewModel.isLoggedIn;
-    currentSenderId = _authViewModel.currentUser?.uid;
-    currentSenderName = _authViewModel.currentUser?.displayName;
-    notifyListeners();
+      /// Get current user id and name to be passed through `InterestDetails`
+      /// screen when tapping `Reach` button.
+      /*
+      Null check is done by `InterestDetails` screen when calling `onTapReach`.
+      */
+      currentSenderId = session.user?.uid;
+      currentSenderName = session.user?.displayName;
+      notifyListeners();
+    });
   }
 
   void startInterestsSubscription(List<InterestType> interestTypes) {
@@ -75,19 +78,9 @@ class ExploreViewModel extends ChangeNotifier {
       onError: (errorObject, stackTrace) {
         interestsStreamError = Str.serverErrorMessage;
         loading = false;
-        // notifyListeners();
+        notifyListeners();
       },
     );
-  }
-
-  /// Get current user id and name to be passed through `InterestDetails` screen
-  /// when tapping `Reach` button.
-  void getCurrentUserIdAndName() {
-    /*
-    Null check is done by `InterestDetails` screen when calling `onTapReach`.
-     */
-    currentSenderId = _authViewModel.currentUser?.uid;
-    currentSenderName = _authViewModel.currentUser?.displayName;
   }
 
   /// Pass `immediately = true` to cancel the previous subscription immediately
@@ -96,7 +89,7 @@ class ExploreViewModel extends ChangeNotifier {
   void stopSubscriptions({bool immediately = false}) {
     _profileRepository.unsubscribeFromInterestsStream(immediately: immediately);
     _interestsSubscription?.cancel();
-    _authViewModel.removeListener(_listenerAuth);
+    _authSessionSubscription?.cancel();
   }
 
   @override

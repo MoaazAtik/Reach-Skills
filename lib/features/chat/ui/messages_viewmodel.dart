@@ -3,21 +3,22 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import '../../../core/constants/strings.dart';
-import '../../auth/domain/auth_repository.dart';
+import '../../auth/domain/entities/auth_session.dart';
+import '../../auth/domain/use_cases/get_auth_session_use_case.dart';
 import '../data/message_model.dart';
 import '../domain/chat_repository.dart';
 
 class MessagesViewModel extends ChangeNotifier {
   MessagesViewModel({
-    required AuthRepository authRepository,
+    required GetAuthSessionUseCase getAuthSessionUseCase,
     required ChatRepository chatRepository,
     required Map<String, dynamic> chatPropertiesPack,
-  }) : _authRepository = authRepository,
+  }) : _getAuthSessionUseCase = getAuthSessionUseCase,
        _chatRepository = chatRepository {
     init(chatPropertiesPack);
   }
 
-  final AuthRepository _authRepository;
+  final GetAuthSessionUseCase _getAuthSessionUseCase;
   final ChatRepository _chatRepository;
 
   String? chatId;
@@ -34,11 +35,12 @@ class MessagesViewModel extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
 
   StreamSubscription<List<MessageModel>>? _messagesSubscription;
+  StreamSubscription<AuthSession>? _authSessionSubscription;
 
   void init(Map<String, dynamic> chatPropertiesPack) {
     updateFields(chatPropertiesPack);
+    _subscribeToAuthSession();
     startMessagesSubscription();
-    startAuthStateSubscription();
   }
 
   void updateFields(Map<String, dynamic> chatPropertiesPack) {
@@ -70,6 +72,15 @@ class MessagesViewModel extends ChangeNotifier {
     `notifyListeners` is called by `startMessagesSubscription` that should be
     called after this function is called.
     */
+  }
+
+  void _subscribeToAuthSession() {
+    _authSessionSubscription = _getAuthSessionUseCase.execute().listen((
+      session,
+    ) {
+      _isLoggedIn = session.isLoggedIn;
+      notifyListeners();
+    });
   }
 
   void startMessagesSubscription() {
@@ -149,26 +160,10 @@ class MessagesViewModel extends ChangeNotifier {
     await _chatRepository.removeMessage(message, lastMessage);
   }
 
-  void startAuthStateSubscription() {
-    _authRepository.subscribeToAuthStateChanges();
-
-    _isLoggedIn = _authRepository.isLoggedIn.value;
-    notifyListeners();
-
-    _authRepository.isLoggedIn.addListener(_listenerIsLoggedIn);
-  }
-
   void stopSubscriptions() {
-    _authRepository.unsubscribeFromAuthStateChanges();
-    _authRepository.isLoggedIn.removeListener(_listenerIsLoggedIn);
-
+    _authSessionSubscription?.cancel();
     _chatRepository.unsubscribeFromMessagesStream();
     _messagesSubscription?.cancel();
-  }
-
-  void _listenerIsLoggedIn() {
-    _isLoggedIn = _authRepository.isLoggedIn.value;
-    notifyListeners();
   }
 
   @override
