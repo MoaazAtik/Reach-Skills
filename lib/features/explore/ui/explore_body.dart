@@ -31,7 +31,7 @@ class _ExploreBodyState extends State<ExploreBody> {
     final exploreViewModel = context.watch<ExploreViewModel>();
     final loading = exploreViewModel.loading;
     final interestsStreamError = exploreViewModel.interestsStreamError;
-    final isLoggedIn = exploreViewModel.isLoggedIn ?? false;
+    final isLoggedIn = exploreViewModel.isLoggedIn;
 
     final interests = context.select<ExploreViewModel, List<InterestModel>>(
       (exploreViewModel) => exploreViewModel.interests,

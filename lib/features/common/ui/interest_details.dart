@@ -63,10 +63,10 @@ class _InterestDetailsState extends State<InterestDetails> {
       context,
     ).state.matchedLocation.contains(Str.profileScreenRoutePath)) {
       fromPath = Str.profileScreenRoutePath;
-      isLoggedIn = context.read<ProfileViewModel>().isLoggedIn ?? false;
+      isLoggedIn = context.read<ProfileViewModel>().isLoggedIn;
     } else {
       fromPath = Str.exploreScreenRoutePath;
-      isLoggedIn = context.read<ExploreViewModel>().isLoggedIn ?? false;
+      isLoggedIn = context.read<ExploreViewModel>().isLoggedIn;
 
       /*
       Sender and receiver Ids and Names are initialized only if Interest Details

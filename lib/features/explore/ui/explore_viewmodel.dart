@@ -31,12 +31,13 @@ class ExploreViewModel extends ChangeNotifier {
 
   String? currentSenderId;
   String? currentSenderName;
-  bool? isLoggedIn;
+  bool isLoggedIn = false;
 
   void init() {
     _subscribeToAuthSession();
     startInterestsSubscription(interestTypes);
-    notifyListeners(); /* Investigate why app works fine even without this line. */
+    // Todo Investigate why app works fine even without this notifyListeners
+    notifyListeners();
   }
 
   void _subscribeToAuthSession() {
@@ -89,6 +90,7 @@ class ExploreViewModel extends ChangeNotifier {
   void stopSubscriptions({bool immediately = false}) {
     _profileRepository.unsubscribeFromInterestsStream(immediately: immediately);
     _interestsSubscription?.cancel();
+    _interestsSubscription = null;
     _authSessionSubscription?.cancel();
   }
 

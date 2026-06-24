@@ -31,7 +31,7 @@ class ProfileViewModel extends ChangeNotifier {
   List<InterestModel> interests = [];
   StreamSubscription<ProfileModel>? _profileSubscription;
   String? profileStreamError;
-  bool? isLoggedIn;
+  bool isLoggedIn = false;
 
   void init() {
     _subscribeToAuthSession();
@@ -46,7 +46,7 @@ class ProfileViewModel extends ChangeNotifier {
       uid = session.user?.uid;
       email = session.user?.email;
 
-      if ((isLoggedIn ?? false) && uid != null) {
+      if (isLoggedIn && uid != null) {
         startProfileSubscription();
       } else {
         stopProfileSubscription();
@@ -59,8 +59,10 @@ class ProfileViewModel extends ChangeNotifier {
   `FirebaseAuth.instance`, not the profile repository which is
    a Firestore collection aka, `FirebaseFirestore.instance`. */
   void startProfileSubscription() {
-    if (uid == null) return;
-
+    if (uid == null || email == null) {
+      print('$this - `startProfileSubscription`: "null uid or email",');
+      return;
+    }
     if (_profileSubscription != null) return;
 
     _profileRepository.subscribeToProfileStream(uid: uid!, email: email!);
@@ -69,8 +71,7 @@ class ProfileViewModel extends ChangeNotifier {
       (profile) {
         this.profile = profile;
 
-        interests = [];
-        interests.addAll(profile.interests);
+        interests = List<InterestModel>.from(profile.interests);
         // interests.shuffle(Random());
 
         profileStreamError = null;
@@ -101,6 +102,8 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   Future<String> removeInterest({required InterestModel interest}) async {
+    if (uid == null) return Str.pleaseSignIn;
+
     String result = await _profileRepository.removeInterest(interest);
     if (result == Str.errorSavingProfile) return result;
 
@@ -187,8 +190,7 @@ class ProfileViewModel extends ChangeNotifier {
 
       // check interests
       if (entry.key == Str.PROFILE_FIELD_INTERESTS) {
-        if ((profile!.interests.isEmpty && newProfile.interests.isNotEmpty) ||
-            newProfile.interests.length != profile!.interests.length) {
+        if (newProfile.interests.length != profile!.interests.length) {
           edited = true;
           break;
         }

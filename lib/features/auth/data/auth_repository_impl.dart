@@ -11,20 +11,19 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  // Todo replace these `FirebaseAuth.instance`s with `_auth`
   @override
   Future<void> signOut() {
-    return FirebaseAuth.instance.signOut();
+    return _auth.signOut();
   }
 
   @override
   String? getUserId() {
-    return FirebaseAuth.instance.currentUser?.uid;
+    return _auth.currentUser?.uid;
   }
 
   @override
   String? getUserEmail() {
-    return FirebaseAuth.instance.currentUser?.email;
+    return _auth.currentUser?.email;
   }
 
   /// Update user name in Firebase Auth user profile aka,
