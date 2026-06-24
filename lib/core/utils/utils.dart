@@ -116,16 +116,21 @@ String? textValidator(String? value, {String errorMessage = Str.required}) {
 void showSnackBarMessage(
   BuildContext context,
   String message, {
+  bool? persist,
   String? actionLabel,
   VoidCallback? onActionPressed,
 }) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(message),
-      action: SnackBarAction(
-        label: actionLabel ?? '',
-        onPressed: onActionPressed ?? () {},
-      ),
+      persist: persist,
+      action:
+          actionLabel != null || onActionPressed != null
+              ? SnackBarAction(
+                label: actionLabel ?? '',
+                onPressed: onActionPressed ?? () {},
+              )
+              : null,
     ),
   );
 }

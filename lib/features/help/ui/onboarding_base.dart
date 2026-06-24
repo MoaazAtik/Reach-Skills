@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reach_skills/core/utils/utils.dart';
 import 'package:reach_skills/features/help/ui/onboarding_progress_chip.dart';
 
 import '../../../core/constants/strings.dart';
@@ -18,12 +19,16 @@ class OnboardingBase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    final isSmallScreen = checkScreenSize(context) == RsScreenSize.small;
+    final buttonWidth =
+        isSmallScreen ? double.infinity : MediaQuery.widthOf(context) / 5;
+    return Container(
       padding: const EdgeInsets.only(
         left: Styles.paddingMedium,
         right: Styles.paddingMedium,
-        bottom: Styles.padding12,
+        bottom: Styles.padding20,
       ),
+      alignment: Alignment.center,
       child: Column(
         children: [
           if (onboardingProgress > 0) SizedBox(height: 32.0),
@@ -48,7 +53,7 @@ class OnboardingBase extends StatelessWidget {
                 _getButtonBackground(onboardingProgress),
               ),
               minimumSize: WidgetStateProperty.all(
-                const Size(double.infinity, Styles.buttonHeight),
+                Size(buttonWidth, Styles.buttonHeight),
               ),
             ),
             child: Text(

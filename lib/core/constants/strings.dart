@@ -195,7 +195,7 @@ abstract class Str {
   static const poweredBy = 'Powered by';
   static const whiteWings = 'White Wings';
 
-  static const guestInfoTitle = 'Experience $appTitle Now 👋🏻';
+  static const guestInfoTitle = 'Experience $appTitle Now 👋';
   static const guestInfoDescription =
       'No signup needed! Try $guestInfoDescriptionGuestAccess using the Credentials below and chat with $devUserName1 and $devUserName2 from our team.';
   static const guestInfoDescriptionGuestAccess = 'guest access';
