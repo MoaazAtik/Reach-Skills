@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reach_skills/core/utils/utils.dart';
+import 'package:reach_skills/features/auth/domain/auth_repository.dart';
 import 'package:reach_skills/features/auth/domain/entities/auth_session.dart';
 import 'package:reach_skills/features/auth/domain/use_cases/get_auth_session_use_case.dart';
 import 'package:reach_skills/features/auth/domain/use_cases/sign_out_use_case.dart';
@@ -12,7 +13,6 @@ import 'package:reach_skills/features/explore/ui/explore_viewmodel.dart';
 import 'package:reach_skills/features/help/ui/help_body.dart';
 import 'package:reach_skills/features/help/ui/onboarding.dart';
 
-import '../../features/auth/data/auth_repository_impl.dart';
 import '../../features/auth/ui/auth_screen.dart';
 import '../../features/auth/ui/auth_viewmodel.dart';
 import '../../features/chat/data/chat_repository_impl.dart';
@@ -417,7 +417,7 @@ Widget _buildInterestDetails({
   }
 
   final bool isOwner =
-      interest.userId == context.read<AuthRepositoryImpl>().getUserId();
+      interest.userId == context.read<AuthRepository>().getUserId();
 
   final Widget interestDetails = InterestDetails(
     key: ValueKey(interest.id),
