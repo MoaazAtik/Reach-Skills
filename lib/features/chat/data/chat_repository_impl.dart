@@ -167,6 +167,9 @@ class ChatRepositoryImpl extends ChatRepository {
           Str.CHAT_FIELD_CREATED_AT: DateTime.now().millisecondsSinceEpoch,
           Str.CHAT_FIELD_UPDATED_AT: DateTime.now().millisecondsSinceEpoch,
         })
+        .onError((error, stackTrace) {
+          return Future.error('FirebaseException: $error');
+        })
         .then((documentReference) {
           chatId = documentReference.id;
         });
