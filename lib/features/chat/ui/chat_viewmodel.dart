@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../core/constants/strings.dart';
+import '../../auth/domain/entities/app_user.dart';
 import '../../auth/domain/entities/auth_session.dart';
 import '../../auth/domain/use_cases/get_auth_session_use_case.dart';
 import '../data/chat_model.dart';
@@ -27,7 +27,7 @@ class ChatViewModel extends ChangeNotifier {
   bool _isLoggedIn = false;
 
   bool get isLoggedIn => _isLoggedIn;
-  User? _currentUser;
+  AppUser? _currentUser;
   String? _authError;
 
   String? get authError => _authError;

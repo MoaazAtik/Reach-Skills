@@ -1,14 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'app_user.dart';
 
 class AuthSession {
-  final User? user;
+  final AppUser? user;
   final bool isLoggedIn;
   final String? error;
 
-  AuthSession({this.user, this.isLoggedIn = false, this.error});
+  const AuthSession({this.user, this.isLoggedIn = false, this.error});
 
-  factory AuthSession.fromUser(User? user) {
-    return AuthSession(user: user, isLoggedIn: user != null);
+  factory AuthSession.authenticated(AppUser user) {
+    return AuthSession(user: user, isLoggedIn: true);
+  }
+
+  factory AuthSession.unauthenticated() {
+    return const AuthSession(isLoggedIn: false);
   }
 
   factory AuthSession.withError(String error) {

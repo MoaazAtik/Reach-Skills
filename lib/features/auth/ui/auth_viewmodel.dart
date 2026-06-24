@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
-import '../domain/auth_repository.dart';
+import '../domain/entities/app_user.dart';
 import '../domain/entities/auth_session.dart';
 import '../domain/use_cases/get_auth_session_use_case.dart';
 import '../domain/use_cases/sign_out_use_case.dart';
@@ -26,10 +25,9 @@ class AuthViewModel extends ChangeNotifier {
 
   bool get isLoggedIn => _isLoggedIn;
 
-  // Example: Listen to current user stream.
-  User? _currentUser;
+  AppUser? _currentUser;
 
-  User? get currentUser => _currentUser;
+  AppUser? get currentUser => _currentUser;
   String? _authError;
 
   String? get authError => _authError;
