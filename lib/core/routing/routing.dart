@@ -399,7 +399,7 @@ Widget _buildInterestDetails({
 
   final fromPath =
       extra[Str.detailsScreenParamFromPath] ??
-      GoRouterState.of(context).matchedLocation;
+      '/${GoRouterState.of(context).matchedLocation.split('/')[1]}';
   final startEditing = extra[Str.detailsScreenParamStartEditing] ?? false;
 
   /* Todo fix. if interest is null fetch it using the provided ID. this is needed for back navigation. Or maybe store it in a view model. */
@@ -436,7 +436,9 @@ Widget _buildInterestDetails({
       masterBody = ProfileBody(onSignInPressed: () => onTapSignIn(context));
       appBarTitle = Str.profileScreenTitle;
       break;
-    default: // case Str.exploreScreenRoutePath:
+    default:
+      // Str.exploreScreenRoutePath
+      // Or Str.detailsExploreScreenRouteFullPath without '/:id'
       masterBody = ExploreBody(
         onTapSignIn: ({String? email}) {
           onTapSignIn(context, email: email);
